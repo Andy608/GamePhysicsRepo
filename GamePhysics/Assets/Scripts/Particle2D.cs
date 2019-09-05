@@ -6,17 +6,17 @@ public class Particle2D : MonoBehaviour
 {
     private Vector2 position;
     private Vector2 velocity;
+    private Vector2 acceleration;
 
     private float rotation;
     private float rotVelocity;
+    private float rotAcceleration;
+    private Vector3 helperRot;
 
-    private Vector2 acceleration;
-    private Vector2 rotAcceleration;
     [SerializeField][Range(0.0f, 10.0f)] private float xScale = 1.0f;
-    [SerializeField] [Range(0.0f, 10.0f)] private float yScale = 1.0f;
+    //[SerializeField] [Range(0.0f, 10.0f)] private float yScale = 1.0f;
 
-    [SerializeField] [Range(0.0f, 10.0f)] private float xRotAcc = 1.0f;
-    [SerializeField] [Range(0.0f, 10.0f)] private float yRotAcc = 1.0f;
+    [SerializeField] [Range(-100.0f, 100.0f)] private float rotAcc = 0.0f;
 
     [SerializeField] private bool useFixedPosition = true;
     [SerializeField] private bool useFixedRotation = true;
@@ -24,7 +24,7 @@ public class Particle2D : MonoBehaviour
     private void Start()
     {
         velocity.x = xScale;
-
+        //velocity.y = yScale;
     }
 
     private void UpdatePositionEulerExplicit(float dt)
@@ -41,14 +41,14 @@ public class Particle2D : MonoBehaviour
 
     private void UpdateRotationEulerExplicit(float dt)
     {
-        //rotation += rotation * dt;
-        //rotVelocity += rotVelocity * dt;
+        rotation += rotVelocity * dt;
+        rotVelocity += rotAcceleration * dt;
     }
 
     private void UpdateRotationKinematic(float dt)
     {
-        //rotation += rotVelocity * dt + 0.5f * rotAcceleration * dt * dt;
-        //rotVelocity += rotAcceleration * dt;
+        rotation += rotVelocity * dt + 0.5f * rotAcceleration * dt * dt;
+        rotVelocity += rotAcceleration * dt;
     }
 
     private void FixedUpdate()
@@ -72,12 +72,18 @@ public class Particle2D : MonoBehaviour
         }
         
         transform.position = position;
-        transform.eulerAngles = rotation;
+        SetRotation(rotation %= 360.0f);
 
         acceleration.x = xScale * -Mathf.Sin(Time.time);
-        //acceleration.y = yScale * -Mathf.Cos(Time.time);
+        //acceleration.y = yScale * Mathf.Cos(Time.time);
 
-        rotAcceleration.x = xRotAcc;
-        rotAcceleration.y = yRotAcc;
+        rotAcceleration = rotAcc;
+    }
+
+    private void SetRotation(float rot)
+    {
+        helperRot = transform.eulerAngles;
+        helperRot.z = rot;
+        transform.eulerAngles = helperRot;
     }
 }
