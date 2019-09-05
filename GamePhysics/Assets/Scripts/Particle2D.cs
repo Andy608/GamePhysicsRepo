@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Particle2D : MonoBehaviour
 {
+    //Used to swap what physics function is used
+    public delegate void MyDelegate(float dt);
+    [SerializeField] public MyDelegate myDelegate;
+
     private Vector2 position;
     private Vector2 velocity;
     private Vector2 acceleration;
@@ -25,6 +29,7 @@ public class Particle2D : MonoBehaviour
     {
         velocity.x = xScale;
         //velocity.y = yScale;
+        myDelegate = UpdatePositionEulerExplicit;
     }
 
     private void UpdatePositionEulerExplicit(float dt)
@@ -53,23 +58,24 @@ public class Particle2D : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (useFixedPosition)
-        {
-            UpdatePositionEulerExplicit(Time.fixedDeltaTime);
-        }
-        else
-        {
-            UpdatePositionKinematic(Time.fixedDeltaTime);
-        }
-
-        if (useFixedRotation)
-        {
-            UpdateRotationEulerExplicit(Time.fixedDeltaTime);
-        }
-        else
-        {
-            UpdateRotationKinematic(Time.fixedDeltaTime);
-        }
+        myDelegate(Time.fixedDeltaTime);
+        //if (useFixedPosition)
+        //{
+        //    UpdatePositionEulerExplicit(Time.fixedDeltaTime);
+        //}
+        //else
+        //{
+        //    UpdatePositionKinematic(Time.fixedDeltaTime);
+        //}
+        //
+        //if (useFixedRotation)
+        //{
+        //    UpdateRotationEulerExplicit(Time.fixedDeltaTime);
+        //}
+        //else
+        //{
+        //    UpdateRotationKinematic(Time.fixedDeltaTime);
+        //}
         
         transform.position = position;
         SetRotation(rotation %= 360.0f);
