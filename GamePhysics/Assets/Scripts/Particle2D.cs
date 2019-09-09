@@ -4,16 +4,30 @@ using UnityEngine;
 
 public class Particle2D : MonoBehaviour
 {
+    private Vector2 Gravity = new Vector2(0.0f, -10.0f);
+
     //Used to swap what physics function is used
     public delegate void MyDelegate(float dt);
     [SerializeField] public MyDelegate myDelegate;
 
-    [SerializeField]private PosIntegrationType physPos;
-    [SerializeField] private RotIntegrationType physRot;
+    [SerializeField]private PosIntegrationType physPos = PosIntegrationType.EulerExplicit;
+    [SerializeField] private RotIntegrationType physRot = RotIntegrationType.EulerExplicit;
     [SerializeField][Range(0.0f, 10.0f)] private float scaleX = 1.0f;
     [SerializeField][Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
-
+    [SerializeField] private float startingMass = 1.0f;
+    
     private float prevScaleX;
+
+    private float mass;
+
+    public void SetMass(float newMass)
+    {
+        mass = newMass > 0.0f ? newMass : 0.0f;
+        MassInv = mass > 0.0f ? 1.0f / mass : 0.0f;
+    }
+
+    public float MassInv { get; private set; }
+    private Vector2 force = Vector2.zero;
 
     private Vector2 position;
     private Vector2 velocity;
@@ -26,7 +40,8 @@ public class Particle2D : MonoBehaviour
 
     private void Start()
     {
-        Reset();
+        SetMass(startingMass);
+        //Reset();
     }
 
     /// <summary>
@@ -37,8 +52,20 @@ public class Particle2D : MonoBehaviour
         position = Vector2.zero;
         acceleration = Vector2.zero;
         velocity = Vector2.zero;
-        velocity.x = scaleX;
+        //velocity.x = scaleX;
         prevScaleX = scaleX;
+    }
+
+    public void AddForce(Vector2 newForce)
+    {
+        //D'Alembert
+        force += newForce;
+    }
+
+    private void UpdateAcceleration()
+    {
+        acceleration = force * MassInv;
+        force = Vector2.zero;
     }
 
     /// <summary>
@@ -87,7 +114,7 @@ public class Particle2D : MonoBehaviour
         if (scaleX != prevScaleX)
         {
             //WHY DOESN'T THIS RESET THE SIN WAVE?
-            Reset();
+            //Reset();
         }
 
         //Uses the selected integration method to use for position
@@ -111,14 +138,15 @@ public class Particle2D : MonoBehaviour
             myDelegate = UpdateRotationKinematic;
         }
         myDelegate(Time.fixedDeltaTime);
-        
+
+        UpdateAcceleration();
+
         transform.position = position;
+
+        AddForce(ForceGenerator.GenerateForce_Gravity(mass, -9.8f, Vector2.up));
 
         //clamps rotation to 360
         SetRotation(rotation %= 360.0f);
-
-        acceleration.x = scaleX * -Mathf.Sin(Time.time);
-
         rotAcceleration = rotAccZ;
     }
 
