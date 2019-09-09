@@ -10,21 +10,25 @@ public class Particle2D : MonoBehaviour
     public delegate void MyDelegate(float dt);
     [SerializeField] public MyDelegate myDelegate;
 
-    [SerializeField]private PosIntegrationType physPos = PosIntegrationType.EulerExplicit;
+    [SerializeField] private PosIntegrationType physPos = PosIntegrationType.EulerExplicit;
     [SerializeField] private RotIntegrationType physRot = RotIntegrationType.EulerExplicit;
-    [SerializeField][Range(0.0f, 10.0f)] private float scaleX = 1.0f;
-    [SerializeField][Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
+    [SerializeField] [Range(0.0f, 10.0f)] private float scaleX = 1.0f;
+    [SerializeField] [Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
     [SerializeField] private float startingMass = 1.0f;
-    
+
     private float prevScaleX;
 
-    private float mass;
-
-    public void SetMass(float newMass)
+    public float Mass
     {
-        mass = newMass > 0.0f ? newMass : 0.0f;
-        MassInv = mass > 0.0f ? 1.0f / mass : 0.0f;
+        get { return mass; }
+        private set
+        {
+            mass = value > 0.0f ? value : 0.0f;
+            MassInv = mass > 0.0f ? 1.0f / mass : 0.0f;
+        }
     }
+
+    private float mass = 1.0f;
 
     public float MassInv { get; private set; }
     private Vector2 force = Vector2.zero;
@@ -40,7 +44,7 @@ public class Particle2D : MonoBehaviour
 
     private void Start()
     {
-        SetMass(startingMass);
+        Mass = startingMass;
         //Reset();
     }
 
