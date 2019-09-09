@@ -29,6 +29,9 @@ public class Particle2D : MonoBehaviour
         Reset();
     }
 
+    /// <summary>
+    /// Supposed to reset the particle to a default state.
+    /// </summary>
     private void Reset()
     {
         position = Vector2.zero;
@@ -38,24 +41,40 @@ public class Particle2D : MonoBehaviour
         prevScaleX = scaleX;
     }
 
+    /// <summary>
+    /// Integrates the particles position using the euler explicit formula
+    /// </summary>
+    /// <param name="dt"></param>
     private void UpdatePositionEulerExplicit(float dt)
     {
         position += velocity * dt;
         velocity += acceleration * dt;
     }
 
+    /// <summary>
+    /// Integrates the particles position using the kinematic formula
+    /// </summary>
+    /// <param name="dt"></param>
     private void UpdatePositionKinematic(float dt)
     {
         position += velocity * dt + 0.5f * acceleration * dt * dt;
         velocity += acceleration * dt;
     }
 
+    /// <summary>
+    /// Integrates the particles rotation using the euler explicit formula
+    /// </summary>
+    /// <param name="dt"></param>
     private void UpdateRotationEulerExplicit(float dt)
     {
         rotation += rotVelocity * dt;
         rotVelocity += rotAcceleration * dt;
     }
 
+    /// <summary>
+    /// Integrates the particles rotation using the kinematic formula
+    /// </summary>
+    /// <param name="dt"></param>
     private void UpdateRotationKinematic(float dt)
     {
         rotation += rotVelocity * dt + 0.5f * rotAcceleration * dt * dt;
@@ -64,12 +83,14 @@ public class Particle2D : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //TODO: Reset to default if the scaleX slider was changed, currently doesn't work
         if (scaleX != prevScaleX)
         {
             //WHY DOESN'T THIS RESET THE SIN WAVE?
             Reset();
         }
 
+        //Uses the selected integration method to use for position
         if (physPos == PosIntegrationType.EulerExplicit)
         {
             myDelegate = UpdatePositionEulerExplicit;
@@ -80,6 +101,7 @@ public class Particle2D : MonoBehaviour
         }
         myDelegate(Time.fixedDeltaTime);
 
+        //Uses the selected integration method to use for rotation
         if (physRot == RotIntegrationType.EulerExplicit)
         {
             myDelegate = UpdateRotationEulerExplicit;
@@ -91,6 +113,8 @@ public class Particle2D : MonoBehaviour
         myDelegate(Time.fixedDeltaTime);
         
         transform.position = position;
+
+        //clamps rotation to 360
         SetRotation(rotation %= 360.0f);
 
         acceleration.x = scaleX * -Mathf.Sin(Time.time);
@@ -98,6 +122,10 @@ public class Particle2D : MonoBehaviour
         rotAcceleration = rotAccZ;
     }
 
+    /// <summary>
+    /// Sets rotation of euler angle without creating new vectors
+    /// </summary>
+    /// <param name="rot"></param>
     private void SetRotation(float rot)
     {
         helperRot = transform.eulerAngles;
@@ -105,12 +133,18 @@ public class Particle2D : MonoBehaviour
         transform.eulerAngles = helperRot;
     }
 
+    /// <summary>
+    /// Enum for Position Integration Type
+    /// </summary>
     public enum PosIntegrationType
     {
         Kinematic,
         EulerExplicit
     }
 
+    /// <summary>
+    /// Enum for Rotation Integration Type
+    /// </summary>
     public enum RotIntegrationType
     {
         Kinematic,
