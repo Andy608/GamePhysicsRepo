@@ -8,6 +8,13 @@ public class Particle2D : MonoBehaviour
     public delegate void MyDelegate(float dt);
     [SerializeField] public MyDelegate myDelegate;
 
+    [SerializeField]private PosIntegrationType physPos;
+    [SerializeField] private RotIntegrationType physRot;
+    [SerializeField][Range(0.0f, 10.0f)] private float scaleX = 1.0f;
+    [SerializeField][Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
+
+    private float prevScaleX;
+
     private Vector2 position;
     private Vector2 velocity;
     private Vector2 acceleration;
@@ -17,19 +24,18 @@ public class Particle2D : MonoBehaviour
     private float rotAcceleration;
     private Vector3 helperRot;
 
-    [SerializeField][Range(0.0f, 10.0f)] private float xScale = 1.0f;
-    //[SerializeField] [Range(0.0f, 10.0f)] private float yScale = 1.0f;
-
-    [SerializeField] [Range(-100.0f, 100.0f)] private float rotAcc = 0.0f;
-
-    [SerializeField] private bool useFixedPosition = true;
-    [SerializeField] private bool useFixedRotation = true;
-
     private void Start()
     {
-        velocity.x = xScale;
-        //velocity.y = yScale;
-        myDelegate = UpdatePositionEulerExplicit;
+        Reset();
+    }
+
+    private void Reset()
+    {
+        position = Vector2.zero;
+        acceleration = Vector2.zero;
+        velocity = Vector2.zero;
+        velocity.x = scaleX;
+        prevScaleX = scaleX;
     }
 
     private void UpdatePositionEulerExplicit(float dt)
@@ -58,32 +64,38 @@ public class Particle2D : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (scaleX != prevScaleX)
+        {
+            //WHY DOESN'T THIS RESET THE SIN WAVE?
+            Reset();
+        }
+
+        if (physPos == PosIntegrationType.EulerExplicit)
+        {
+            myDelegate = UpdatePositionEulerExplicit;
+        }
+        else if (physPos == PosIntegrationType.Kinematic)
+        {
+            myDelegate = UpdatePositionKinematic;
+        }
         myDelegate(Time.fixedDeltaTime);
-        //if (useFixedPosition)
-        //{
-        //    UpdatePositionEulerExplicit(Time.fixedDeltaTime);
-        //}
-        //else
-        //{
-        //    UpdatePositionKinematic(Time.fixedDeltaTime);
-        //}
-        //
-        //if (useFixedRotation)
-        //{
-        //    UpdateRotationEulerExplicit(Time.fixedDeltaTime);
-        //}
-        //else
-        //{
-        //    UpdateRotationKinematic(Time.fixedDeltaTime);
-        //}
+
+        if (physRot == RotIntegrationType.EulerExplicit)
+        {
+            myDelegate = UpdateRotationEulerExplicit;
+        }
+        else  if (physRot == RotIntegrationType.Kinematic)
+        {
+            myDelegate = UpdateRotationKinematic;
+        }
+        myDelegate(Time.fixedDeltaTime);
         
         transform.position = position;
         SetRotation(rotation %= 360.0f);
 
-        acceleration.x = xScale * -Mathf.Sin(Time.time);
-        //acceleration.y = yScale * Mathf.Cos(Time.time);
+        acceleration.x = scaleX * -Mathf.Sin(Time.time);
 
-        rotAcceleration = rotAcc;
+        rotAcceleration = rotAccZ;
     }
 
     private void SetRotation(float rot)
@@ -91,5 +103,17 @@ public class Particle2D : MonoBehaviour
         helperRot = transform.eulerAngles;
         helperRot.z = rot;
         transform.eulerAngles = helperRot;
+    }
+
+    public enum PosIntegrationType
+    {
+        Kinematic,
+        EulerExplicit
+    }
+
+    public enum RotIntegrationType
+    {
+        Kinematic,
+        EulerExplicit
     }
 }
