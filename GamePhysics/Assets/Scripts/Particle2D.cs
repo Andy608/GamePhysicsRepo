@@ -6,21 +6,27 @@ public class Particle2D : MonoBehaviour
 {
     private Vector2 Gravity = new Vector2(0.0f, -10.0f);
 
-    //Used to swap what physics function is used
-    public delegate void MyDelegate(float dt);
-    [SerializeField] public MyDelegate myDelegate;
+    ////Used to swap what physics function is used
+    //public delegate void MyDelegate(float dt);
+    //[SerializeField] public MyDelegate myDelegate;
 
-    [SerializeField] private PosIntegrationType physPos = PosIntegrationType.EulerExplicit;
-    [SerializeField] private RotIntegrationType physRot = RotIntegrationType.EulerExplicit;
+    [SerializeField] private PosIntegrationType positionType = PosIntegrationType.EulerExplicit;
+    [SerializeField] private RotIntegrationType rotationType = RotIntegrationType.EulerExplicit;
+
     [SerializeField] [Range(0.0f, 10.0f)] private float scaleX = 1.0f;
     [SerializeField] [Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
+
     [SerializeField] private float startingMass = 1.0f;
 
     private float prevScaleX;
 
     public float Mass
     {
-        get { return mass; }
+        get
+        {
+            return mass;
+        }
+
         private set
         {
             mass = value > 0.0f ? value : 0.0f;
@@ -42,6 +48,12 @@ public class Particle2D : MonoBehaviour
     private float rotAcceleration;
     private Vector3 helperRot;
 
+    public void AddForce(Vector2 newForce)
+    {
+        //D'Alembert
+        force += newForce;
+    }
+
     private void Start()
     {
         Mass = startingMass;
@@ -60,10 +72,74 @@ public class Particle2D : MonoBehaviour
         prevScaleX = scaleX;
     }
 
-    public void AddForce(Vector2 newForce)
+    /// <summary>
+    /// Integrates the particles rotation using the kinematic formula
+    /// </summary>
+    /// <param name="dt"></param>
+    private void UpdateRotationKinematic(float dt)
     {
-        //D'Alembert
-        force += newForce;
+        rotation += rotVelocity * dt + 0.5f * rotAcceleration * dt * dt;
+        rotVelocity += rotAcceleration * dt;
+    }
+
+    private void FixedUpdate()
+    {
+        //TODO: Reset to default if the scaleX slider was changed, currently doesn't work
+        if (scaleX != prevScaleX)
+        {
+            //WHY DOESN'T THIS RESET THE SIN WAVE?
+            //Reset();
+        }
+
+        switch (positionType)
+        {
+            case PosIntegrationType.EulerExplicit:
+                UpdatePositionEulerExplicit(Time.fixedDeltaTime);
+                break;
+            default:
+                UpdatePositionKinematic(Time.fixedDeltaTime);
+                break;
+        }
+
+        switch (rotationType)
+        {
+            case RotIntegrationType.EulerExplicit:
+                UpdateRotationEulerExplicit(Time.fixedDeltaTime);
+                break;
+            default:
+                UpdateRotationKinematic(Time.fixedDeltaTime);
+                break;
+        }
+
+        UpdateAcceleration();
+
+        transform.position = position;
+
+        Vector2 gravitationalForce = ForceGenerator.GenerateForce_Gravity(mass, -9.8f, Vector2.up);
+        Vector2 normalForce = ForceGenerator.GenerateForce_Normal(-gravitationalForce, Vector2.up);
+        Vector2 slideForce = ForceGenerator.GenerateForce_Sliding(gravitationalForce, normalForce);
+        Vector2 frictionStaticForce = ForceGenerator.GenerateForce_FrictionStatic(normalForce, transform.right.normalized * 0.4f, 0.953f);
+
+        //AddForce(gravitationalForce);
+        //AddForce(normalForce);
+        AddForce(frictionStaticForce);
+        AddForce(normalForce);
+        AddForce(gravitationalForce);
+
+        //clamps rotation to 360
+        SetRotation(rotation %= 360.0f);
+        rotAcceleration = rotAccZ;
+    }
+
+    /// <summary>
+    /// Sets rotation of euler angle without creating new vectors
+    /// </summary>
+    /// <param name="rot"></param>
+    private void SetRotation(float rot)
+    {
+        helperRot = transform.eulerAngles;
+        helperRot.z = rot;
+        transform.eulerAngles = helperRot;
     }
 
     private void UpdateAcceleration()
@@ -100,69 +176,6 @@ public class Particle2D : MonoBehaviour
     {
         rotation += rotVelocity * dt;
         rotVelocity += rotAcceleration * dt;
-    }
-
-    /// <summary>
-    /// Integrates the particles rotation using the kinematic formula
-    /// </summary>
-    /// <param name="dt"></param>
-    private void UpdateRotationKinematic(float dt)
-    {
-        rotation += rotVelocity * dt + 0.5f * rotAcceleration * dt * dt;
-        rotVelocity += rotAcceleration * dt;
-    }
-
-    private void FixedUpdate()
-    {
-        //TODO: Reset to default if the scaleX slider was changed, currently doesn't work
-        if (scaleX != prevScaleX)
-        {
-            //WHY DOESN'T THIS RESET THE SIN WAVE?
-            //Reset();
-        }
-
-        //Uses the selected integration method to use for position
-        if (physPos == PosIntegrationType.EulerExplicit)
-        {
-            myDelegate = UpdatePositionEulerExplicit;
-        }
-        else if (physPos == PosIntegrationType.Kinematic)
-        {
-            myDelegate = UpdatePositionKinematic;
-        }
-        myDelegate(Time.fixedDeltaTime);
-
-        //Uses the selected integration method to use for rotation
-        if (physRot == RotIntegrationType.EulerExplicit)
-        {
-            myDelegate = UpdateRotationEulerExplicit;
-        }
-        else  if (physRot == RotIntegrationType.Kinematic)
-        {
-            myDelegate = UpdateRotationKinematic;
-        }
-        myDelegate(Time.fixedDeltaTime);
-
-        UpdateAcceleration();
-
-        transform.position = position;
-
-        AddForce(ForceGenerator.GenerateForce_Gravity(mass, -9.8f, Vector2.up));
-
-        //clamps rotation to 360
-        SetRotation(rotation %= 360.0f);
-        rotAcceleration = rotAccZ;
-    }
-
-    /// <summary>
-    /// Sets rotation of euler angle without creating new vectors
-    /// </summary>
-    /// <param name="rot"></param>
-    private void SetRotation(float rot)
-    {
-        helperRot = transform.eulerAngles;
-        helperRot.z = rot;
-        transform.eulerAngles = helperRot;
     }
 
     /// <summary>
