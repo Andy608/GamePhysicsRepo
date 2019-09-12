@@ -10,11 +10,15 @@ public class Particle2D : MonoBehaviour
     //public delegate void MyDelegate(float dt);
     //[SerializeField] public MyDelegate myDelegate;
 
+    public GameObject testFloor = null;
+
     [SerializeField] private PosIntegrationType positionType = PosIntegrationType.EulerExplicit;
     [SerializeField] private RotIntegrationType rotationType = RotIntegrationType.EulerExplicit;
 
     [SerializeField] [Range(0.0f, 10.0f)] private float scaleX = 1.0f;
     [SerializeField] [Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
+
+    [SerializeField] [Range(0.0f, 20.0f)] private float frictionStatic = 0.75f;
 
     [SerializeField] private float startingMass = 1.0f;
 
@@ -63,7 +67,7 @@ public class Particle2D : MonoBehaviour
     /// <summary>
     /// Supposed to reset the particle to a default state.
     /// </summary>
-    private void Reset()
+    private void Init()
     {
         position = Vector2.zero;
         acceleration = Vector2.zero;
@@ -116,15 +120,16 @@ public class Particle2D : MonoBehaviour
         transform.position = position;
 
         Vector2 gravitationalForce = ForceGenerator.GenerateForce_Gravity(mass, -9.8f, Vector2.up);
-        Vector2 normalForce = ForceGenerator.GenerateForce_Normal(-gravitationalForce, Vector2.up);
+        Vector2 normalForce = ForceGenerator.GenerateForce_Normal(-gravitationalForce, testFloor.transform.up);
         Vector2 slideForce = ForceGenerator.GenerateForce_Sliding(gravitationalForce, normalForce);
-        Vector2 frictionStaticForce = ForceGenerator.GenerateForce_FrictionStatic(normalForce, transform.right.normalized * 0.4f, 0.953f);
-
+        Vector2 frictionStaticForce = ForceGenerator.GenerateForce_FrictionStatic(normalForce, -slideForce, frictionStatic);
+        Debug.Log(frictionStaticForce);
         //AddForce(gravitationalForce);
         //AddForce(normalForce);
+        AddForce(slideForce);
         AddForce(frictionStaticForce);
-        AddForce(normalForce);
-        AddForce(gravitationalForce);
+        //AddForce(normalForce);
+        //AddForce(gravitationalForce);
 
         //clamps rotation to 360
         SetRotation(rotation %= 360.0f);

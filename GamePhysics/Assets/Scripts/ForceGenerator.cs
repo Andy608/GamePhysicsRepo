@@ -19,20 +19,18 @@ public class ForceGenerator : MonoBehaviour
         return gravitationalForce + normalForce;
     }
 
-    // f_friction_s = -f_opposing if less than max, else -coeff*f_normal (max amount is coeff*|f_normal|)
+    // f_friction_s = -f_opposing if less than coeff*|f_normal|, else -coeff*f_normal (max amount is )
     public static Vector2 GenerateForce_FrictionStatic(Vector2 normalForce, Vector2 opposingForce, float materialCoefficientStatic)
     {
-        //NOT SURE IF THIS IS IMPLEMENTED RIGHT - Gotta check what |---| means
+        Vector2 frictionForce = materialCoefficientStatic * normalForce;
 
-        Vector2 max = materialCoefficientStatic * normalForce.normalized;
-
-        if (-opposingForce.sqrMagnitude < max.sqrMagnitude)
+        if (opposingForce.SqrMagnitude() < frictionForce.SqrMagnitude())
         {
             return -opposingForce;
         }
         else
         {
-            return -materialCoefficientStatic * normalForce;
+            return -frictionForce;
         }
     }
 
