@@ -22,23 +22,22 @@ public class ForceGenerator : MonoBehaviour
     // f_friction_s = -f_opposing if less than coeff*|f_normal|, else -coeff*f_normal (max amount is )
     public static Vector2 GenerateForce_FrictionStatic(Vector2 normalForce, Vector2 opposingForce, float materialCoefficientStatic)
     {
-        Vector2 frictionForce = materialCoefficientStatic * normalForce;
+        float frictionForceMax = materialCoefficientStatic * normalForce.magnitude;
 
-        if (opposingForce.SqrMagnitude() < frictionForce.SqrMagnitude())
+        if (opposingForce.magnitude < frictionForceMax)
         {
             return -opposingForce;
         }
         else
         {
-            return -frictionForce;
+            return materialCoefficientStatic * opposingForce * frictionForceMax;
         }
     }
 
     // f_friction_k = -coeff*|f_normal| * unit(vel)
     public static Vector2 GenerateForce_FrictionKinetic(Vector2 normalForce, Vector2 particleVelocity, float materialCoefficientKinetic)
     {
-        // Gotta check what |---| means and change normalForce.normalize
-        return -materialCoefficientKinetic * normalForce.normalized * particleVelocity.normalized;
+        return -materialCoefficientKinetic * normalForce.magnitude * particleVelocity.normalized;
     }
 
     // f_drag = (p * u^2 * area * coeff)/2

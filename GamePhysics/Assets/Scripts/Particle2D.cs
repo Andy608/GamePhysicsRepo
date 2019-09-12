@@ -19,6 +19,7 @@ public class Particle2D : MonoBehaviour
     [SerializeField] [Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
 
     [SerializeField] [Range(0.0f, 20.0f)] private float frictionStatic = 0.75f;
+    [SerializeField] [Range(0.0f, 20.0f)] private float frictionKinetic = 0.75f;
 
     [SerializeField] private float startingMass = 1.0f;
 
@@ -122,12 +123,15 @@ public class Particle2D : MonoBehaviour
         Vector2 gravitationalForce = ForceGenerator.GenerateForce_Gravity(mass, -9.8f, Vector2.up);
         Vector2 normalForce = ForceGenerator.GenerateForce_Normal(-gravitationalForce, testFloor.transform.up);
         Vector2 slideForce = ForceGenerator.GenerateForce_Sliding(gravitationalForce, normalForce);
-        Vector2 frictionStaticForce = ForceGenerator.GenerateForce_FrictionStatic(normalForce, -slideForce, frictionStatic);
-        Debug.Log(frictionStaticForce);
+        Vector2 frictionStaticForce = ForceGenerator.GenerateForce_FrictionStatic(normalForce, slideForce, frictionStatic);
+        Vector2 frictionKineticForce = ForceGenerator.GenerateForce_FrictionKinetic(normalForce, velocity, frictionKinetic);
+        //Debug.Log(frictionStaticForce);
         //AddForce(gravitationalForce);
         //AddForce(normalForce);
+
         AddForce(slideForce);
         AddForce(frictionStaticForce);
+        //AddForce(frictionKineticForce);
         //AddForce(normalForce);
         //AddForce(gravitationalForce);
 

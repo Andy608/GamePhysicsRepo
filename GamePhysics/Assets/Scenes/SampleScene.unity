@@ -424,8 +424,9 @@ MonoBehaviour:
   rotationType: 1
   scaleX: 2
   rotAccZ: 0
-  frictionStatic: 5
-  startingMass: 1
+  frictionStatic: 20
+  frictionKinetic: 0
+  startingMass: 0.87
 --- !u!65 &1643873798
 BoxCollider:
   m_ObjectHideFlags: 0
