@@ -32,7 +32,7 @@ public class ForceGenerator : MonoBehaviour
         }
         else
         {
-            return  -opposingForce * frictionForceMax/oppMag;
+            return  -opposingForce * frictionForceMax / oppMag;
         }
     }
 
@@ -42,15 +42,49 @@ public class ForceGenerator : MonoBehaviour
         return -materialCoefficientKinetic * normalForce.magnitude * particleVelocity.normalized;
     }
 
+    public static Vector2 GenerateForce_Friction(Vector2 normalForce, Vector2 opposingForce, Vector2 particleVelocity, 
+        float materialCoefficientStatic, float materialCofficientKinetic)
+    {
+        Vector2 frictionForce = Vector2.zero;
+
+        if (particleVelocity.SqrMagnitude() <= 0.0f)
+        {
+            frictionForce = GenerateForce_FrictionStatic(normalForce, opposingForce, materialCoefficientStatic);
+        }
+        else
+        {
+            frictionForce = GenerateForce_FrictionKinetic(normalForce, particleVelocity, materialCofficientKinetic);
+        }
+
+        return frictionForce;
+    }
+
     // f_drag = (p * u^2 * area * coeff)/2
     public static Vector2 GenerateForce_Drag(Vector2 particleVelocity, Vector2 fluidVelocity, float fluidDensity, float objectArea_crossSection, float objectDragCoefficient)
     {
-        return Vector2.zero;
+        return 0.5f * fluidDensity * fluidVelocity * fluidVelocity * objectArea_crossSection * objectDragCoefficient;
+        //return Vector2.zero;
     }
 
     // f_spring = -coeff*(spring length - spring resting length)
     public static Vector2 GenerateForce_Spring(Vector2 particlePosition, Vector2 anchorPosition, float springRestingLength, float springStiffnessCoefficient)
     {
-        return Vector2.zero;
+        Vector2 currentEndPos = (particlePosition - anchorPosition);
+        Vector2 restingEndPos = currentEndPos.normalized * springRestingLength;
+        Vector2 springDiff = currentEndPos - restingEndPos;
+
+        return -springStiffnessCoefficient * springDiff;
+    }
+
+    public static Vector2 GenerateForce_DampSpring(float mass, Vector2 particlePosition, Vector2 particleVelocity, float springStiffnessCoefficient, float dragCoefficient)
+    {
+        float y = 0.5f * Mathf.Sqrt(4 * springStiffnessCoefficient - dragCoefficient * dragCoefficient);
+        Vector2 c = ((dragCoefficient / 2.0f * y) * particlePosition) + ((1 / y) * particleVelocity);
+
+        Vector2 target = (particlePosition * Mathf.Cos(y * Time.deltaTime) + c * Mathf.Sin(y * Time.deltaTime)) * Mathf.Exp(-0.5f * Time.deltaTime);
+
+        Vector2 acceleration = (target - particlePosition) * (1.0f / Time.deltaTime * Time.deltaTime) - particleVelocity * Time.deltaTime;
+
+        return acceleration * mass;
     }
 }

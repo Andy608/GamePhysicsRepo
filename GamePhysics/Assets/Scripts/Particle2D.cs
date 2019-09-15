@@ -11,6 +11,7 @@ public class Particle2D : MonoBehaviour
     //[SerializeField] public MyDelegate myDelegate;
 
     public GameObject testFloor = null;
+    public Transform testSpringAnchor = null;
 
     [SerializeField] private PosIntegrationType positionType = PosIntegrationType.EulerExplicit;
     [SerializeField] private RotIntegrationType rotationType = RotIntegrationType.EulerExplicit;
@@ -18,8 +19,11 @@ public class Particle2D : MonoBehaviour
     [SerializeField] [Range(0.0f, 10.0f)] private float scaleX = 1.0f;
     [SerializeField] [Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
 
-    [SerializeField] [Range(0.0f, 20.0f)] private float frictionStatic = 0.75f;
-    [SerializeField] [Range(0.0f, 20.0f)] private float frictionKinetic = 0.75f;
+    [SerializeField] [Range(0.0f, 1.0f)] private float frictionStatic = 0.75f;
+    [SerializeField] [Range(0.0f, 1.0f)] private float frictionKinetic = 0.75f;
+
+    [SerializeField] [Range(0.0f, 1.0f)] private float springRestingLength = 0.3f;
+    [SerializeField] [Range(0.0f, 10.0f)] private float springStrength = 1.0f;
 
     [SerializeField] private float startingMass = 1.0f;
 
@@ -123,17 +127,18 @@ public class Particle2D : MonoBehaviour
         Vector2 gravitationalForce = ForceGenerator.GenerateForce_Gravity(mass, -9.8f, Vector2.up);
         Vector2 normalForce = ForceGenerator.GenerateForce_Normal(-gravitationalForce, testFloor.transform.up);
         Vector2 slideForce = ForceGenerator.GenerateForce_Sliding(gravitationalForce, normalForce);
-        Vector2 frictionStaticForce = ForceGenerator.GenerateForce_FrictionStatic(normalForce, slideForce, frictionStatic);
-        Vector2 frictionKineticForce = ForceGenerator.GenerateForce_FrictionKinetic(normalForce, velocity, frictionKinetic);
-        //Debug.Log(frictionStaticForce);
-        //AddForce(gravitationalForce);
-        //AddForce(normalForce);
+        Vector2 frictionForce = ForceGenerator.GenerateForce_Friction(normalForce, slideForce, velocity, frictionStatic, frictionKinetic);
+        Vector2 dragForce = ForceGenerator.GenerateForce_Drag(velocity, new Vector2(0.2f, 0.0f), 10.0f, 10.0f, 4.0f);
+        Vector2 springForce = ForceGenerator.GenerateForce_Spring(transform.position, testSpringAnchor.position, springRestingLength, springStrength);
+        Vector2 springDampForce = ForceGenerator.GenerateForce_DampSpring(mass, transform.position, velocity, springStrength, 2.0f);
 
-        AddForce(slideForce);
-        AddForce(frictionStaticForce);
-        //AddForce(frictionKineticForce);
-        //AddForce(normalForce);
-        //AddForce(gravitationalForce);
+        //AddForce(slideForce);
+        //AddForce(frictionForce);
+
+        AddForce(gravitationalForce);
+        AddForce(springForce);
+        //AddForce(springDampForce);
+        //AddForce(dragForce);
 
         //clamps rotation to 360
         SetRotation(rotation %= 360.0f);
