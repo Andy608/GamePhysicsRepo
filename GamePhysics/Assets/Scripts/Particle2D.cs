@@ -66,6 +66,7 @@ public class Particle2D : MonoBehaviour
     private void Start()
     {
         Mass = startingMass;
+        position = transform.position;
         //Reset();
     }
 
@@ -129,15 +130,17 @@ public class Particle2D : MonoBehaviour
         Vector2 slideForce = ForceGenerator.GenerateForce_Sliding(gravitationalForce, normalForce);
         Vector2 frictionForce = ForceGenerator.GenerateForce_Friction(normalForce, slideForce, velocity, frictionStatic, frictionKinetic);
         Vector2 dragForce = ForceGenerator.GenerateForce_Drag(velocity, new Vector2(0.2f, 0.0f), 10.0f, 10.0f, 4.0f);
-        Vector2 springForce = ForceGenerator.GenerateForce_Spring(transform.position, testSpringAnchor.position, springRestingLength, springStrength);
-        Vector2 springDampForce = ForceGenerator.GenerateForce_DampSpring(mass, transform.position, velocity, springStrength, 2.0f);
-
+        Vector2 springForce = ForceGenerator.GenerateForce_Spring(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength);
+        Vector2 springDampForce = ForceGenerator.GenerateForce_SpringDamping(mass, velocity, springStrength, 5.0f);
+          
         //AddForce(slideForce);
         //AddForce(frictionForce);
 
         AddForce(gravitationalForce);
+
         AddForce(springForce);
-        //AddForce(springDampForce);
+        AddForce(springDampForce);
+
         //AddForce(dragForce);
 
         //clamps rotation to 360
