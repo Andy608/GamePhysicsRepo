@@ -15,6 +15,7 @@ public class Particle2D : MonoBehaviour
 
     [SerializeField] private PosIntegrationType positionType = PosIntegrationType.EulerExplicit;
     [SerializeField] private RotIntegrationType rotationType = RotIntegrationType.EulerExplicit;
+    [SerializeField] private ForceType forceType = ForceType.gravity;
 
     [SerializeField] [Range(0.0f, 10.0f)] private float scaleX = 1.0f;
     [SerializeField] [Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
@@ -22,8 +23,10 @@ public class Particle2D : MonoBehaviour
     [SerializeField] [Range(0.0f, 1.0f)] private float frictionStatic = 0.75f;
     [SerializeField] [Range(0.0f, 1.0f)] private float frictionKinetic = 0.75f;
 
-    [SerializeField] [Range(0.0f, 1.0f)] private float springRestingLength = 0.3f;
-    [SerializeField] [Range(0.0f, 10.0f)] private float springStrength = 1.0f;
+    [SerializeField] [Range(1.0f, 1.0f)] private float springRestingLength = 0.3f;
+    [SerializeField] [Range(0.0f, 8.0f)] private float springStrength = 1.0f;
+
+    [SerializeField] [Range(1.0f, 8.0f)] private float maxSpringLength = 1.0f;
 
     [SerializeField] private float startingMass = 1.0f;
 
@@ -132,16 +135,44 @@ public class Particle2D : MonoBehaviour
         Vector2 dragForce = ForceGenerator.GenerateForce_Drag(velocity, new Vector2(0.2f, 0.0f), 10.0f, 10.0f, 4.0f);
         Vector2 springForce = ForceGenerator.GenerateForce_Spring(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength);
         Vector2 springDampForce = ForceGenerator.GenerateForce_SpringDamping(mass, velocity, springStrength, 5.0f);
-          
-        //AddForce(slideForce);
-        //AddForce(frictionForce);
+        Vector2 springMaxLengthForce = ForceGenerator.GenerateForce_SpringWithMax(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength, maxSpringLength);
 
-        AddForce(gravitationalForce);
 
-        AddForce(springForce);
-        AddForce(springDampForce);
-
-        //AddForce(dragForce);
+        switch (forceType)
+        {
+            case ForceType.gravity:
+                AddForce(gravitationalForce);
+                break;
+            case ForceType.normal:
+                AddForce(normalForce);
+                break;
+            case ForceType.slide:
+                AddForce(slideForce);
+                break;
+            case ForceType.friction:
+                AddForce(slideForce);
+                AddForce(frictionForce);
+                break;
+            case ForceType.drag:
+                AddForce(dragForce);
+                break;
+            case ForceType.spring:
+                AddForce(springForce);
+                break;
+            case ForceType.springDamping:
+                AddForce(springForce);
+                AddForce(springDampForce);
+                AddForce(gravitationalForce);
+                break;
+            case ForceType.springWithMaxLength:
+                AddForce(springMaxLengthForce);
+                AddForce(springDampForce);
+                AddForce(gravitationalForce);
+                break;
+            default:
+                AddForce(gravitationalForce);
+                break;
+        }
 
         //clamps rotation to 360
         SetRotation(rotation %= 360.0f);
@@ -211,5 +242,17 @@ public class Particle2D : MonoBehaviour
     {
         Kinematic,
         EulerExplicit
+    }
+
+    public enum ForceType
+    {
+        gravity,
+        normal,
+        slide,
+        friction,
+        drag,
+        spring,
+        springDamping,
+        springWithMaxLength
     }
 }

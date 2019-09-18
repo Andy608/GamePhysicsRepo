@@ -80,10 +80,27 @@ public class ForceGenerator : MonoBehaviour
         }
 
         return force;
+    }
 
-        //Vector2 restingEndPos = currentEndPos * springRestingLength / mag;
-        //Vector2 springDiff = currentEndPos - restingEndPos;
-        //return -springStiffnessCoefficient * springDiff;
+    public static Vector2 GenerateForce_SpringWithMax(Vector2 particlePosition, Vector2 anchorPosition, float springRestingLength, float springStiffnessCoefficient, float maxSpringLength)
+    {
+        Vector2 currentEndPos = (particlePosition - anchorPosition);
+
+        if (currentEndPos.magnitude > maxSpringLength)
+        {
+            springStiffnessCoefficient *= 0.3f;
+        }
+
+        float mag = currentEndPos.magnitude;
+        float amount = -springStiffnessCoefficient * (mag - springRestingLength);
+        Vector2 force = Vector2.zero;
+
+        if (mag > 0.0f)
+        {
+            force = (currentEndPos * amount / mag);
+        }
+
+        return force;
     }
 
     public static Vector2 GenerateForce_SpringDamping(float mass, Vector2 velocity, float springStiffnessCoefficient, float damping)
@@ -93,24 +110,24 @@ public class ForceGenerator : MonoBehaviour
         return (-c * velocity) / damping;
     }
 
-    public static Vector2 GenerateForce_DampSpring(float mass, Vector2 particlePosition, Vector2 anchorPosition, Vector2 particleVelocity, float springStiffnessCoefficient, float dragCoefficient)
-    {
-        if (Time.time == 0.0f)
-            return Vector2.zero;
-
-        Vector2 particleToAnchor = (particlePosition - anchorPosition);
-
-        float y = 0.5f * Mathf.Sqrt((4.0f * springStiffnessCoefficient) - (dragCoefficient * dragCoefficient));
-
-        if (y == 0)
-            return Vector2.zero;
-
-        Vector2 c = (particleToAnchor * (dragCoefficient / (2.0f * y))) + (particleVelocity * (1.0f / y));
-
-        Vector2 target = (((particleToAnchor * Mathf.Cos(y * Time.time)) + (c * Mathf.Sin(y * Time.time)))) * Mathf.Exp(-0.5f * Time.time * dragCoefficient);
-
-        Vector2 acceleration = (target - particleToAnchor) * (1.0f / Time.time * Time.time) - (particleVelocity * Time.time);
-
-        return acceleration * mass;
-    }
+    //public static Vector2 GenerateForce_DampSpring(float mass, Vector2 particlePosition, Vector2 anchorPosition, Vector2 particleVelocity, float springStiffnessCoefficient, float dragCoefficient)
+    //{
+    //    if (Time.time == 0.0f)
+    //        return Vector2.zero;
+    //
+    //    Vector2 particleToAnchor = (particlePosition - anchorPosition);
+    //
+    //    float y = 0.5f * Mathf.Sqrt((4.0f * springStiffnessCoefficient) - (dragCoefficient * dragCoefficient));
+    //
+    //    if (y == 0)
+    //        return Vector2.zero;
+    //
+    //    Vector2 c = (particleToAnchor * (dragCoefficient / (2.0f * y))) + (particleVelocity * (1.0f / y));
+    //
+    //    Vector2 target = (((particleToAnchor * Mathf.Cos(y * Time.time)) + (c * Mathf.Sin(y * Time.time)))) * Mathf.Exp(-0.5f * Time.time * dragCoefficient);
+    //
+    //    Vector2 acceleration = (target - particleToAnchor) * (1.0f / Time.time * Time.time) - (particleVelocity * Time.time);
+    //
+    //    return acceleration * mass;
+    //}
 }
