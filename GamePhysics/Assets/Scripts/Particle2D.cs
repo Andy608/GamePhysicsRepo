@@ -4,16 +4,52 @@ using UnityEngine;
 
 public class Particle2D : MonoBehaviour
 {
-    //Used to swap what physics function is used
-    public delegate void MyDelegate(float dt);
-    [SerializeField] public MyDelegate myDelegate;
+    private Vector2 Gravity = new Vector2(0.0f, -10.0f);
 
-    [SerializeField]private PosIntegrationType physPos;
-    [SerializeField] private RotIntegrationType physRot;
-    [SerializeField][Range(0.0f, 10.0f)] private float scaleX = 1.0f;
-    [SerializeField][Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
+    ////Used to swap what physics function is used
+    //public delegate void MyDelegate(float dt);
+    //[SerializeField] public MyDelegate myDelegate;
+
+    public GameObject testFloor = null;
+    public Transform testSpringAnchor = null;
+
+    [SerializeField] private PosIntegrationType positionType = PosIntegrationType.EulerExplicit;
+    [SerializeField] private RotIntegrationType rotationType = RotIntegrationType.EulerExplicit;
+    [SerializeField] private ForceType forceType = ForceType.gravity;
+
+    [SerializeField] [Range(0.0f, 10.0f)] private float scaleX = 1.0f;
+    [SerializeField] [Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
+
+    [SerializeField] [Range(0.0f, 1.0f)] private float frictionStatic = 0.75f;
+    [SerializeField] [Range(0.0f, 1.0f)] private float frictionKinetic = 0.75f;
+
+    [SerializeField] [Range(1.0f, 1.0f)] private float springRestingLength = 0.3f;
+    [SerializeField] [Range(0.0f, 8.0f)] private float springStrength = 1.0f;
+
+    [SerializeField] [Range(1.0f, 8.0f)] private float maxSpringLength = 1.0f;
+
+    [SerializeField] private float startingMass = 1.0f;
 
     private float prevScaleX;
+
+    public float Mass
+    {
+        get
+        {
+            return mass;
+        }
+
+        private set
+        {
+            mass = value > 0.0f ? value : 0.0f;
+            MassInv = mass > 0.0f ? 1.0f / mass : 0.0f;
+        }
+    }
+
+    private float mass = 1.0f;
+
+    public float MassInv { get; private set; }
+    private Vector2 force = Vector2.zero;
 
     private Vector2 position;
     private Vector2 velocity;
@@ -24,21 +60,140 @@ public class Particle2D : MonoBehaviour
     private float rotAcceleration;
     private Vector3 helperRot;
 
+    public void AddForce(Vector2 newForce)
+    {
+        //D'Alembert
+        force += newForce;
+    }
+
     private void Start()
     {
-        Reset();
+        Mass = startingMass;
+        position = transform.position;
+        //Reset();
     }
 
     /// <summary>
     /// Supposed to reset the particle to a default state.
     /// </summary>
-    private void Reset()
+    private void Init()
     {
         position = Vector2.zero;
         acceleration = Vector2.zero;
         velocity = Vector2.zero;
-        velocity.x = scaleX;
+        //velocity.x = scaleX;
         prevScaleX = scaleX;
+    }
+
+    /// <summary>
+    /// Integrates the particles rotation using the kinematic formula
+    /// </summary>
+    /// <param name="dt"></param>
+    private void UpdateRotationKinematic(float dt)
+    {
+        rotation += rotVelocity * dt + 0.5f * rotAcceleration * dt * dt;
+        rotVelocity += rotAcceleration * dt;
+    }
+
+    private void FixedUpdate()
+    {
+        //TODO: Reset to default if the scaleX slider was changed, currently doesn't work
+        if (scaleX != prevScaleX)
+        {
+            //WHY DOESN'T THIS RESET THE SIN WAVE?
+            //Reset();
+        }
+
+        switch (positionType)
+        {
+            case PosIntegrationType.EulerExplicit:
+                UpdatePositionEulerExplicit(Time.fixedDeltaTime);
+                break;
+            default:
+                UpdatePositionKinematic(Time.fixedDeltaTime);
+                break;
+        }
+
+        switch (rotationType)
+        {
+            case RotIntegrationType.EulerExplicit:
+                UpdateRotationEulerExplicit(Time.fixedDeltaTime);
+                break;
+            default:
+                UpdateRotationKinematic(Time.fixedDeltaTime);
+                break;
+        }
+
+        UpdateAcceleration();
+
+        transform.position = position;
+
+        Vector2 gravitationalForce = ForceGenerator.GenerateForce_Gravity(mass, -9.8f, Vector2.up);
+        Vector2 normalForce = ForceGenerator.GenerateForce_Normal(-gravitationalForce, testFloor.transform.up);
+        Vector2 slideForce = ForceGenerator.GenerateForce_Sliding(gravitationalForce, normalForce);
+        Vector2 frictionForce = ForceGenerator.GenerateForce_Friction(normalForce, slideForce, velocity, frictionStatic, frictionKinetic);
+        Vector2 dragForce = ForceGenerator.GenerateForce_Drag(velocity, new Vector2(0.2f, 0.0f), 10.0f, 10.0f, 4.0f);
+        Vector2 springForce = ForceGenerator.GenerateForce_Spring(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength);
+        Vector2 springDampForce = ForceGenerator.GenerateForce_SpringDamping(mass, velocity, springStrength, 5.0f);
+        Vector2 springMaxLengthForce = ForceGenerator.GenerateForce_SpringWithMax(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength, maxSpringLength);
+
+
+        switch (forceType)
+        {
+            case ForceType.gravity:
+                AddForce(gravitationalForce);
+                break;
+            case ForceType.normal:
+                AddForce(normalForce);
+                break;
+            case ForceType.slide:
+                AddForce(slideForce);
+                break;
+            case ForceType.friction:
+                AddForce(slideForce);
+                AddForce(frictionForce);
+                break;
+            case ForceType.drag:
+                AddForce(dragForce);
+                break;
+            case ForceType.spring:
+                AddForce(springForce);
+                break;
+            case ForceType.springDamping:
+                AddForce(springForce);
+                AddForce(springDampForce);
+                AddForce(gravitationalForce);
+                break;
+            case ForceType.springWithMaxLength:
+                AddForce(springMaxLengthForce);
+                AddForce(springDampForce);
+                AddForce(gravitationalForce);
+                break;
+            default:
+                AddForce(gravitationalForce);
+                break;
+        }
+
+        //clamps rotation to 360
+        SetRotation(rotation %= 360.0f);
+        rotAcceleration = rotAccZ;
+    }
+
+    /// <summary>
+    /// Sets rotation of euler angle without creating new vectors
+    /// </summary>
+    /// <param name="rot"></param>
+    private void SetRotation(float rot)
+    {
+        helperRot = transform.eulerAngles;
+        helperRot.z = rot;
+        transform.eulerAngles = helperRot;
+    }
+
+    private void UpdateAcceleration()
+    {
+        acceleration = force * MassInv;
+        force = Vector2.zero;
     }
 
     /// <summary>
@@ -72,68 +227,6 @@ public class Particle2D : MonoBehaviour
     }
 
     /// <summary>
-    /// Integrates the particles rotation using the kinematic formula
-    /// </summary>
-    /// <param name="dt"></param>
-    private void UpdateRotationKinematic(float dt)
-    {
-        rotation += rotVelocity * dt + 0.5f * rotAcceleration * dt * dt;
-        rotVelocity += rotAcceleration * dt;
-    }
-
-    private void FixedUpdate()
-    {
-        //TODO: Reset to default if the scaleX slider was changed, currently doesn't work
-        if (scaleX != prevScaleX)
-        {
-            //WHY DOESN'T THIS RESET THE SIN WAVE?
-            Reset();
-        }
-
-        //Uses the selected integration method to use for position
-        if (physPos == PosIntegrationType.EulerExplicit)
-        {
-            myDelegate = UpdatePositionEulerExplicit;
-        }
-        else if (physPos == PosIntegrationType.Kinematic)
-        {
-            myDelegate = UpdatePositionKinematic;
-        }
-        myDelegate(Time.fixedDeltaTime);
-
-        //Uses the selected integration method to use for rotation
-        if (physRot == RotIntegrationType.EulerExplicit)
-        {
-            myDelegate = UpdateRotationEulerExplicit;
-        }
-        else  if (physRot == RotIntegrationType.Kinematic)
-        {
-            myDelegate = UpdateRotationKinematic;
-        }
-        myDelegate(Time.fixedDeltaTime);
-        
-        transform.position = position;
-
-        //clamps rotation to 360
-        SetRotation(rotation %= 360.0f);
-
-        acceleration.x = scaleX * -Mathf.Sin(Time.time);
-
-        rotAcceleration = rotAccZ;
-    }
-
-    /// <summary>
-    /// Sets rotation of euler angle without creating new vectors
-    /// </summary>
-    /// <param name="rot"></param>
-    private void SetRotation(float rot)
-    {
-        helperRot = transform.eulerAngles;
-        helperRot.z = rot;
-        transform.eulerAngles = helperRot;
-    }
-
-    /// <summary>
     /// Enum for Position Integration Type
     /// </summary>
     public enum PosIntegrationType
@@ -149,5 +242,17 @@ public class Particle2D : MonoBehaviour
     {
         Kinematic,
         EulerExplicit
+    }
+
+    public enum ForceType
+    {
+        gravity,
+        normal,
+        slide,
+        friction,
+        drag,
+        spring,
+        springDamping,
+        springWithMaxLength
     }
 }
