@@ -60,6 +60,23 @@ public class Particle2D : MonoBehaviour
     private float rotAcceleration;
     private Vector3 helperRot;
 
+    //lab3
+    [SerializeField] [Range(1.0f, 5.0f)] private float momentOfInertia = 0;
+    private float momentOfInertiaInv;
+
+    [SerializeField] private float torque = 0.0f;
+	private float angularAccel = 0;
+
+    public ParticleShape particleShape = ParticleShape.disk;
+    public enum ParticleShape
+    {
+        disk,
+        ring,
+        rectangle,
+        thinRod,
+        other
+    }
+
     public void AddForce(Vector2 newForce)
     {
         //D'Alembert
@@ -71,6 +88,35 @@ public class Particle2D : MonoBehaviour
         Mass = startingMass;
         position = transform.position;
         //Reset();
+
+        //lab3
+        switch (particleShape)
+        {
+            case ParticleShape.disk:
+                //inertia = 0.5 * mass * (radius^2)
+                break;
+            case ParticleShape.ring:
+                //inertia = 0.5 * mass * (radiusOuter^2 + radiusInner^2)
+                break;
+            case ParticleShape.rectangle:
+                //inertia = (0.083) * mass * (xLength^2 + yLength^2)
+                break;
+            case ParticleShape.thinRod:
+                //inertia = (0.083) * mass * length^2
+                break;
+            case ParticleShape.other:
+                print("You've fallen into my trap!");
+                int zero = 0;
+                int fuckU = 4 / zero;
+                break;
+
+            default:
+                break;
+        }
+
+
+        momentOfInertia = momentOfInertia > 0.0f ? momentOfInertia : 0.0f;
+        momentOfInertiaInv = momentOfInertia > 0.0f ? 1.0f / momentOfInertia : 0.0f;
     }
 
     /// <summary>
@@ -169,6 +215,9 @@ public class Particle2D : MonoBehaviour
                 AddForce(springDampForce);
                 AddForce(gravitationalForce);
                 break;
+            case ForceType.none:
+                Debug.Log("We ain't movin chief.");
+                break;
             default:
                 AddForce(gravitationalForce);
                 break;
@@ -226,6 +275,27 @@ public class Particle2D : MonoBehaviour
         rotVelocity += rotAcceleration * dt;
     }
 
+    //lab3
+    private void UpdateAngularAcceleration()
+    {
+		//angularAcceleration = Inertia^-1 * Torque
+		angularAccel = momentOfInertiaInv * torque;
+		torque = 0;
+    }
+
+	/// <summary>
+	/// Adds torque to the aggrgate torque
+	/// </summary>
+	/// <param name="pointApplied"> Like a point, but applied! </param>
+	/// <param name="forceApplied"></param>
+    private void ApplyTorque(Vector2 pointApplied, Vector2 forceApplied)
+    {
+		//Torque = pointOfForceRelativeToCenterMass X forceApplied
+		float miniTorque = 0;
+		miniTorque = pointApplied.x * forceApplied.x - pointApplied.y * forceApplied.y;
+		torque += miniTorque;
+    }
+
     /// <summary>
     /// Enum for Position Integration Type
     /// </summary>
@@ -253,6 +323,7 @@ public class Particle2D : MonoBehaviour
         drag,
         spring,
         springDamping,
-        springWithMaxLength
+        springWithMaxLength,
+        none
     }
 }
