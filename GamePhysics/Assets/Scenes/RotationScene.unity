@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -229,8 +229,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3064e8ffe6e3784ba157e31681b1d0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  testFloor: {fileID: 1375486389}
+  testSpringAnchor: {fileID: 442235761}
   positionType: 1
   rotationType: 1
+  forceType: 8
+  scaleX: 1
+  rotAccZ: 0
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
   startingMass: 5
   pointApplied: {x: 1, y: 0}
   forceApplied: {x: 0, y: 5}
@@ -328,8 +338,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3064e8ffe6e3784ba157e31681b1d0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  testFloor: {fileID: 1375486389}
+  testSpringAnchor: {fileID: 526343348}
   positionType: 1
   rotationType: 1
+  forceType: 8
+  scaleX: 1
+  rotAccZ: 0
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
   startingMass: 5
   pointApplied: {x: -1, y: 1}
   forceApplied: {x: 2, y: 0}
@@ -600,11 +620,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3064e8ffe6e3784ba157e31681b1d0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  testFloor: {fileID: 1375486389}
+  testSpringAnchor: {fileID: 1329122599}
   positionType: 1
   rotationType: 1
+  forceType: 8
+  scaleX: 1
+  rotAccZ: 0
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
   startingMass: 5
-  pointApplied: {x: 0, y: -5}
-  forceApplied: {x: 2, y: 0}
+  pointApplied: {x: -5, y: 0}
+  forceApplied: {x: 0, y: -2}
   centerOfMass: {x: 0, y: 2}
   particleShape: 3
 --- !u!23 &1329122597
@@ -791,8 +821,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3064e8ffe6e3784ba157e31681b1d0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  testFloor: {fileID: 1375486389}
+  testSpringAnchor: {fileID: 1689758197}
   positionType: 1
   rotationType: 1
+  forceType: 8
+  scaleX: 1
+  rotAccZ: 0
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
   startingMass: 5
   pointApplied: {x: 2, y: -1}
   forceApplied: {x: 0, y: 2}

@@ -6,22 +6,22 @@ public class Particle2D : MonoBehaviour
 {
     private static Vector2 Gravity = new Vector2(0.0f, -10.0f);
 
-    //[SerializeField] private GameObject testFloor = null;
-    //[SerializeField] private Transform testSpringAnchor = null;
+    [SerializeField] private GameObject testFloor = null;
+    [SerializeField] private Transform testSpringAnchor = null;
 
     [SerializeField] private PosIntegrationType positionType = PosIntegrationType.EulerExplicit;
     [SerializeField] private RotIntegrationType rotationType = RotIntegrationType.EulerExplicit;
-    //[SerializeField] private ForceType forceType = ForceType.gravity;
+	[SerializeField] private ForceType forceType = ForceType.gravity;
 
-    //[SerializeField] [Range(0.0f, 10.0f)] private float scaleX = 1.0f;
-    //[SerializeField] [Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
-    //[SerializeField] [Range(0.0f, 1.0f)] private float frictionStatic = 0.75f;
-    //[SerializeField] [Range(0.0f, 1.0f)] private float frictionKinetic = 0.75f;
-    //[SerializeField] [Range(1.0f, 1.0f)] private float springRestingLength = 0.3f;
-    //[SerializeField] [Range(0.0f, 8.0f)] private float springStrength = 1.0f;
-    //[SerializeField] [Range(1.0f, 8.0f)] private float maxSpringLength = 1.0f;
+	[SerializeField] [Range(0.0f, 10.0f)] private float scaleX = 1.0f;
+	[SerializeField] [Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
+	[SerializeField] [Range(0.0f, 1.0f)] private float frictionStatic = 0.75f;
+	[SerializeField] [Range(0.0f, 1.0f)] private float frictionKinetic = 0.75f;
+	[SerializeField] [Range(1.0f, 1.0f)] private float springRestingLength = 0.3f;
+	[SerializeField] [Range(0.0f, 8.0f)] private float springStrength = 1.0f;
+	[SerializeField] [Range(1.0f, 8.0f)] private float maxSpringLength = 1.0f;
 
-    [SerializeField] private float startingMass = 1.0f;
+	[SerializeField] private float startingMass = 1.0f;
 
     public float Mass { get { return mass; } private set { mass = value > 0.0f ? value : 0.0f; MassInv = mass > 0.0f ? 1.0f / mass : 0.0f; } }
     private float mass = 1.0f;
@@ -147,61 +147,62 @@ public class Particle2D : MonoBehaviour
                 break;
         }
 
+		//lab03
         UpdateAngularAcceleration();
         UpdateAcceleration();
 
         transform.position = position;
 
-        //Vector2 gravitationalForce = ForceGenerator.GenerateForce_Gravity(mass, -9.8f, Vector2.up);
-        //Vector2 normalForce = ForceGenerator.GenerateForce_Normal(-gravitationalForce, testFloor.transform.up);
-        //Vector2 slideForce = ForceGenerator.GenerateForce_Sliding(gravitationalForce, normalForce);
-        //Vector2 frictionForce = ForceGenerator.GenerateForce_Friction(normalForce, slideForce, velocity, frictionStatic, frictionKinetic);
-        //Vector2 dragForce = ForceGenerator.GenerateForce_Drag(velocity, new Vector2(0.2f, 0.0f), 10.0f, 10.0f, 4.0f);
-        //Vector2 springForce = ForceGenerator.GenerateForce_Spring(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength);
-        //Vector2 springDampForce = ForceGenerator.GenerateForce_SpringDamping(mass, velocity, springStrength, 5.0f);
-        //Vector2 springMaxLengthForce = ForceGenerator.GenerateForce_SpringWithMax(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength, maxSpringLength);
+        Vector2 gravitationalForce = ForceGenerator.GenerateForce_Gravity(mass, -9.8f, Vector2.up);
+        Vector2 normalForce = ForceGenerator.GenerateForce_Normal(-gravitationalForce, testFloor.transform.up);
+        Vector2 slideForce = ForceGenerator.GenerateForce_Sliding(gravitationalForce, normalForce);
+        Vector2 frictionForce = ForceGenerator.GenerateForce_Friction(normalForce, slideForce, velocity, frictionStatic, frictionKinetic);
+        Vector2 dragForce = ForceGenerator.GenerateForce_Drag(velocity, new Vector2(0.2f, 0.0f), 10.0f, 10.0f, 4.0f);
+        Vector2 springForce = ForceGenerator.GenerateForce_Spring(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength);
+        Vector2 springDampForce = ForceGenerator.GenerateForce_SpringDamping(mass, velocity, springStrength, 5.0f);
+        Vector2 springMaxLengthForce = ForceGenerator.GenerateForce_SpringWithMax(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength, maxSpringLength);
 
-        //switch (forceType)
-        //{
-            //case ForceType.gravity:
-                //AddForce(gravitationalForce);
-                //break;
-            //case ForceType.normal:
-                //AddForce(normalForce);
-                //break;
-            //case ForceType.slide:
-                //AddForce(slideForce);
-                //break;
-            //case ForceType.friction:
-                //AddForce(slideForce);
-                //AddForce(frictionForce);
-                //break;
-            //case ForceType.drag:
-                //AddForce(dragForce);
-                //break;
-            //case ForceType.spring:
-                //AddForce(springForce);
-                //break;
-            //case ForceType.springDamping:
-                //AddForce(springForce);
-                //AddForce(springDampForce);
-                //AddForce(gravitationalForce);
-                //break;
-            //case ForceType.springWithMaxLength:
-                //AddForce(springMaxLengthForce);
-                //AddForce(springDampForce);
-                //AddForce(gravitationalForce);
-                //break;
-            //case ForceType.none:
-                //Debug.Log("We ain't movin chief.");
-                //break;
-            //default:
-                //AddForce(gravitationalForce);
-                //break;
-        //}
+        switch (forceType)
+        {
+            case ForceType.gravity:
+                AddForce(gravitationalForce);
+                break;
+            case ForceType.normal:
+				AddForce(normalForce);
+				break;
+			case ForceType.slide:
+				AddForce(slideForce);
+				break;
+			case ForceType.friction:
+				AddForce(slideForce);
+				AddForce(frictionForce);
+				break;
+			case ForceType.drag:
+				AddForce(dragForce);
+				break;
+			case ForceType.spring:
+				AddForce(springForce);
+				break;
+			case ForceType.springDamping:
+				AddForce(springForce);
+				AddForce(springDampForce);
+				AddForce(gravitationalForce);
+				break;
+			case ForceType.springWithMaxLength:
+				AddForce(springMaxLengthForce);
+				AddForce(springDampForce);
+				AddForce(gravitationalForce);
+				break;
+			case ForceType.none:
+				Debug.Log("We ain't movin chief.");
+				break;
+			default:
+				AddForce(gravitationalForce);
+				break;
+		}
 
-        ApplyTorque(pointApplied, forceApplied);
-
+		//lab03		
+		ApplyTorque(pointApplied, forceApplied);
 
         //clamps rotation to 360
         SetRotation(rotation %= 360.0f);
@@ -256,26 +257,37 @@ public class Particle2D : MonoBehaviour
     }
 
     //lab3
+	/// <summary>
+	/// Update the Angular Accel from the torque
+	/// </summary>
     private void UpdateAngularAcceleration()
     {
 		//angularAcceleration = Inertia^-1 * Torque
+
+		//Apply torque to angular accel using inverse of inertia
 		angularAccel = momentOfInertiaInv * torque;
+
+		//reset torque
 		torque = 0;
     }
 
 	/// <summary>
 	/// Adds torque to the aggrgate torque
 	/// </summary>
-	/// <param name="pointApplied"> Like a point, but applied! </param>
-	/// <param name="forceApplied"></param>
+	/// <param name="pointAppliedWorld"> The point the force is applied at world space </param>
+	/// <param name="forceApplied"> Strength and direction of force applied. </param>
     private void ApplyTorque(Vector2 pointAppliedWorld, Vector2 forceApplied)
     {
 		//Torque = pointOfForceRelativeToCenterMass X forceApplied
 		float miniTorque = 0;
 
+		//Transform world space coord to local space
         Vector2 pointAppliedLocal = pointAppliedWorld - centerOfMass;
 
+		//Calculate the torqu to apply
         miniTorque = pointAppliedLocal.x * forceApplied.x - pointAppliedLocal.y * forceApplied.y;
+
+		//Add it to the aggregate torque
 		torque += miniTorque;
     }
 
