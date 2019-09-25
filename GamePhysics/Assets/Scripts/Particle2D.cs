@@ -13,8 +13,8 @@ public class Particle2D : MonoBehaviour
     [SerializeField] private RotIntegrationType rotationType = RotIntegrationType.EulerExplicit;
 	[SerializeField] private ForceType forceType = ForceType.gravity;
 
-	[SerializeField] [Range(0.0f, 10.0f)] private float scaleX = 1.0f;
-	[SerializeField] [Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
+	//[SerializeField] [Range(0.0f, 10.0f)] private float scaleX = 1.0f;
+	//[SerializeField] [Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
 	[SerializeField] [Range(0.0f, 1.0f)] private float frictionStatic = 0.75f;
 	[SerializeField] [Range(0.0f, 1.0f)] private float frictionKinetic = 0.75f;
 	[SerializeField] [Range(1.0f, 1.0f)] private float springRestingLength = 0.3f;
@@ -194,7 +194,7 @@ public class Particle2D : MonoBehaviour
 				AddForce(gravitationalForce);
 				break;
 			case ForceType.none:
-				Debug.Log("We ain't movin chief.");
+				//Debug.Log("We ain't movin chief.");
 				break;
 			default:
 				AddForce(gravitationalForce);
