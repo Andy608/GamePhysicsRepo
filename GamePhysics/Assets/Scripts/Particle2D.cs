@@ -4,48 +4,26 @@ using UnityEngine;
 
 public class Particle2D : MonoBehaviour
 {
-    private Vector2 Gravity = new Vector2(0.0f, -10.0f);
+    private static Vector2 Gravity = new Vector2(0.0f, -10.0f);
 
-    ////Used to swap what physics function is used
-    //public delegate void MyDelegate(float dt);
-    //[SerializeField] public MyDelegate myDelegate;
-
-    public GameObject testFloor = null;
-    public Transform testSpringAnchor = null;
+    [SerializeField] private GameObject testFloor = null;
+    [SerializeField] private Transform testSpringAnchor = null;
 
     [SerializeField] private PosIntegrationType positionType = PosIntegrationType.EulerExplicit;
     [SerializeField] private RotIntegrationType rotationType = RotIntegrationType.EulerExplicit;
-    [SerializeField] private ForceType forceType = ForceType.gravity;
+	[SerializeField] private ForceType forceType = ForceType.gravity;
 
-    [SerializeField] [Range(0.0f, 10.0f)] private float scaleX = 1.0f;
-    [SerializeField] [Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
+	//[SerializeField] [Range(0.0f, 10.0f)] private float scaleX = 1.0f;
+	//[SerializeField] [Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
+	[SerializeField] [Range(0.0f, 1.0f)] private float frictionStatic = 0.75f;
+	[SerializeField] [Range(0.0f, 1.0f)] private float frictionKinetic = 0.75f;
+	[SerializeField] [Range(1.0f, 1.0f)] private float springRestingLength = 0.3f;
+	[SerializeField] [Range(0.0f, 8.0f)] private float springStrength = 1.0f;
+	[SerializeField] [Range(1.0f, 8.0f)] private float maxSpringLength = 1.0f;
 
-    [SerializeField] [Range(0.0f, 1.0f)] private float frictionStatic = 0.75f;
-    [SerializeField] [Range(0.0f, 1.0f)] private float frictionKinetic = 0.75f;
+	[SerializeField] private float startingMass = 1.0f;
 
-    [SerializeField] [Range(1.0f, 1.0f)] private float springRestingLength = 0.3f;
-    [SerializeField] [Range(0.0f, 8.0f)] private float springStrength = 1.0f;
-
-    [SerializeField] [Range(1.0f, 8.0f)] private float maxSpringLength = 1.0f;
-
-    [SerializeField] private float startingMass = 1.0f;
-
-    private float prevScaleX;
-
-    public float Mass
-    {
-        get
-        {
-            return mass;
-        }
-
-        private set
-        {
-            mass = value > 0.0f ? value : 0.0f;
-            MassInv = mass > 0.0f ? 1.0f / mass : 0.0f;
-        }
-    }
-
+    public float Mass { get { return mass; } private set { mass = value > 0.0f ? value : 0.0f; MassInv = mass > 0.0f ? 1.0f / mass : 0.0f; } }
     private float mass = 1.0f;
 
     public float MassInv { get; private set; }
@@ -60,6 +38,36 @@ public class Particle2D : MonoBehaviour
     private float rotAcceleration;
     private Vector3 helperRot;
 
+    //lab3
+    private float momentOfInertia = 0;
+    private float momentOfInertiaInv;
+
+    private float torque = 0.0f;
+	private float angularAccel = 0;
+
+    private float radius = 0.5f;
+
+    private float radiusOuter = 1.0f;
+    private float radiusInner = 0.5f;
+
+    private float xLength = 1.0f;
+    private float yLength = 0.5f;
+
+    private float rodLength = 1.0f;
+
+    public Vector2 pointApplied = Vector2.zero, forceApplied = Vector2.zero;
+    public Vector2 centerOfMass = Vector2.zero;
+
+    public ParticleShape particleShape = ParticleShape.disk;
+    public enum ParticleShape
+    {
+        disk,
+        ring,
+        rectangle,
+        thinRod,
+        other
+    }
+
     public void AddForce(Vector2 newForce)
     {
         //D'Alembert
@@ -70,7 +78,31 @@ public class Particle2D : MonoBehaviour
     {
         Mass = startingMass;
         position = transform.position;
-        //Reset();
+
+        //lab3
+        switch (particleShape)
+        {
+            case ParticleShape.ring:
+                //inertia = 0.5 * mass * (radiusOuter^2 + radiusInner^2)
+                momentOfInertia = 0.5f * Mass * (radiusOuter * radiusOuter + radiusInner * radiusInner);
+                break;
+            case ParticleShape.rectangle:
+                //inertia = (0.083) * mass * (xLength^2 + yLength^2)
+                momentOfInertia = 0.083f * Mass * (xLength * xLength + yLength * yLength);
+                break;
+            case ParticleShape.thinRod:
+                //inertia = (0.083) * mass * length^2
+                momentOfInertia = 0.083f * Mass * (rodLength * rodLength);
+                break;
+            default:
+            case ParticleShape.disk:
+                //inertia = 0.5 * mass * (radius^2)
+                momentOfInertia = 0.5f * Mass * radius * radius;
+                break;
+        }
+
+        //momentOfInertia = momentOfInertia > 0.0f ? momentOfInertia : 0.0f;
+        momentOfInertiaInv = momentOfInertia > 0.0f ? 1.0f / momentOfInertia : 0.0f;
     }
 
     /// <summary>
@@ -81,8 +113,6 @@ public class Particle2D : MonoBehaviour
         position = Vector2.zero;
         acceleration = Vector2.zero;
         velocity = Vector2.zero;
-        //velocity.x = scaleX;
-        prevScaleX = scaleX;
     }
 
     /// <summary>
@@ -97,13 +127,6 @@ public class Particle2D : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //TODO: Reset to default if the scaleX slider was changed, currently doesn't work
-        if (scaleX != prevScaleX)
-        {
-            //WHY DOESN'T THIS RESET THE SIN WAVE?
-            //Reset();
-        }
-
         switch (positionType)
         {
             case PosIntegrationType.EulerExplicit:
@@ -124,6 +147,8 @@ public class Particle2D : MonoBehaviour
                 break;
         }
 
+		//lab03
+        UpdateAngularAcceleration();
         UpdateAcceleration();
 
         transform.position = position;
@@ -137,46 +162,51 @@ public class Particle2D : MonoBehaviour
         Vector2 springDampForce = ForceGenerator.GenerateForce_SpringDamping(mass, velocity, springStrength, 5.0f);
         Vector2 springMaxLengthForce = ForceGenerator.GenerateForce_SpringWithMax(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength, maxSpringLength);
 
-
         switch (forceType)
         {
             case ForceType.gravity:
                 AddForce(gravitationalForce);
                 break;
             case ForceType.normal:
-                AddForce(normalForce);
-                break;
-            case ForceType.slide:
-                AddForce(slideForce);
-                break;
-            case ForceType.friction:
-                AddForce(slideForce);
-                AddForce(frictionForce);
-                break;
-            case ForceType.drag:
-                AddForce(dragForce);
-                break;
-            case ForceType.spring:
-                AddForce(springForce);
-                break;
-            case ForceType.springDamping:
-                AddForce(springForce);
-                AddForce(springDampForce);
-                AddForce(gravitationalForce);
-                break;
-            case ForceType.springWithMaxLength:
-                AddForce(springMaxLengthForce);
-                AddForce(springDampForce);
-                AddForce(gravitationalForce);
-                break;
-            default:
-                AddForce(gravitationalForce);
-                break;
-        }
+				AddForce(normalForce);
+				break;
+			case ForceType.slide:
+				AddForce(slideForce);
+				break;
+			case ForceType.friction:
+				AddForce(slideForce);
+				AddForce(frictionForce);
+				break;
+			case ForceType.drag:
+				AddForce(dragForce);
+				break;
+			case ForceType.spring:
+				AddForce(springForce);
+				break;
+			case ForceType.springDamping:
+				AddForce(springForce);
+				AddForce(springDampForce);
+				AddForce(gravitationalForce);
+				break;
+			case ForceType.springWithMaxLength:
+				AddForce(springMaxLengthForce);
+				AddForce(springDampForce);
+				AddForce(gravitationalForce);
+				break;
+			case ForceType.none:
+				//Debug.Log("We ain't movin chief.");
+				break;
+			default:
+				AddForce(gravitationalForce);
+				break;
+		}
+
+		//lab03		
+		ApplyTorque(pointApplied, forceApplied);
 
         //clamps rotation to 360
         SetRotation(rotation %= 360.0f);
-        rotAcceleration = rotAccZ;
+        rotAcceleration = angularAccel;
     }
 
     /// <summary>
@@ -226,6 +256,41 @@ public class Particle2D : MonoBehaviour
         rotVelocity += rotAcceleration * dt;
     }
 
+    //lab3
+	/// <summary>
+	/// Update the Angular Accel from the torque
+	/// </summary>
+    private void UpdateAngularAcceleration()
+    {
+		//angularAcceleration = Inertia^-1 * Torque
+
+		//Apply torque to angular accel using inverse of inertia
+		angularAccel = momentOfInertiaInv * torque;
+
+		//reset torque
+		torque = 0;
+    }
+
+	/// <summary>
+	/// Adds torque to the aggrgate torque
+	/// </summary>
+	/// <param name="pointAppliedWorld"> The point the force is applied at world space </param>
+	/// <param name="forceApplied"> Strength and direction of force applied. </param>
+    private void ApplyTorque(Vector2 pointAppliedWorld, Vector2 forceApplied)
+    {
+		//Torque = pointOfForceRelativeToCenterMass X forceApplied
+		float miniTorque = 0;
+
+		//Transform world space coord to local space
+        Vector2 pointAppliedLocal = pointAppliedWorld - centerOfMass;
+
+		//Calculate the torqu to apply
+        miniTorque = pointAppliedLocal.x * forceApplied.x - pointAppliedLocal.y * forceApplied.y;
+
+		//Add it to the aggregate torque
+		torque += miniTorque;
+    }
+
     /// <summary>
     /// Enum for Position Integration Type
     /// </summary>
@@ -253,6 +318,7 @@ public class Particle2D : MonoBehaviour
         drag,
         spring,
         springDamping,
-        springWithMaxLength
+        springWithMaxLength,
+        none
     }
 }
