@@ -43,6 +43,15 @@ public class CircleCollisionHull2D : CollisionHull2D
 		// done by clamping center of circle to be within box dimensions
 		// if closest point is within circle, pass! (do circle vs point test)
 
+		// 1. get circle center
+		// 2. get box x bounds 
+		// 3. get box y bounds
+		// 4. clamp circle center on box x bound
+		// 5. clamp circle center on box y bound
+		// 6. use clamped point as closest point of box
+		// 7. check if closest point of box is within the circle
+		// 8. do test (if in circle, true, else false)
+
 		return false;
 	}
 
@@ -50,6 +59,17 @@ public class CircleCollisionHull2D : CollisionHull2D
 	{
 		//same as above but first...
 		//multiply circle center by box inverse matrix 
+
+
+		// 1. get circle center
+		// 2. get box x bounds 
+		// 3. get box y bounds
+		// 4. multiply circle center world position by box world to local matrix
+		// 5. clamp circle center on box x bound
+		// 6. clamp circle center on box y bound
+		// 7. use clamped point as closest point of box
+		// 8. check if closest point of box is within the circle
+		// 9. do test (if in circle, true, else false)
 
 		return false;
 	}
