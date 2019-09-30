@@ -5,6 +5,8 @@ using UnityEngine;
 //andy is big dweeb fuck him
 public abstract class CollisionHull2D : MonoBehaviour
 {
+	public CollisionHull2D otherObj;
+
 	public enum CollisionHullType2D
 	{
 		circle,
@@ -31,6 +33,21 @@ public abstract class CollisionHull2D : MonoBehaviour
 	private void Start()
 	{
 		particle = GetComponent<Particle2D>();
+	}
+
+	private void Update()
+	{
+		//for (int i = 0; i < 4; i++)
+		//{
+		if (otherObj.type == CollisionHullType2D.circle)
+		{
+			TestCollisionVsCircle(otherObj as CircleCollisionHull2D);
+		}
+		else if (otherObj.type == CollisionHullType2D.aabb)
+		{
+			TestCollisionVsAABB(otherObj as AxisAlignedBoundingBoxCollision2D);
+		}
+		//}
 	}
 
 	public virtual bool TestCollisionVsCircle(CircleCollisionHull2D other)

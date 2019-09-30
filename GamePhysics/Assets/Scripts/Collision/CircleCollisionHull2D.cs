@@ -14,25 +14,30 @@ public class CircleCollisionHull2D : CollisionHull2D
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
 	public override bool TestCollisionVsCircle(CircleCollisionHull2D other)
 	{
+		Debug.Log("checking...");
+
 		//collides if distance between centers is <= sum of radii
 		//or if you like opptimizations
 		//if (distance between center)^2 <= (sum of radii)^2
 		// 1. get two centers
-		Vector2 circleCenter1;
-		Vector2 circleCenter2;
+		Vector2 circleCenter1 = transform.position;
+		Vector2 circleCenter2 = other.transform.position;
 		// 2. take diference
+		Vector2 distance = circleCenter2 - circleCenter1;
 		// 3. distance squared = dot(diff, diff)
+		float distSqr = Vector2.Dot(distance, distance);
 		// 4. add the radii
+		float radiiSum = other.radius + radius;
 		// 5. square sum
+		radiiSum *= radiiSum;
 		// 6. do test. johnny test. it passes if distSq <= sumSq
+		if (distSqr < radiiSum)
+		{
+			print("Circle Interpenetration ;)");
+			return true;
+		}
 
 		return false;
 	}
@@ -44,8 +49,11 @@ public class CircleCollisionHull2D : CollisionHull2D
 		// if closest point is within circle, pass! (do circle vs point test)
 
 		// 1. get circle center
+		Vector2 circleCenter = transform.position;
 		// 2. get box x bounds 
+		float xBound;
 		// 3. get box y bounds
+		float yBoud;
 		// 4. clamp circle center on box x bound
 		// 5. clamp circle center on box y bound
 		// 6. use clamped point as closest point of box

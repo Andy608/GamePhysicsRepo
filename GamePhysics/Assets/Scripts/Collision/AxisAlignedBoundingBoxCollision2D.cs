@@ -62,6 +62,14 @@ public class AxisAlignedBoundingBoxCollision2D : CollisionHull2D
 		//first, find max extent of OBB, do AABB vs this box
 		// then, transform this box into OBBs space, find max extents, repeat
 
+		// 1. Find OBB max extents on each Axis
+		// 2. Perform AABB test with AABB bounds, and OBB found maxExtents
+		// 3. Transform AABB box into OBB box's local space
+		// 4. find max extents of AABB box in OBB local space
+		// 5. perform AABB test again with AABB max extents and OOBBs bounds
+		// 6. only if all cases pass, return true
+
+		//DEPRECATED
 		// 1. calculate box A normal (cos0, sin0) 0 = theta
 		// 2. calculate box B normal (-sin0, cos0)
 		// 3. calculate box A points

@@ -37,7 +37,6 @@ public class ObjectBoundingBoxCollisionHull2D : CollisionHull2D
 	public override bool TestCollisionVsObject(ObjectBoundingBoxCollisionHull2D other)
 	{
 		//same as AABB-OBB part 2 twice
-
 		// 1. calculate box A normal (cos0, sin0) 0 = theta
 		// 2. calculate box B normal (-sin0, cos0)
 		// 3. calculate box A points
