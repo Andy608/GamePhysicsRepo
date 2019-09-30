@@ -51,7 +51,7 @@ public class AxisAlignedBoundingBoxCollision2D : CollisionHull2D
 		// 6. check if max extent of A.y is greater than min extent B.y
 		// 7. check if max extent of B.x is greater than min extent A.x
 		// 8. check if max extent of B.y is greater than min extent A.y
-		// 9. if all cases pass, collision is true
+		// 9. only if all cases pass, collision is true
 
 		return false;
 	}
@@ -62,11 +62,15 @@ public class AxisAlignedBoundingBoxCollision2D : CollisionHull2D
 		//first, find max extent of OBB, do AABB vs this box
 		// then, transform this box into OBBs space, find max extents, repeat
 
-		// 1. calculate box A normal
-		// 1. calculate box B normal
-		// 2. calculate box A points
-		// 2. calculate box B points
-		// 2. project each box A point onto box B normal (Apoint dot Bnormal^)Bnormal^
+		// 1. calculate box A normal (cos0, sin0) 0 = theta
+		// 2. calculate box B normal (-sin0, cos0)
+		// 3. calculate box A points
+		// 4. calculate box B points
+		// 5. project each box A point onto one of the box B normals (Apoint dot Bnormal^)Bnormal^
+		// 6. project each box B point onto one of the box B normals (Bpoint dot Bnormal^)Bnormal^
+		// 7. Do AABB with the points projected on the normal
+		// 8. Repeat steps 5-7 for each normal. (4 total)
+		// 9. only if all cases pass, collision is true
 
 		return false;
 	}
