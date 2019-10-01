@@ -6,8 +6,8 @@ public class CircleCollisionHull2D : CollisionHull2D
 {
 	public CircleCollisionHull2D() : base(CollisionHullType2D.circle) { }
 
-	public Transform point1, point2, point3, point4;
-	public Transform ball;
+	//public Transform ballBoxLocal;
+    //public Transform boxLocal;
 
 	[Range(0.0f, 69.0f)] public float radius = 5.0f;
 
@@ -98,10 +98,10 @@ public class CircleCollisionHull2D : CollisionHull2D
 	{
 		//same as above but first...
 		//multiply circle center by box inverse matrix 
-		Debug.Log("checking...");
 
 		// 1. get circle center
-		Vector2 circleCenter = transform.position;
+		Vector4 circleCenter = new Vector4(transform.position.x, transform.position.y, 0.0f, 1.0f);
+
 		// 2. get box x bounds 
 		float xMaxBound = other.width * 0.5f;
 		float xMinBound = -other.width * 0.5f;
@@ -109,27 +109,18 @@ public class CircleCollisionHull2D : CollisionHull2D
 		float yMaxBound = other.height * 0.5f;
 		float yMinBound = -other.height * 0.5f;
 
-		Matrix4x4 matObb1Inverse = other.transform.localToWorldMatrix;
-
-		point1.position = matObb1Inverse * new Vector2(xMaxBound, yMaxBound);
-		point2.position = matObb1Inverse * new Vector2(xMinBound, yMaxBound);
-		point3.position = matObb1Inverse * new Vector2(xMaxBound, yMinBound);
-		point4.position = matObb1Inverse * new Vector2(xMinBound, yMinBound);
-
-
 		// 4. multiply circle center world position by box world to local matrix
-		Matrix4x4 matObbInverse = other.transform.worldToLocalMatrix;
-		//Vector2 circleInBoxSpace = matObbInverse * circleCenter;
-		circleCenter = matObbInverse * circleCenter;
+        circleCenter = other.transform.InverseTransformPoint(circleCenter);
 
-		ball.position = circleCenter;
-
-		// 5. clamp circle center on box x bound
-		float circleOnX = circleCenter.x;
+        // 5. clamp circle center on box x bound
+        float circleOnX = circleCenter.x;
 		// 6. clamp circle center on box y bound
 		float circleOnY = circleCenter.y;
 
-		if (circleCenter.x > xMaxBound)
+        //ballBoxLocal.position = circleCenter;
+        //boxLocal.position = other.transform.InverseTransformPoint(other.transform.position);
+
+        if (circleCenter.x > xMaxBound)
 		{
 			circleOnX = xMaxBound;
 		}
@@ -146,17 +137,20 @@ public class CircleCollisionHull2D : CollisionHull2D
 		{
 			circleOnY = yMinBound;
 		}
-		// 7. use clamped point as closest point of box
-		Vector2 closestPoint = new Vector2(circleOnX, circleOnY);
-		Vector2 distance = closestPoint - circleCenter;
+
+        // 7. use clamped point as closest point of box
+        Vector2 closestPoint = new Vector2(circleOnX, circleOnY);
+
+		Vector2 distance = closestPoint - new Vector2(circleCenter.x, circleCenter.y);
 		float distSqr = Vector2.Dot(distance, distance);
+
 		// 8. check if closest point of box is within the circle
 		if (distSqr < radius * radius)
 		{
 			Debug.Log("SLUGMA BALLZ");
 		}
-		// 9. do test (if in circle, true, else false)
 
+		// 9. do test (if in circle, true, else false)
 		return false;
 	}
 }

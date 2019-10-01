@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -250,7 +250,8 @@ MonoBehaviour:
   point2: {fileID: 684318693}
   point3: {fileID: 1866646801}
   point4: {fileID: 562654015}
-  ball: {fileID: 1044048009}
+  ballBoxLocal: {fileID: 1044048009}
+  boxLocal: {fileID: 288061523}
   radius: 0.5
 --- !u!23 &132997127
 MeshRenderer:
@@ -894,7 +895,8 @@ MonoBehaviour:
   point2: {fileID: 0}
   point3: {fileID: 0}
   point4: {fileID: 0}
-  ball: {fileID: 0}
+  ballBoxLocal: {fileID: 0}
+  boxLocal: {fileID: 0}
   radius: 0.5
 --- !u!23 &1044048007
 MeshRenderer:
