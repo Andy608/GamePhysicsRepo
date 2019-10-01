@@ -76,17 +76,17 @@ public class AxisAlignedBoundingBoxCollision2D : CollisionHull2D
 		//
 
 		// 1. get box A min extent
-		float xMinExtentA = transform.position.x - width * 0.5f;
-		float yMinExtentA = transform.position.y - height * 0.5f;
+		float xMinExtentA = transform.position.x - transform.lossyScale.x * 0.5f;
+		float yMinExtentA = transform.position.y - transform.lossyScale.y * 0.5f;
 		// 2. get box A max extent
-		float xMaxExtentA = transform.position.x + width * 0.5f;
-		float yMaxExtentA = transform.position.y + height * 0.5f;
+		float xMaxExtentA = transform.position.x + transform.lossyScale.x * 0.5f;
+		float yMaxExtentA = transform.position.y + transform.lossyScale.y * 0.5f;
 		// 3. get box B min extent
-		float xMinExtentB = other.transform.position.x - width * 0.5f;
-		float yMinExtentB = other.transform.position.y - height * 0.5f;
+		float xMinExtentB = other.transform.position.x - other.transform.lossyScale.x * 0.5f;
+		float yMinExtentB = other.transform.position.y - other.transform.lossyScale.y * 0.5f;
 		// 4. get box B max extent
-		float xMaxExtentB = other.transform.position.x + width * 0.5f;
-		float yMaxExtentB = other.transform.position.y + height * 0.5f;
+		float xMaxExtentB = other.transform.position.x + other.transform.lossyScale.x * 0.5f;
+		float yMaxExtentB = other.transform.position.y + other.transform.lossyScale.y * 0.5f;
 		// 5. check if max extent of A.x is greater than min extent B.x
 		if (!(xMaxExtentA > xMinExtentB))
 		{
@@ -123,17 +123,17 @@ public class AxisAlignedBoundingBoxCollision2D : CollisionHull2D
 
 		// 1. Find OBB max extents on each Axis
 			// 1.1 get obb box x extents
-		float xMaxExtentOBB = other.width * 0.5f;
-		float xMinExtentOBB = -other.width * 0.5f;
+		float xMaxExtentOBB = other.transform.lossyScale.x * 0.5f;
+		float xMinExtentOBB = -other.transform.lossyScale.x * 0.5f;
 			// 1.2 get obb box y extents
-		float yMaxExtentOBB = other.height * 0.5f;
-		float yMinExtentOBB = -other.height * 0.5f;
+		float yMaxExtentOBB = other.transform.lossyScale.y * 0.5f;
+		float yMinExtentOBB = -other.transform.lossyScale.y * 0.5f;
 			// 1.3 get aabb box min extent
-		float xMinExtentAABB = transform.position.x - width * 0.5f;
-		float yMinExtentAABB = transform.position.y - height * 0.5f;
+		float xMinExtentAABB = transform.position.x - transform.lossyScale.x * 0.5f;
+		float yMinExtentAABB = transform.position.y - transform.lossyScale.y * 0.5f;
 			// 1.4 get aabb box max extent
-		float xMaxExtentAABB = transform.position.x + width * 0.5f;
-		float yMaxExtentAABB = transform.position.y + height * 0.5f;
+		float xMaxExtentAABB = transform.position.x + transform.lossyScale.x * 0.5f;
+		float yMaxExtentAABB = transform.position.y + transform.lossyScale.y * 0.5f;
 		// 2. Perform AABB test with AABB bounds, and OBB found maxExtents
 			// 2.1 check if max extent of aabb.x is greater than min extent obb.x
 		if (!(xMaxExtentAABB > yMinExtentOBB))

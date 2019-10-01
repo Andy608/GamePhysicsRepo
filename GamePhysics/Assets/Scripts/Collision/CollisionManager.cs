@@ -6,25 +6,28 @@ public class CollisionManager : MonoBehaviour
 {
     public List<CollisionHull2D> objs = new List<CollisionHull2D>();
 
+    private List<CollisionHull2D> unCheckedObjs = new List<CollisionHull2D>();
+
     private void Update()
     {
-        foreach(CollisionHull2D i in objs)
-        {
-            foreach(CollisionHull2D j in objs)
-            {
-                if (i == j) continue;
+        unCheckedObjs.AddRange(objs);
 
-                if (CollisionHull2D.TestCollision(i, j))
-                {
-                    i.GetComponent<MeshRenderer>().material.color = Color.red;
-                    j.GetComponent<MeshRenderer>().material.color = Color.red;
-                }
-                else // gross cuz it does it every frame even if it doesn't have to, but will work for now.
-                {
-                    i.GetComponent<MeshRenderer>().material.color = Color.green;
-                    j.GetComponent<MeshRenderer>().material.color = Color.green;
-                }
+        foreach (CollisionHull2D otherObj in objs)
+        {
+            for (int i = 0; i < unCheckedObjs.Count; ++i)
+            {
+                CollisionHull2D currentObj = unCheckedObjs[i];
+
+                if (currentObj.GetInstanceID() == otherObj.GetInstanceID()) continue;
+
+                bool isColliding = CollisionHull2D.TestCollision(currentObj, otherObj);
+                currentObj.SetColliding(isColliding, otherObj);
+                //j.SetColliding(isColliding, i);
             }
+
+            //unCheckedObjs.RemoveAt(0);
         }
+
+        unCheckedObjs.Clear();
     }
 }

@@ -2,65 +2,90 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//andy is big dweeb fuck him
+[RequireComponent(typeof(MeshRenderer))]
 public abstract class CollisionHull2D : MonoBehaviour
 {
-	public enum CollisionHullType2D
-	{
-		circle,
-		aabb,
-		obb,
-		penis
-	}
+    public enum CollisionHullType2D
+    {
+        circle,
+        aabb,
+        obb,
+        penis
+    }
 
-	protected Particle2D particle;
+    private Material material;
 
-	private CollisionHullType2D type { get; }
+    protected Particle2D particle;
 
-	protected CollisionHull2D(CollisionHullType2D _type)
-	{
-		type = _type;
-	}
+    private CollisionHullType2D type { get; }
 
-	private void Start()
-	{
-		particle = GetComponent<Particle2D>();
-	}
+    private List<CollisionHull2D> collidingWith = new List<CollisionHull2D>();
+
+    public void SetColliding(bool colliding, CollisionHull2D otherObj)
+    {
+        if (colliding)
+        {
+            if (!collidingWith.Contains(otherObj))
+            {
+                collidingWith.Add(otherObj);
+            }
+        }
+        else
+        {
+            collidingWith.Remove(otherObj);
+        }
+
+        if (IsColliding())
+        {
+            material.color = Color.red;
+        }
+        else
+        {
+            material.color = Color.green;
+        }
+    }
+
+    public bool IsColliding()
+    {
+        return collidingWith.Count != 0;
+    }
+
+    protected CollisionHull2D(CollisionHullType2D _type)
+    {
+        type = _type;
+    }
+
+    private void Awake()
+    {
+        particle = GetComponent<Particle2D>();
+        material = GetComponent<MeshRenderer>().material;
+    }
 
     public static bool TestCollision(CollisionHull2D a, CollisionHull2D b)
     {
-		if (b.type == CollisionHullType2D.circle)
-		{
+        if (b.type == CollisionHullType2D.circle)
+        {
             return a.TestCollisionVsCircle(b as CircleCollisionHull2D);
-		}
-		else if (b.type == CollisionHullType2D.aabb)
-		{
+        }
+        else if (b.type == CollisionHullType2D.aabb)
+        {
             return a.TestCollisionVsAABB(b as AxisAlignedBoundingBoxCollision2D);
-		}
-		else if (b.type == CollisionHullType2D.obb)
-		{
+        }
+        else if (b.type == CollisionHullType2D.obb)
+        {
             return a.TestCollisionVsObject(b as ObjectBoundingBoxCollisionHull2D);
-		}
-		else if (b.type == CollisionHullType2D.penis)
-		{
-			print("I N T E R P E N E T R A T I O N");
-		}
+        }
+        else if (b.type == CollisionHullType2D.penis)
+        {
+            print("I N T E R P E N E T R A T I O N");
+        }
 
         return false;
-	}
+    }
 
-	public virtual bool TestCollisionVsCircle(CircleCollisionHull2D other)
-	{
-		return false;
-	}
+    public abstract bool TestCollisionVsCircle(CircleCollisionHull2D other);
 
-	public virtual bool TestCollisionVsAABB(AxisAlignedBoundingBoxCollision2D other)
-	{
-		return false;
-	}
+    public abstract bool TestCollisionVsAABB(AxisAlignedBoundingBoxCollision2D other);
 
-	public virtual bool TestCollisionVsObject(ObjectBoundingBoxCollisionHull2D other)
-	{
-		return false;
-	}
+    public abstract bool TestCollisionVsObject(ObjectBoundingBoxCollisionHull2D other);
 }
