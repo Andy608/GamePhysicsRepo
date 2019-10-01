@@ -151,9 +151,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 029bbcd8ada8c714385298ccdb7f3457, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  otherObj: {fileID: 0}
-  width: 1
-  height: 1
 --- !u!23 &90201432
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -245,13 +242,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a30518269e4dc74aaa17dba6a6896cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  otherObj: {fileID: 90201431}
-  point1: {fileID: 1730597291}
-  point2: {fileID: 684318693}
-  point3: {fileID: 1866646801}
-  point4: {fileID: 562654015}
-  ballBoxLocal: {fileID: 1044048009}
-  boxLocal: {fileID: 288061523}
   radius: 0.5
 --- !u!23 &132997127
 MeshRenderer:
@@ -405,9 +395,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32b863b81d9aaad4283103a72b4ffdac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  otherObj: {fileID: 0}
-  width: 1
-  height: 1
 --- !u!23 &288061521
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -569,6 +556,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 607008824}
+  - component: {fileID: 607008825}
   m_Layer: 0
   m_Name: _WORLD
   m_TagString: Untagged
@@ -593,6 +581,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &607008825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 607008823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02d17f19d38465c43aa811b0b983c113, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objs:
+  - {fileID: 132997126}
+  - {fileID: 1044048006}
+  - {fileID: 288061519}
+  - {fileID: 90201431}
 --- !u!1 &684318692
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,13 +895,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a30518269e4dc74aaa17dba6a6896cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  otherObj: {fileID: 0}
-  point1: {fileID: 0}
-  point2: {fileID: 0}
-  point3: {fileID: 0}
-  point4: {fileID: 0}
-  ballBoxLocal: {fileID: 0}
-  boxLocal: {fileID: 0}
   radius: 0.5
 --- !u!23 &1044048007
 MeshRenderer:
@@ -973,7 +971,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1342605558
 Transform:
   m_ObjectHideFlags: 0

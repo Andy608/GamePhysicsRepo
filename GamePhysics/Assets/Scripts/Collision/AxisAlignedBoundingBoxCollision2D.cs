@@ -6,8 +6,6 @@ public class AxisAlignedBoundingBoxCollision2D : CollisionHull2D
 {
 	public AxisAlignedBoundingBoxCollision2D() : base(CollisionHullType2D.aabb) { }
 
-	public float width = 0, height = 0;
-
 	// Start is called before the first frame update
 	void Start()
     {
@@ -16,22 +14,59 @@ public class AxisAlignedBoundingBoxCollision2D : CollisionHull2D
 
 	public override bool TestCollisionVsCircle(CircleCollisionHull2D other)
 	{
-		//SEE CIRCLE
+        //SEE CIRCLE
 
-		// find closest point to circle on box
-		// done by clamping center of circle to be within box dimensions
-		// if closest point is within circle, pass! (do circle vs point test)
+        // find closest point to circle on box
+        // done by clamping center of circle to be within box dimensions
+        // if closest point is within circle, pass! (do circle vs point test)
 
-		// 1. get circle center
-		// 2. get box x bounds 
-		// 3. get box y bounds
-		// 4. clamp circle center on box x bound
-		// 5. clamp circle center on box y bound
-		// 6. use clamped point as closest point of box
-		// 7. check if closest point of box is within the circle
-		// 8. do test (if in circle, true, else false)
+        // 1. get circle center
+        Vector2 circleCenter = other.transform.position;
+        float xMaxBound = transform.position.x + transform.localScale.x * 0.5f;
+        float xMinBound = transform.position.x - transform.localScale.x * 0.5f;
 
-		return false;
+        // 3. get box y bounds
+        float yMaxBound = transform.position.y + transform.localScale.y * 0.5f;
+        float yMinBound = transform.position.y - transform.localScale.y * 0.5f;
+
+        // 4. clamp circle center on box x bound
+        // 5. clamp circle center on box y bound
+
+        float circleOnX = circleCenter.x;
+        float circleOnY = circleCenter.y;
+
+        if (circleCenter.x > xMaxBound)
+        {
+            circleOnX = xMaxBound;
+        }
+        else if (circleCenter.x < xMinBound)
+        {
+            circleOnX = xMinBound;
+        }
+
+        if (circleCenter.y > yMaxBound)
+        {
+            circleOnY = yMaxBound;
+        }
+        else if (circleCenter.y < yMinBound)
+        {
+            circleOnY = yMinBound;
+        }
+
+        // 6. use clamped point as closest point of box
+        Vector2 closestPoint = new Vector2(circleOnX, circleOnY);
+        Vector2 distance = closestPoint - circleCenter;
+        float distSqr = Vector2.Dot(distance, distance);
+
+        // 7. check if closest point of box is within the circle
+        // 8. do test (if in circle, true, else false)
+        if (distSqr < other.radius * other.radius)
+        {
+            Debug.Log("BOX -> CIRCLE");
+            return true;
+        }
+
+        return false;
 	}
 
 	public override bool TestCollisionVsAABB(AxisAlignedBoundingBoxCollision2D other)
