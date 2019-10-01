@@ -5,8 +5,6 @@ using UnityEngine;
 //andy is big dweeb fuck him
 public abstract class CollisionHull2D : MonoBehaviour
 {
-	public CollisionHull2D otherObj;
-
 	public enum CollisionHullType2D
 	{
 		circle,
@@ -24,43 +22,31 @@ public abstract class CollisionHull2D : MonoBehaviour
 		type = _type;
 	}
 
-	protected static bool TestCollision(CollisionHull2D a, CollisionHull2D b)
-	{
-
-		return false;
-	}
-
 	private void Start()
 	{
 		particle = GetComponent<Particle2D>();
 	}
 
-	private void Update()
-	{
-		//for (int i = 0; i < 4; i++)
-		//{
-		if (otherObj == null)
+    public static bool TestCollision(CollisionHull2D a, CollisionHull2D b)
+    {
+		if (b.type == CollisionHullType2D.circle)
 		{
-			return;
+            return a.TestCollisionVsCircle(b as CircleCollisionHull2D);
 		}
-
-		if (otherObj.type == CollisionHullType2D.circle)
+		else if (b.type == CollisionHullType2D.aabb)
 		{
-			TestCollisionVsCircle(otherObj as CircleCollisionHull2D);
+            return a.TestCollisionVsAABB(b as AxisAlignedBoundingBoxCollision2D);
 		}
-		else if (otherObj.type == CollisionHullType2D.aabb)
+		else if (b.type == CollisionHullType2D.obb)
 		{
-			TestCollisionVsAABB(otherObj as AxisAlignedBoundingBoxCollision2D);
+            return a.TestCollisionVsObject(b as ObjectBoundingBoxCollisionHull2D);
 		}
-		else if (otherObj.type == CollisionHullType2D.obb)
-		{
-			TestCollisionVsObject(otherObj as ObjectBoundingBoxCollisionHull2D);
-		}
-		else if (otherObj.type == CollisionHullType2D.penis)
+		else if (b.type == CollisionHullType2D.penis)
 		{
 			print("I N T E R P E N E T R A T I O N");
 		}
-		//}
+
+        return false;
 	}
 
 	public virtual bool TestCollisionVsCircle(CircleCollisionHull2D other)

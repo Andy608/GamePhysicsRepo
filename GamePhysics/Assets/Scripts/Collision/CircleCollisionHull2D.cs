@@ -33,7 +33,7 @@ public class CircleCollisionHull2D : CollisionHull2D
 		// 6. do test. johnny test. it passes if distSq <= sumSq
 		if (distSqr < radiiSum)
 		{
-			print("Circle Interpenetration ;)");
+            Debug.Log("CIRCLE -> CIRCLE");
 			return true;
 		}
 
@@ -49,14 +49,14 @@ public class CircleCollisionHull2D : CollisionHull2D
 		// 1. get circle center
 		Vector2 circleCenter = transform.position;
 		// 2. get box x bounds 
-		float xMaxBound = other.transform.position.x + other.width * 0.5f;
-		float xMinBound = other.transform.position.x - other.width * 0.5f;
+		float xMaxBound = other.transform.position.x + other.transform.localScale.x * 0.5f;
+		float xMinBound = other.transform.position.x - other.transform.localScale.x * 0.5f;
 		// 3. get box y bounds
-		float yMaxBound = other.transform.position.y + other.height * 0.5f;
-		float yMinBound = other.transform.position.y - other.height * 0.5f;
+		float yMaxBound = other.transform.position.y + other.transform.localScale.y * 0.5f;
+		float yMinBound = other.transform.position.y - other.transform.localScale.y * 0.5f;
 		// 4. clamp circle center on box x bound
-		float circleOnX = circleCenter.x;
 		// 5. clamp circle center on box y bound
+		float circleOnX = circleCenter.x;
 		float circleOnY = circleCenter.y;
 
 		if (circleCenter.x > xMaxBound)
@@ -81,12 +81,14 @@ public class CircleCollisionHull2D : CollisionHull2D
 		Vector2 closestPoint = new Vector2(circleOnX, circleOnY);
 		Vector2 distance = closestPoint - circleCenter;
 		float distSqr = Vector2.Dot(distance, distance);
-		// 7. check if closest point of box is within the circle
+		
+        // 7. check if closest point of box is within the circle
+        // 8. do test (if in circle, true, else false)
 		if (distSqr < radius * radius)
 		{
-			Debug.Log("WE'RE IN BBY");
+            Debug.Log("CIRCLE -> BOX");
+            return true;
 		}
-		// 8. do test (if in circle, true, else false)
 
 		return false;
 	}
@@ -95,26 +97,30 @@ public class CircleCollisionHull2D : CollisionHull2D
 	{
 		//same as above but first...
 		//multiply circle center by box inverse matrix 
-		Debug.Log("checking...");
 
 		// 1. get circle center
-		Vector2 circleCenter = transform.position;
+		Vector4 circleCenter = new Vector4(transform.position.x, transform.position.y, 0.0f, 1.0f);
+
 		// 2. get box x bounds 
-		float xMaxBound = other.width * 0.5f;
-		float xMinBound = -other.width * 0.5f;
+		float xMaxBound = other.transform.localScale.x * 0.5f;
+		float xMinBound = -other.transform.localScale.x * 0.5f;
 		// 3. get box y bounds
-		float yMaxBound = other.height * 0.5f;
-		float yMinBound = -other.height * 0.5f;
+
+		float yMaxBound = other.transform.localScale.y * 0.5f;
+		float yMinBound = -other.transform.localScale.y * 0.5f;
 
 		// 4. multiply circle center world position by box world to local matrix
-		circleCenter = other.transform.InverseTransformPoint(circleCenter);
+        circleCenter = other.transform.InverseTransformPoint(circleCenter);
 
-		// 5. clamp circle center on box x bound
-		float circleOnX = circleCenter.x;
+        // 5. clamp circle center on box x bound
+        float circleOnX = circleCenter.x;
 		// 6. clamp circle center on box y bound
 		float circleOnY = circleCenter.y;
 
-		if (circleCenter.x > xMaxBound)
+        //ballBoxLocal.position = circleCenter;
+        //boxLocal.position = other.transform.InverseTransformPoint(other.transform.position);
+
+        if (circleCenter.x > xMaxBound)
 		{
 			circleOnX = xMaxBound;
 		}
@@ -131,17 +137,21 @@ public class CircleCollisionHull2D : CollisionHull2D
 		{
 			circleOnY = yMinBound;
 		}
-		// 7. use clamped point as closest point of box
-		Vector2 closestPoint = new Vector2(circleOnX, circleOnY);
-		Vector2 distance = closestPoint - circleCenter;
+
+        // 7. use clamped point as closest point of box
+        Vector2 closestPoint = new Vector2(circleOnX, circleOnY);
+
+		Vector2 distance = closestPoint - new Vector2(circleCenter.x, circleCenter.y);
 		float distSqr = Vector2.Dot(distance, distance);
+
 		// 8. check if closest point of box is within the circle
 		if (distSqr < radius * radius)
 		{
-			Debug.Log("SLUGMA BALLZ");
-		}
-		// 9. do test (if in circle, true, else false)
+            Debug.Log("CIRCLE -> OBB");
+            return true;
+        }
 
+		// 9. do test (if in circle, true, else false)
 		return false;
 	}
 }
