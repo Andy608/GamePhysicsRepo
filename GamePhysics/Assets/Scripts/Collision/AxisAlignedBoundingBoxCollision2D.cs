@@ -6,13 +6,45 @@ public class AxisAlignedBoundingBoxCollision2D : CollisionHull2D
 {
 	public AxisAlignedBoundingBoxCollision2D() : base(CollisionHullType2D.aabb) { }
 
-	// Start is called before the first frame update
+    //private Transform OBJtrAABB, OBJtlAABB, OBJbrAABB, OBJblAABB;
+    //private Transform OBJtrTranOBB, OBJtlTranOBB, OBJbrTranOBB, OBJblTranOBB;
+    //private Transform OBJtrOBB, OBJtlOBB, OBJbrOBB, OBJblOBB;
+    //private Transform OBJtrTranAABB, OBJtlTranAABB, OBJbrTranAABB, OBJblTranAABB;
+
 	void Start()
     {
-        
+        //OBJtrAABB = Instantiate(testPoint);
+        //OBJtlAABB = Instantiate(testPoint);
+        //OBJbrAABB = Instantiate(testPoint);
+        //OBJblAABB = Instantiate(testPoint);
+        //
+        //OBJtrAABB.GetComponent<MeshRenderer>().material.color = Color.blue;
+        //OBJtlAABB.GetComponent<MeshRenderer>().material.color = Color.blue;
+        //OBJbrAABB.GetComponent<MeshRenderer>().material.color = Color.blue;
+        //OBJblAABB.GetComponent<MeshRenderer>().material.color = Color.blue;
+        //
+        //OBJtrTranOBB = Instantiate(testPoint);
+        //OBJtlTranOBB = Instantiate(testPoint);
+        //OBJbrTranOBB = Instantiate(testPoint);
+        //OBJblTranOBB = Instantiate(testPoint);
+        //
+        //OBJtrTranOBB.GetComponent<MeshRenderer>().material.color = Color.yellow;
+        //OBJtlTranOBB.GetComponent<MeshRenderer>().material.color = Color.yellow;
+        //OBJbrTranOBB.GetComponent<MeshRenderer>().material.color = Color.yellow;
+        //OBJblTranOBB.GetComponent<MeshRenderer>().material.color = Color.yellow;
+        //
+        //OBJtrTranAABB = Instantiate(testPoint);
+        //OBJtlTranAABB = Instantiate(testPoint);
+        //OBJbrTranAABB = Instantiate(testPoint);
+        //OBJblTranAABB = Instantiate(testPoint);
+        //
+        //OBJtrOBB = Instantiate(testPoint);
+        //OBJtlOBB = Instantiate(testPoint);
+        //OBJbrOBB = Instantiate(testPoint);
+        //OBJblOBB = Instantiate(testPoint);
     }
 
-	public override bool TestCollisionVsCircle(CircleCollisionHull2D other)
+    public override bool TestCollisionVsCircle(CircleCollisionHull2D other)
 	{
         //SEE CIRCLE
 
@@ -72,106 +104,153 @@ public class AxisAlignedBoundingBoxCollision2D : CollisionHull2D
 
 	public override bool TestCollisionVsAABB(AxisAlignedBoundingBoxCollision2D other)
 	{
-		//pass if, for all axis, max extent of A is greater than min extent of B
-		//
+        //pass if, for all axis, max extent of A is greater than min extent of B
+        //
 
-		// 1. get box A min extent
-		float xMinExtentA = transform.position.x - transform.lossyScale.x * 0.5f;
-		float yMinExtentA = transform.position.y - transform.lossyScale.y * 0.5f;
-		// 2. get box A max extent
-		float xMaxExtentA = transform.position.x + transform.lossyScale.x * 0.5f;
-		float yMaxExtentA = transform.position.y + transform.lossyScale.y * 0.5f;
-		// 3. get box B min extent
-		float xMinExtentB = other.transform.position.x - other.transform.lossyScale.x * 0.5f;
-		float yMinExtentB = other.transform.position.y - other.transform.lossyScale.y * 0.5f;
-		// 4. get box B max extent
-		float xMaxExtentB = other.transform.position.x + other.transform.lossyScale.x * 0.5f;
-		float yMaxExtentB = other.transform.position.y + other.transform.lossyScale.y * 0.5f;
-		// 5. check if max extent of A.x is greater than min extent B.x
-		if (!(xMaxExtentA > xMinExtentB))
-		{
-			return false;
-		}
-		// 6. check if max extent of A.y is greater than min extent B.y
-		if (!(yMaxExtentA > yMinExtentB))
-		{
-			return false;
-		}
-		// 7. check if max extent of B.x is greater than min extent A.x
-		if (!(xMaxExtentB > xMinExtentA))
-		{
-			return false;
-		}
-		// 8. check if max extent of B.y is greater than min extent A.y
-		if (!(yMaxExtentB > yMinExtentA))
-		{
-			return false;
-		}
-		// 9. only if all cases pass, collision is true
+        // 1. get box A min extent
+        float xMinExtentA = transform.position.x - transform.lossyScale.x * 0.5f;
+        float yMinExtentA = transform.position.y - transform.lossyScale.y * 0.5f;
+        // 2. get box A max extent
+        float xMaxExtentA = transform.position.x + transform.lossyScale.x * 0.5f;
+        float yMaxExtentA = transform.position.y + transform.lossyScale.y * 0.5f;
+        // 3. get box B min extent
+        float xMinExtentB = other.transform.position.x - other.transform.lossyScale.x * 0.5f;
+        float yMinExtentB = other.transform.position.y - other.transform.lossyScale.y * 0.5f;
+        // 4. get box B max extent
+        float xMaxExtentB = other.transform.position.x + other.transform.lossyScale.x * 0.5f;
+        float yMaxExtentB = other.transform.position.y + other.transform.lossyScale.y * 0.5f;
 
+        if (DoAABBCollisionTest(xMaxExtentA, yMaxExtentA, xMinExtentA, yMinExtentA,
+            xMaxExtentB, yMaxExtentB, xMinExtentB, yMinExtentB))
+        {
+            Debug.Log("AABB -> AABB");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        // 5. check if max extent of A.x is greater than min extent B.x
+        //if (!(xMaxExtentA > xMinExtentB))
+        //{
+        //    return false;
+        //}
+        //// 6. check if max extent of A.y is greater than min extent B.y
+        //if (!(yMaxExtentA > yMinExtentB))
+        //{
+        //    return false;
+        //}
+        //// 7. check if max extent of B.x is greater than min extent A.x
+        //if (!(xMaxExtentB > xMinExtentA))
+        //{
+        //    return false;
+        //}
+        //// 8. check if max extent of B.y is greater than min extent A.y
+        //if (!(yMaxExtentB > yMinExtentA))
+        //{
+        //    return false;
+        //}
+        // 9. only if all cases pass, collision is true
 
-		Debug.Log("Bammin Slammin, bootylicious");
+        //Debug.Log("Bammin Slammin, bootylicious");
 	
-		return true;
+		//return true;
 	}
 
 	public override bool TestCollisionVsObject(ObjectBoundingBoxCollisionHull2D other)
 	{
-		//same as above twice but first...
-		//first, find max extent of OBB, do AABB vs this box
-		// then, transform this box into OBBs space, find max extents, repeat
+        // 1. Find width and height for both boxes.
 
-		// 1. Find OBB max extents on each Axis
-			// 1.1 get obb box x extents
-		float xMaxExtentOBB = other.transform.lossyScale.x * 0.5f;
-		float xMinExtentOBB = -other.transform.lossyScale.x * 0.5f;
-			// 1.2 get obb box y extents
-		float yMaxExtentOBB = other.transform.lossyScale.y * 0.5f;
-		float yMinExtentOBB = -other.transform.lossyScale.y * 0.5f;
-			// 1.3 get aabb box min extent
-		float xMinExtentAABB = transform.position.x - transform.lossyScale.x * 0.5f;
-		float yMinExtentAABB = transform.position.y - transform.lossyScale.y * 0.5f;
-			// 1.4 get aabb box max extent
-		float xMaxExtentAABB = transform.position.x + transform.lossyScale.x * 0.5f;
-		float yMaxExtentAABB = transform.position.y + transform.lossyScale.y * 0.5f;
-		// 2. Perform AABB test with AABB bounds, and OBB found maxExtents
-			// 2.1 check if max extent of aabb.x is greater than min extent obb.x
-		if (!(xMaxExtentAABB > yMinExtentOBB))
-		{
-			return false;
-		}
-			// 2.2 check if max extent of aabb.y is greater than min extent obb.y
-		if (!(yMaxExtentAABB > xMinExtentOBB))
-		{
-			return false;
-		}
-			// 2.3 check if max extent of obb.x is greater than min extent aabb.x
-		if (!(xMaxExtentOBB > xMinExtentAABB))
-		{
-			return false;
-		}
-			// 2.4 check if max extent of obb.y is greater than min extent aabb.y
-		if (!(yMaxExtentOBB > yMinExtentAABB))
-		{
-			return false;
-		}
+        float widthAABB = transform.lossyScale.x * 0.5f;
+        float heightAABB = transform.lossyScale.y * 0.5f;
+        float widthOBB = other.transform.lossyScale.x * 0.5f;
+        float heightOBB = other.transform.lossyScale.y * 0.5f;
 
-		// 3. Transform AABB box into OBB box's local space
-		// 4. find max extents of AABB box in OBB local space
-		// 5. perform AABB test again with AABB max extents and OOBBs bounds
-		// 6. only if all cases pass, return true
 
-		//DEPRECATED
-		// 1. calculate box A normal (cos0, sin0) 0 = theta
-		// 2. calculate box B normal (-sin0, cos0)
-		// 3. calculate box A points
-		// 4. calculate box B points
-		// 5. project each box A point onto one of the box B normals (Apoint dot Bnormal^)Bnormal^
-		// 6. project each box B point onto one of the box B normals (Bpoint dot Bnormal^)Bnormal^
-		// 7. Do AABB with the points projected on the normal
-		// 8. Repeat steps 5-7 for each normal. (4 total)
-		// 9. only if all cases pass, collision is true
+        // 2. Find local points for both boxes.
 
-		return false;
-	}
+        Vector2 trAABB_LOCAL = new Vector2(widthAABB, heightAABB);
+        Vector2 tlAABB_LOCAL = new Vector2(-widthAABB, heightAABB);
+        Vector2 blAABB_LOCAL = new Vector2(-widthAABB, -heightAABB);
+        Vector2 brAABB_LOCAL = new Vector2(widthAABB, -heightAABB);
+
+        Vector2 trOBB_LOCAL = new Vector2(widthOBB, heightOBB);
+        Vector2 tlOBB_LOCAL = new Vector2(-widthOBB, heightOBB);
+        Vector2 blOBB_LOCAL = new Vector2(-widthOBB, -heightOBB);
+        Vector2 brOBB_LOCAL = new Vector2(widthOBB, -heightOBB);
+
+
+        // 3. Find world points for both boxes.
+
+        Vector2 trAABB_WORLD = transform.TransformPoint(new Vector2(widthAABB, heightAABB));
+        Vector2 tlAABB_WORLD = transform.TransformPoint(new Vector2(-widthAABB, heightAABB));
+        Vector2 blAABB_WORLD = transform.TransformPoint(new Vector2(-widthAABB, -heightAABB));
+        Vector2 brAABB_WORLD = transform.TransformPoint(new Vector2(widthAABB, -heightAABB));
+
+        Vector2 trOBB_WORLD = other.transform.TransformPoint(new Vector2(widthOBB, heightOBB));
+        Vector2 tlOBB_WORLD = other.transform.TransformPoint(new Vector2(-widthOBB, heightOBB));
+        Vector2 blOBB_WORLD = other.transform.TransformPoint(new Vector2(-widthOBB, -heightOBB));
+        Vector2 brOBB_WORLD = other.transform.TransformPoint(new Vector2(widthOBB, -heightOBB));
+
+
+        // 4. Convert OBB into local AABB space
+
+        Vector2 trTranOBB = transform.InverseTransformPoint(trOBB_WORLD);
+        Vector2 tlTranOBB = transform.InverseTransformPoint(tlOBB_WORLD);
+        Vector2 blTranOBB = transform.InverseTransformPoint(blOBB_WORLD);
+        Vector2 brTranOBB = transform.InverseTransformPoint(brOBB_WORLD);
+
+        //OBJtrAABB.position = trAABB_LOCAL;
+        //OBJtlAABB.position = tlAABB_LOCAL;
+        //OBJblAABB.position = blAABB_LOCAL;
+        //OBJbrAABB.position = brAABB_LOCAL;
+
+
+        // 5. Calculate transformed OBB's AABB
+
+        float rbTransOBB, tbTransOBB, lbTransOBB, bbTransOBB;
+        CalculateAABB(trTranOBB, tlTranOBB, blTranOBB, brTranOBB, out rbTransOBB, out tbTransOBB, out lbTransOBB, out bbTransOBB);
+
+
+        // 6. Do AABB collision test of AABB vs transformed OBB's ABB
+
+        bool isTransformedOBBinAABB = DoAABBCollisionTest(widthAABB, heightAABB, -widthAABB, -heightAABB, rbTransOBB, tbTransOBB, lbTransOBB, bbTransOBB);
+
+
+        // 7. If the test comes back neg, then return false because there is no way the boxes are colliding
+
+        if (!isTransformedOBBinAABB)
+        {
+            return false;
+        }
+
+
+        // 8. Convert AABB into local OBB space.
+
+        Vector2 trTranAABB = other.transform.InverseTransformPoint(trAABB_WORLD);
+        Vector2 tlTranAABB = other.transform.InverseTransformPoint(tlAABB_WORLD);
+        Vector2 blTranAABB = other.transform.InverseTransformPoint(blAABB_WORLD);
+        Vector2 brTranAABB = other.transform.InverseTransformPoint(brAABB_WORLD);
+
+
+        // 9. Calculate transformed AABB's AABB
+
+        float rbTransAABB, tbTransAABB, lbTransAABB, bbTransAABB;
+        CalculateAABB(trTranAABB, tlTranAABB, blTranAABB, brTranAABB, out rbTransAABB, out tbTransAABB, out lbTransAABB, out bbTransAABB);
+
+
+        // 10. Do AABB collision test of OBB's local AABB vs transformed AABB's AABB
+
+        bool isTransformedAABBinOBB = DoAABBCollisionTest(widthOBB, heightOBB, -widthOBB, -heightOBB, rbTransAABB, tbTransAABB, lbTransAABB, bbTransAABB);
+
+        if (isTransformedAABBinOBB)
+        {
+            Debug.Log("AABB -> OBB");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

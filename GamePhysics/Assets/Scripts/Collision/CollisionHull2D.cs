@@ -88,4 +88,46 @@ public abstract class CollisionHull2D : MonoBehaviour
     public abstract bool TestCollisionVsAABB(AxisAlignedBoundingBoxCollision2D other);
 
     public abstract bool TestCollisionVsObject(ObjectBoundingBoxCollisionHull2D other);
+
+    protected static float projOnAxis(Vector2 point, Vector2 axis)
+    {
+        return Vector2.Dot(point, axis);
+    }
+
+    protected static float projXAxis(Vector2 point)
+    {
+        return projOnAxis(point, Vector2.right);
+    }
+
+    protected static float projYAxis(Vector2 point)
+    {
+        return projOnAxis(point, Vector2.up);
+    }
+
+    protected static void CalculateAABB(Vector2 tr, Vector2 tl, Vector2 bl, Vector2 br, out float rb, out float tb, out float lb, out float bb)
+    {
+        Vector2 trProj = new Vector2(projXAxis(tr), projYAxis(tr));
+        Vector2 tlProj = new Vector2(projXAxis(tl), projYAxis(tl));
+        Vector2 blProj = new Vector2(projXAxis(bl), projYAxis(bl));
+        Vector2 brProj = new Vector2(projXAxis(br), projYAxis(br));
+
+        rb = Mathf.Max(Mathf.Max(Mathf.Max(trProj.x, tlProj.x), blProj.x), brProj.x);
+        tb = Mathf.Max(Mathf.Max(Mathf.Max(trProj.y, tlProj.y), blProj.y), brProj.y);
+        lb = Mathf.Min(Mathf.Min(Mathf.Min(trProj.x, tlProj.x), blProj.x), brProj.x);
+        bb = Mathf.Min(Mathf.Min(Mathf.Min(trProj.y, tlProj.y), blProj.y), brProj.y);
+    }
+
+    protected static bool DoAABBCollisionTest(float rb, float tb, float lb, float bb,
+        float rbOther, float tbOther, float lbOther, float bbOther)
+    {
+
+        if (rb < lbOther || tb < bbOther || rbOther < lb || tbOther < bb)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
 }
