@@ -6,6 +6,9 @@ public class CircleCollisionHull2D : CollisionHull2D
 {
 	public CircleCollisionHull2D() : base(CollisionHullType2D.circle) { }
 
+	public Transform point1, point2, point3, point4;
+	public Transform ball;
+
 	[Range(0.0f, 69.0f)] public float radius = 5.0f;
 
     // Start is called before the first frame update
@@ -16,8 +19,6 @@ public class CircleCollisionHull2D : CollisionHull2D
 
 	public override bool TestCollisionVsCircle(CircleCollisionHull2D other)
 	{
-		Debug.Log("checking...");
-
 		//collides if distance between centers is <= sum of radii
 		//or if you like opptimizations
 		//if (distance between center)^2 <= (sum of radii)^2
@@ -51,13 +52,43 @@ public class CircleCollisionHull2D : CollisionHull2D
 		// 1. get circle center
 		Vector2 circleCenter = transform.position;
 		// 2. get box x bounds 
-		float xBound;
+		float xMaxBound = other.transform.position.x + other.width * 0.5f;
+		float xMinBound = other.transform.position.x - other.width * 0.5f;
 		// 3. get box y bounds
-		float yBoud;
+		float yMaxBound = other.transform.position.y + other.height * 0.5f;
+		float yMinBound = other.transform.position.y - other.height * 0.5f;
 		// 4. clamp circle center on box x bound
+		float circleOnX = circleCenter.x;
 		// 5. clamp circle center on box y bound
+		float circleOnY = circleCenter.y;
+
+		if (circleCenter.x > xMaxBound)
+		{
+			circleOnX = xMaxBound;
+		}
+		else if (circleCenter.x < xMinBound)
+		{
+			circleOnX = xMinBound;
+		}
+
+		if (circleCenter.y > yMaxBound)
+		{
+			circleOnY = yMaxBound;
+		}
+		else if (circleCenter.y < yMinBound)
+		{
+			circleOnY = yMinBound;
+		}
+
 		// 6. use clamped point as closest point of box
+		Vector2 closestPoint = new Vector2(circleOnX, circleOnY);
+		Vector2 distance = closestPoint - circleCenter;
+		float distSqr = Vector2.Dot(distance, distance);
 		// 7. check if closest point of box is within the circle
+		if (distSqr < radius * radius)
+		{
+			Debug.Log("WE'RE IN BBY");
+		}
 		// 8. do test (if in circle, true, else false)
 
 		return false;
@@ -67,16 +98,63 @@ public class CircleCollisionHull2D : CollisionHull2D
 	{
 		//same as above but first...
 		//multiply circle center by box inverse matrix 
-
+		Debug.Log("checking...");
 
 		// 1. get circle center
+		Vector2 circleCenter = transform.position;
 		// 2. get box x bounds 
+		float xMaxBound = other.width * 0.5f;
+		float xMinBound = -other.width * 0.5f;
 		// 3. get box y bounds
+		float yMaxBound = other.height * 0.5f;
+		float yMinBound = -other.height * 0.5f;
+
+		Matrix4x4 matObb1Inverse = other.transform.localToWorldMatrix;
+
+		point1.position = matObb1Inverse * new Vector2(xMaxBound, yMaxBound);
+		point2.position = matObb1Inverse * new Vector2(xMinBound, yMaxBound);
+		point3.position = matObb1Inverse * new Vector2(xMaxBound, yMinBound);
+		point4.position = matObb1Inverse * new Vector2(xMinBound, yMinBound);
+
+
 		// 4. multiply circle center world position by box world to local matrix
+		Matrix4x4 matObbInverse = other.transform.worldToLocalMatrix;
+		//Vector2 circleInBoxSpace = matObbInverse * circleCenter;
+		circleCenter = matObbInverse * circleCenter;
+
+		ball.position = circleCenter;
+
 		// 5. clamp circle center on box x bound
+		float circleOnX = circleCenter.x;
 		// 6. clamp circle center on box y bound
+		float circleOnY = circleCenter.y;
+
+		if (circleCenter.x > xMaxBound)
+		{
+			circleOnX = xMaxBound;
+		}
+		else if (circleCenter.x < xMinBound)
+		{
+			circleOnX = xMinBound;
+		}
+
+		if (circleCenter.y > yMaxBound)
+		{
+			circleOnY = yMaxBound;
+		}
+		else if (circleCenter.y < yMinBound)
+		{
+			circleOnY = yMinBound;
+		}
 		// 7. use clamped point as closest point of box
+		Vector2 closestPoint = new Vector2(circleOnX, circleOnY);
+		Vector2 distance = closestPoint - circleCenter;
+		float distSqr = Vector2.Dot(distance, distance);
 		// 8. check if closest point of box is within the circle
+		if (distSqr < radius * radius)
+		{
+			Debug.Log("SLUGMA BALLZ");
+		}
 		// 9. do test (if in circle, true, else false)
 
 		return false;

@@ -6,14 +6,10 @@ public class AxisAlignedBoundingBoxCollision2D : CollisionHull2D
 {
 	public AxisAlignedBoundingBoxCollision2D() : base(CollisionHullType2D.aabb) { }
 
+	public float width = 0, height = 0;
+
 	// Start is called before the first frame update
 	void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
     {
         
     }

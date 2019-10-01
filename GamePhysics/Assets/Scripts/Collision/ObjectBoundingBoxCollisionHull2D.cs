@@ -6,6 +6,8 @@ public class ObjectBoundingBoxCollisionHull2D : CollisionHull2D
 {
 	public ObjectBoundingBoxCollisionHull2D() : base(CollisionHullType2D.obb) { }
 
+	public float width = 0, height = 0;
+
 	// Start is called before the first frame update
 	void Start()
     {

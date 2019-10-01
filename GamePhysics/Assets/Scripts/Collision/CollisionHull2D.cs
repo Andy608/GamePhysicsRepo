@@ -39,6 +39,11 @@ public abstract class CollisionHull2D : MonoBehaviour
 	{
 		//for (int i = 0; i < 4; i++)
 		//{
+		if (otherObj == null)
+		{
+			return;
+		}
+
 		if (otherObj.type == CollisionHullType2D.circle)
 		{
 			TestCollisionVsCircle(otherObj as CircleCollisionHull2D);
@@ -46,6 +51,14 @@ public abstract class CollisionHull2D : MonoBehaviour
 		else if (otherObj.type == CollisionHullType2D.aabb)
 		{
 			TestCollisionVsAABB(otherObj as AxisAlignedBoundingBoxCollision2D);
+		}
+		else if (otherObj.type == CollisionHullType2D.obb)
+		{
+			TestCollisionVsObject(otherObj as ObjectBoundingBoxCollisionHull2D);
+		}
+		else if (otherObj.type == CollisionHullType2D.penis)
+		{
+			print("I N T E R P E N E T R A T I O N");
 		}
 		//}
 	}
