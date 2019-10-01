@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class CollisionManager : MonoBehaviour
 {
-    public List<CollisionHull2D> objs = new List<CollisionHull2D>();
+    private CollisionHull2D[] objs;
 
     private List<CollisionHull2D> unCheckedObjs = new List<CollisionHull2D>();
+
+    private void Start()
+    {
+        objs = GetComponentsInChildren<CollisionHull2D>();
+    }
 
     private void Update()
     {
