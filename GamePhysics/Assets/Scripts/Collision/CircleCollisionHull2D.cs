@@ -6,9 +6,6 @@ public class CircleCollisionHull2D : CollisionHull2D
 {
 	public CircleCollisionHull2D() : base(CollisionHullType2D.circle) { }
 
-	public Transform point1, point2, point3, point4;
-	public Transform ball;
-
 	[Range(0.0f, 69.0f)] public float radius = 5.0f;
 
     // Start is called before the first frame update
@@ -109,20 +106,8 @@ public class CircleCollisionHull2D : CollisionHull2D
 		float yMaxBound = other.height * 0.5f;
 		float yMinBound = -other.height * 0.5f;
 
-		Matrix4x4 matObb1Inverse = other.transform.localToWorldMatrix;
-
-		point1.position = matObb1Inverse * new Vector2(xMaxBound, yMaxBound);
-		point2.position = matObb1Inverse * new Vector2(xMinBound, yMaxBound);
-		point3.position = matObb1Inverse * new Vector2(xMaxBound, yMinBound);
-		point4.position = matObb1Inverse * new Vector2(xMinBound, yMinBound);
-
-
 		// 4. multiply circle center world position by box world to local matrix
-		Matrix4x4 matObbInverse = other.transform.worldToLocalMatrix;
-		//Vector2 circleInBoxSpace = matObbInverse * circleCenter;
-		circleCenter = matObbInverse * circleCenter;
-
-		ball.position = circleCenter;
+		circleCenter = other.transform.InverseTransformPoint(circleCenter);
 
 		// 5. clamp circle center on box x bound
 		float circleOnX = circleCenter.x;
