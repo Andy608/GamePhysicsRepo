@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4356686846349863406}
   - component: {fileID: 4356686846349863408}
   - component: {fileID: 3675654100012333136}
+  - component: {fileID: -7231507826142070513}
   m_Layer: 0
   m_Name: AABB
   m_TagString: Untagged
@@ -104,3 +105,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 808f888abeebf4242befe477bc1ae145, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveX: 0
+  moveY: 0
+  xRange: 0.5
+  yRange: 0.5
+--- !u!114 &-7231507826142070513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4356686846349863409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3064e8ffe6e3784ba157e31681b1d0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  testFloor: {fileID: 0}
+  testSpringAnchor: {fileID: 0}
+  positionType: 1
+  rotationType: 1
+  forceType: 0
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
+  startingMass: 1
+  pointApplied: {x: 0, y: 0}
+  forceApplied: {x: 0, y: 0}
+  centerOfMass: {x: 0, y: 0}
+  particleShape: 0

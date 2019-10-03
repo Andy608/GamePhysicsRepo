@@ -6,12 +6,12 @@ public class ObjectBoundingBoxCollisionHull2D : CollisionHull2D
 {
 	public ObjectBoundingBoxCollisionHull2D() : base(CollisionHullType2D.obb) { }
 
-    [Range(0.0f, 720.0f)] public float rotationSpeed = 90.0f;
+    //[Range(0.0f, 720.0f)] public float rotationSpeed = 90.0f;
 
-    public void Update()
-    {
-        transform.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
-    }
+    //public void Update()
+    //{
+    //    //transform.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
+    //}
 
 	public override bool TestCollisionVsCircle(CircleCollisionHull2D other)
 	{

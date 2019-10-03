@@ -12,16 +12,15 @@ public abstract class CollisionHull2D : MonoBehaviour
             Vector2 point;
             Vector2 normal;
             float coefficientRestitution;
-
         }
 
         public CollisionHull2D a = null, b = null;
         public bool status = false;
         public Contact[] contact = new Contact[4];
         public int contactCount = 0;
-        public Vector2 closingVelocity = Vector2.zero;
+        public float closingVelocity = 0.0f;
 
-        public Collision(CircleCollisionHull2D hullA, CircleCollisionHull2D hullB, Contact[] c, Vector2 closingVel)
+        public Collision(CollisionHull2D hullA, CollisionHull2D hullB, Contact[] c, float closingVel)
         {
             a = hullA;
             b = hullB;
@@ -50,7 +49,7 @@ public abstract class CollisionHull2D : MonoBehaviour
     {
         if (colliding)
         {
-            if (!collidingWith.Contains(otherObj))
+            if (!IsColliding(otherObj))
             {
                 collidingWith.Add(otherObj);
             }
@@ -75,6 +74,11 @@ public abstract class CollisionHull2D : MonoBehaviour
         return collidingWith.Count != 0;
     }
 
+    public bool IsColliding(CollisionHull2D other)
+    {
+        return collidingWith.Contains(other);
+    }
+
     protected CollisionHull2D(CollisionHullType2D _type)
     {
         type = _type;
@@ -88,24 +92,26 @@ public abstract class CollisionHull2D : MonoBehaviour
 
     public static bool TestCollision(CollisionHull2D a, CollisionHull2D b)
     {
+        bool validCollision = false;
+
         if (b.type == CollisionHullType2D.circle)
         {
-            return a.TestCollisionVsCircle(b as CircleCollisionHull2D);
+            validCollision = a.TestCollisionVsCircle(b as CircleCollisionHull2D);
         }
         else if (b.type == CollisionHullType2D.aabb)
         {
-            return a.TestCollisionVsAABB(b as AxisAlignedBoundingBoxCollision2D);
+            validCollision = a.TestCollisionVsAABB(b as AxisAlignedBoundingBoxCollision2D);
         }
         else if (b.type == CollisionHullType2D.obb)
         {
-            return a.TestCollisionVsObject(b as ObjectBoundingBoxCollisionHull2D);
+            validCollision = a.TestCollisionVsObject(b as ObjectBoundingBoxCollisionHull2D);
         }
         else if (b.type == CollisionHullType2D.penis)
         {
             print("I N T E R P E N E T R A T I O N");
         }
 
-        return false;
+        return validCollision;
     }
 
     public abstract bool TestCollisionVsCircle(CircleCollisionHull2D other);
