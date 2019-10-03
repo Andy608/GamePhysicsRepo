@@ -5,6 +5,31 @@ using UnityEngine;
 [RequireComponent(typeof(MeshRenderer))]
 public abstract class CollisionHull2D : MonoBehaviour
 {
+    public class Collision
+    {
+        public struct Contact
+        {
+            Vector2 point;
+            Vector2 normal;
+            float coefficientRestitution;
+
+        }
+
+        public CollisionHull2D a = null, b = null;
+        public bool status = false;
+        public Contact[] contact = new Contact[4];
+        public int contactCount = 0;
+        public Vector2 closingVelocity = Vector2.zero;
+
+        public Collision(CircleCollisionHull2D hullA, CircleCollisionHull2D hullB, Contact[] c, Vector2 closingVel)
+        {
+            a = hullA;
+            b = hullB;
+            contact = c;
+            closingVelocity = closingVel;
+        }
+    }
+
     public enum CollisionHullType2D
     {
         circle,
