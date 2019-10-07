@@ -7,16 +7,23 @@ public abstract class CollisionHull2D : MonoBehaviour
 {
     public class Collision
     {
-        public struct Contact
+        public class Contact
         {
-            Vector2 point;
-            Vector2 normal;
-            float coefficientRestitution;
+            public Vector2 Point { get; private set; }
+            public Vector2 Normal { get; private set; }
+            public float CoefficientRestitution { get; private set; }
+
+            public Contact(Vector2 p, Vector2 n, float coeff)
+            {
+                Point = p;
+                Normal = n;
+                CoefficientRestitution = coeff;
+            }
         }
 
         public CollisionHull2D a = null, b = null;
         public bool status = false;
-        public Contact[] contact = new Contact[4];
+        public Contact[] contactPoints = new Contact[4];
         public int contactCount = 0;
         public float closingVelocity = 0.0f;
 
@@ -24,8 +31,43 @@ public abstract class CollisionHull2D : MonoBehaviour
         {
             a = hullA;
             b = hullB;
-            contact = c;
+            contactPoints = c;
             closingVelocity = closingVel;
+        }
+
+        protected void Resolve()
+        {
+            ResolveVelocity();
+            ResolveInterpeneration();
+        }
+
+        protected float ResolveVelcity()
+        {
+            float separatingVel = -closingVelocity;
+
+            if (separatingVel > 0.0f)
+            {
+                //No impulse
+                return 0.0f;
+            }
+
+            foreach(Contact c in contactPoints)
+            {
+                if (c == null) break;
+
+                //Calculate the new separating vel.
+                float newSepVel = closingVelocity * c.CoefficientRestitution;
+                float deltaVel = newSepVel - separatingVel;
+
+                //We apply the change in velocity to each object in proportion to their mass
+                float totalInverseMass = a.GetComponent<Particle2D>().MassInv;
+
+                if (b != null)
+                {
+
+                }
+            }
+
         }
     }
 
@@ -43,15 +85,15 @@ public abstract class CollisionHull2D : MonoBehaviour
 
     private CollisionHullType2D type { get; }
 
-    private List<CollisionHull2D> collidingWith = new List<CollisionHull2D>();
+    private Dictionary<CollisionHull2D, Collision> collidingWith = new Dictionary<CollisionHull2D, Collision>();
 
-    public void SetColliding(bool colliding, CollisionHull2D otherObj)
+    public void SetColliding(bool colliding, CollisionHull2D otherObj, Collision c)
     {
         if (colliding)
         {
             if (!IsColliding(otherObj))
             {
-                collidingWith.Add(otherObj);
+                collidingWith.Add(otherObj, c);
             }
         }
         else
@@ -76,7 +118,7 @@ public abstract class CollisionHull2D : MonoBehaviour
 
     public bool IsColliding(CollisionHull2D other)
     {
-        return collidingWith.Contains(other);
+        return collidingWith.ContainsKey(other);
     }
 
     protected CollisionHull2D(CollisionHullType2D _type)
@@ -90,21 +132,21 @@ public abstract class CollisionHull2D : MonoBehaviour
         material = GetComponent<MeshRenderer>().material;
     }
 
-    public static bool TestCollision(CollisionHull2D a, CollisionHull2D b)
+    public static bool TestCollision(CollisionHull2D a, CollisionHull2D b, ref Collision col)
     {
         bool validCollision = false;
 
         if (b.type == CollisionHullType2D.circle)
         {
-            validCollision = a.TestCollisionVsCircle(b as CircleCollisionHull2D);
+            validCollision = a.TestCollisionVsCircle((b as CircleCollisionHull2D), ref col);
         }
         else if (b.type == CollisionHullType2D.aabb)
         {
-            validCollision = a.TestCollisionVsAABB(b as AxisAlignedBoundingBoxCollision2D);
+            validCollision = a.TestCollisionVsAABB((b as AxisAlignedBoundingBoxCollision2D), ref col);
         }
         else if (b.type == CollisionHullType2D.obb)
         {
-            validCollision = a.TestCollisionVsObject(b as ObjectBoundingBoxCollisionHull2D);
+            validCollision = a.TestCollisionVsObject((b as ObjectBoundingBoxCollisionHull2D), ref col);
         }
         else if (b.type == CollisionHullType2D.penis)
         {
@@ -114,11 +156,11 @@ public abstract class CollisionHull2D : MonoBehaviour
         return validCollision;
     }
 
-    public abstract bool TestCollisionVsCircle(CircleCollisionHull2D other);
+    public abstract bool TestCollisionVsCircle(CircleCollisionHull2D other, ref Collision c);
 
-    public abstract bool TestCollisionVsAABB(AxisAlignedBoundingBoxCollision2D other);
+    public abstract bool TestCollisionVsAABB(AxisAlignedBoundingBoxCollision2D other, ref Collision c);
 
-    public abstract bool TestCollisionVsObject(ObjectBoundingBoxCollisionHull2D other);
+    public abstract bool TestCollisionVsObject(ObjectBoundingBoxCollisionHull2D other, ref Collision c);
 
     protected static float projOnAxis(Vector2 point, Vector2 axis)
     {

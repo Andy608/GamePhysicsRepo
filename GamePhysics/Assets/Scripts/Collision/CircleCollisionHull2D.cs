@@ -14,7 +14,7 @@ public class CircleCollisionHull2D : CollisionHull2D
         
     }
 
-	public override bool TestCollisionVsCircle(CircleCollisionHull2D other)
+	public override bool TestCollisionVsCircle(CircleCollisionHull2D other, ref Collision c)
 	{
 		//collides if distance between centers is <= sum of radii
 		//or if you like opptimizations
@@ -34,13 +34,29 @@ public class CircleCollisionHull2D : CollisionHull2D
 		if (distSqr < radiiSum)
 		{
             Debug.Log("CIRCLE -> CIRCLE");
+
+            Particle2D aParticle = GetComponent<Particle2D>();
+            Particle2D bParticle = other.GetComponent<Particle2D>();
+
+            Collision.Contact[] contacts = new Collision.Contact[4];
+            Collision.Contact c1 = new Collision.Contact(
+                distance * 0.5f, 
+                (aParticle.Position - bParticle.Position).normalized,
+                0.001f);
+
+            contacts[0] = c1;
+
+            float closingVel = -Vector2.Dot((aParticle.Velocity - bParticle.Velocity), c1.Normal);
+
+            c = new Collision(this, other, contacts, closingVel);
 			return true;
 		}
 
+        c = null;
 		return false;
 	}
 
-	public override bool TestCollisionVsAABB(AxisAlignedBoundingBoxCollision2D other)
+	public override bool TestCollisionVsAABB(AxisAlignedBoundingBoxCollision2D other, ref Collision c)
 	{
 		// find closest point to circle on box
 		// done by clamping center of circle to be within box dimensions
@@ -93,7 +109,7 @@ public class CircleCollisionHull2D : CollisionHull2D
 		return false;
 	}
 
-	public override bool TestCollisionVsObject(ObjectBoundingBoxCollisionHull2D other)
+	public override bool TestCollisionVsObject(ObjectBoundingBoxCollisionHull2D other, ref Collision c)
 	{
 		//same as above but first...
 		//multiply circle center by box inverse matrix 

@@ -44,7 +44,7 @@ public class AxisAlignedBoundingBoxCollision2D : CollisionHull2D
         //OBJblOBB = Instantiate(testPoint);
     }
 
-    public override bool TestCollisionVsCircle(CircleCollisionHull2D other)
+    public override bool TestCollisionVsCircle(CircleCollisionHull2D other, ref Collision col)
 	{
         //SEE CIRCLE
 
@@ -102,7 +102,7 @@ public class AxisAlignedBoundingBoxCollision2D : CollisionHull2D
         return false;
 	}
 
-	public override bool TestCollisionVsAABB(AxisAlignedBoundingBoxCollision2D other)
+	public override bool TestCollisionVsAABB(AxisAlignedBoundingBoxCollision2D other, ref Collision col)
 	{
         //pass if, for all axis, max extent of A is greater than min extent of B
         //
@@ -157,7 +157,7 @@ public class AxisAlignedBoundingBoxCollision2D : CollisionHull2D
 		//return true;
 	}
 
-	public override bool TestCollisionVsObject(ObjectBoundingBoxCollisionHull2D other)
+	public override bool TestCollisionVsObject(ObjectBoundingBoxCollisionHull2D other, ref Collision col)
 	{
         // 1. Find width and height for both boxes.
 
