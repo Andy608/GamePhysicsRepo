@@ -9,6 +9,7 @@ public abstract class CollisionHull2D : MonoBehaviour
     {
         public class Contact
         {
+            public float Penetration { get; private set; }
             public Vector2 Point { get; private set; }
             public Vector2 Normal { get; private set; }
             public float CoefficientRestitution { get; private set; }
@@ -38,17 +39,50 @@ public abstract class CollisionHull2D : MonoBehaviour
         protected void Resolve()
         {
             ResolveVelocity();
-            ResolveInterpeneration();
+            ResolveInterpenetration();
         }
 
-        protected float ResolveVelcity()
+        protected void ResolveInterpenetration()
+        {
+            foreach (Contact c in contactPoints)
+            {
+                if (c == null) break;
+
+                if (c.Penetration <= 0) return;
+
+                float totalInverseMass = a.GetComponent<Particle2D>().MassInv;
+
+                if (b != null)
+                {
+                    totalInverseMass += b.GetComponent<Particle2D>().MassInv;
+                }
+
+                if (totalInverseMass <= 0) return;
+
+                Vector2 movePerIMass = c.Normal * (c.Penetration / totalInverseMass);
+
+                Vector2 aMovement = movePerIMass * a.GetComponent<Particle2D>().MassInv;
+                Vector2 bMovement = Vector2.zero;
+
+                if (b != null)
+                {
+                    bMovement = movePerIMass * -b.GetComponent<Particle2D>().MassInv;
+                }
+
+                a.GetComponent<Particle2D>().SetPosition(a.GetComponent<Particle2D>().Position + aMovement);
+                b.GetComponent<Particle2D>().SetPosition(b.GetComponent<Particle2D>().Position + bMovement);
+            }
+
+        }
+
+        protected void ResolveVelocity()
         {
             float separatingVel = -closingVelocity;
 
             if (separatingVel > 0.0f)
             {
                 //No impulse
-                return 0.0f;
+                return;
             }
 
             foreach(Contact c in contactPoints)
@@ -64,7 +98,24 @@ public abstract class CollisionHull2D : MonoBehaviour
 
                 if (b != null)
                 {
+                    totalInverseMass += b.GetComponent<Particle2D>().MassInv;
+                }
 
+                //Infinite mass
+                if (totalInverseMass <= 0)
+                {
+                    return;
+                }
+
+                float impulse = deltaVel / totalInverseMass;
+
+                //Find the amount of impulse per unit of inverse mass.
+                Vector2 impulsePerIMass = c.Normal * impulse;
+                a.GetComponent<Particle2D>().SetVelocity(a.GetComponent<Particle2D>().Velocity + impulsePerIMass * a.GetComponent<Particle2D>().MassInv);
+
+                if (b != null)
+                {
+                    b.GetComponent<Particle2D>().SetVelocity(b.GetComponent<Particle2D>().Velocity + impulsePerIMass * b.GetComponent<Particle2D>().MassInv);
                 }
             }
 

@@ -68,6 +68,16 @@ public class Particle2D : MonoBehaviour
         other
     }
 
+    public void SetVelocity(Vector2 v)
+    {
+        Velocity = v;
+    }
+
+    public void SetPosition(Vector2 p)
+    {
+        Position = p;
+    }
+
     public void AddForce(Vector2 newForce)
     {
         //D'Alembert
