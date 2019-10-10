@@ -138,11 +138,6 @@ public class ShipController : MonoBehaviour
         BoundsCheck();
     }
 
-    //private float FlipRotation(float rotation)
-    //{
-    //    return rotation += (2.0f * (90.0f - rotation) - 180.0f);
-    //}
-
     private void FlipShip(bool flip)
     {
         isSpriteFlipped = flip;

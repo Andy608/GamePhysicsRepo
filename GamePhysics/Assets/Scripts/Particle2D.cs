@@ -32,6 +32,9 @@ public class Particle2D : MonoBehaviour
     private Vector2 force = Vector2.zero;
 
     public Vector2 Position;
+    public Vector2 PrevPosition;
+    private Vector3 PosDiff = Vector3.zero;
+
     public Vector2 Velocity;
     public Vector2 Acceleration;
 
@@ -90,8 +93,9 @@ public class Particle2D : MonoBehaviour
     {
         Mass = startingMass;
         Position = transform.position;
+        PrevPosition = transform.position;
 
-		Velocity = InitialVel;
+        Velocity = InitialVel;
 
 		//lab3
 		switch (particleShape)
@@ -125,6 +129,7 @@ public class Particle2D : MonoBehaviour
     private void Init()
     {
         Position = Vector2.zero;
+        PrevPosition = Vector2.zero;
         Acceleration = Vector2.zero;
         Velocity = Vector2.zero;
     }
@@ -165,7 +170,11 @@ public class Particle2D : MonoBehaviour
         UpdateAngularAcceleration();
         UpdateAcceleration();
 
-        transform.position = Position;
+        PosDiff.x = Position.x - PrevPosition.x;
+        PosDiff.y = Position.y - PrevPosition.y;
+        Debug.Log(Position);
+        transform.position += PosDiff;
+        PrevPosition = Position;
 
 		//Vector2 gravitationalForce = ForceGenerator.GenerateForce_Gravity(mass, -Gravity.y, Vector2.up);
 		//Vector2 normalForce = ForceGenerator.GenerateForce_Normal(-gravitationalForce, testFloor.transform.up);

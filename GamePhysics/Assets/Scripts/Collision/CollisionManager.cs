@@ -47,7 +47,7 @@ public class CollisionManager : ManagerBase<CollisionManager>
 			}
 		}
 
-		Debug.Log("I've counted " + count + " collisions!");
+		Debug.Log("TESTED: " + count + " POSSIBLE COLLISIONS.");
         Debug.Log("Registered Obj Count: " + objs.Count);
 
 

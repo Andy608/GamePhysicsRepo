@@ -170,7 +170,7 @@ public abstract class CollisionHull2D : MonoBehaviour
             if (material)
                 material.color = Color.green;
             else
-                spriteRenderer.color = Color.red;
+                spriteRenderer.color = Color.green;
         }
     }
 
