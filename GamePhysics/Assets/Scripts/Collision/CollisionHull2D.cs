@@ -195,12 +195,12 @@ public abstract class CollisionHull2D : MonoBehaviour
 
         material = GetComponent<Material>();
 
-        CollisionManager.Instance.RegisterObject(this);
+        CollisionManager.Instance?.RegisterObject(this);
     }
 
     private void OnDestroy()
     {
-        CollisionManager.Instance.UnRegisterObject(this);
+        CollisionManager.Instance?.UnRegisterObject(this);
     }
 
     public static bool TestCollision(CollisionHull2D a, CollisionHull2D b, ref Collision col)
