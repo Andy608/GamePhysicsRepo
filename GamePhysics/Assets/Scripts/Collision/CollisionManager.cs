@@ -21,8 +21,6 @@ public class CollisionManager : ManagerBase<CollisionManager>
     {
         unCheckedObjs.AddRange(objs);
 
-		//List<CollisionHull2D.Collision> collisions = new List<CollisionHull2D.Collision>();
-
 		int count = 0;
 
 		for (int i = 0; i < unCheckedObjs.Count; i++)
@@ -40,7 +38,6 @@ public class CollisionManager : ManagerBase<CollisionManager>
                 //if (currentObj.IsColliding())
                 if (isColliding)
 				{
-                    //collisions.Add(col);
                     col.Resolve();
                 }
                 count++;
@@ -50,41 +47,6 @@ public class CollisionManager : ManagerBase<CollisionManager>
 		Debug.Log("TESTED: " + count + " POSSIBLE COLLISIONS.");
         Debug.Log("Registered Obj Count: " + objs.Count);
 
-
-		//foreach (CollisionHull2D otherObj in objs)
-        //{
-        //    for (int i = 0; i < unCheckedObjs.Count; ++i)
-        //    {
-        //        CollisionHull2D currentObj = unCheckedObjs[i];
-		//
-        //        if (currentObj.GetInstanceID() == otherObj.GetInstanceID()) continue;
-		//
-        //        CollisionHull2D.Collision col = null;
-        //        bool isColliding = CollisionHull2D.TestCollision(currentObj, otherObj, ref col);
-        //        currentObj.SetColliding(isColliding, otherObj, col);
-		//
-		//		if (currentObj.IsColliding())
-		//		{
-		//			collisions.Add(col);
-		//		}
-		//
-		//		//otherObj.SetColliding(isColliding, currentObj, col);
-        //    }
-		//
-        //    //unCheckedObjs.RemoveAt(0);
-        //}
-
-		//if (collisions.Count > 0)
-		//{
-		//	collisions[0].Resolve();
-		//}
-
-		//foreach (CollisionHull2D.Collision cols in collisions)
-		//{
-			//cols.Resolve();
-		//}
-
-		//collisions.Clear();
 		unCheckedObjs.Clear();
     }
 }

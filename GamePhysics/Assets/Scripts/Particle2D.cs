@@ -172,57 +172,76 @@ public class Particle2D : MonoBehaviour
 
         PosDiff.x = Position.x - PrevPosition.x;
         PosDiff.y = Position.y - PrevPosition.y;
-        Debug.Log(Position);
         transform.position += PosDiff;
         PrevPosition = Position;
 
-		//Vector2 gravitationalForce = ForceGenerator.GenerateForce_Gravity(mass, -Gravity.y, Vector2.up);
-		//Vector2 normalForce = ForceGenerator.GenerateForce_Normal(-gravitationalForce, testFloor.transform.up);
-		//Vector2 slideForce = ForceGenerator.GenerateForce_Sliding(gravitationalForce, normalForce);
-		//Vector2 frictionForce = ForceGenerator.GenerateForce_Friction(normalForce, slideForce, Velocity, frictionStatic, frictionKinetic);
-		//Vector2 dragForce = ForceGenerator.GenerateForce_Drag(Velocity, new Vector2(0.2f, 0.0f), 10.0f, 10.0f, 4.0f);
-		//Vector2 springForce = ForceGenerator.GenerateForce_Spring(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength);
-		//Vector2 springDampForce = ForceGenerator.GenerateForce_SpringDamping(mass, Velocity, springStrength, 5.0f);
-		//Vector2 springMaxLengthForce = ForceGenerator.GenerateForce_SpringWithMax(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength, maxSpringLength);
+		Vector2 gravitationalForce;// = ForceGenerator.GenerateForce_Gravity(mass, -Gravity.y, Vector2.up);
+		Vector2 normalForce;// = ForceGenerator.GenerateForce_Normal(-gravitationalForce, testFloor.transform.up);
+		Vector2 slideForce;// = ForceGenerator.GenerateForce_Sliding(gravitationalForce, normalForce);
+		Vector2 frictionForce;// = ForceGenerator.GenerateForce_Friction(normalForce, slideForce, Velocity, frictionStatic, frictionKinetic);
+		Vector2 dragForce;// = ForceGenerator.GenerateForce_Drag(Velocity, new Vector2(0.2f, 0.0f), 10.0f, 10.0f, 4.0f);
+		Vector2 springForce;// = ForceGenerator.GenerateForce_Spring(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength);
+		Vector2 springDampForce;// = ForceGenerator.GenerateForce_SpringDamping(mass, Velocity, springStrength, 5.0f);
+		Vector2 springMaxLengthForce;// = ForceGenerator.GenerateForce_SpringWithMax(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength, maxSpringLength);
 
-		//switch (forceType)
-		//{
-			//case ForceType.gravity:
-				//AddForce(gravitationalForce);
-				//break;
-			//case ForceType.normal:
-				//AddForce(normalForce);
-				//break;
-			//case ForceType.slide:
-				//AddForce(slideForce);
-				//break;
-			//case ForceType.friction:
-				//AddForce(slideForce);
-				//AddForce(frictionForce);
-				//break;
-			//case ForceType.drag:
-				//AddForce(dragForce);
-				//break;
-			//case ForceType.spring:
-				//AddForce(springForce);
-				//break;
-			//case ForceType.springDamping:
-				//AddForce(springForce);
-				//AddForce(springDampForce);
-				//AddForce(gravitationalForce);
-				//break;
-			//case ForceType.springWithMaxLength:
-				//AddForce(springMaxLengthForce);
-				//AddForce(springDampForce);
-				//AddForce(gravitationalForce);
-				//break;
-			//case ForceType.none:
-				////Debug.Log("We ain't movin chief.");
-				//break;
-			//default:
-				//AddForce(gravitationalForce);
-				//break;
-		//}
+		switch (forceType)
+		{
+			case ForceType.gravity:
+				gravitationalForce = ForceGenerator.GenerateForce_Gravity(mass, -Gravity.y, Vector2.up);
+				AddForce(gravitationalForce);
+				break;
+			case ForceType.normal:
+				gravitationalForce = ForceGenerator.GenerateForce_Gravity(mass, -Gravity.y, Vector2.up);
+				normalForce = ForceGenerator.GenerateForce_Normal(-gravitationalForce, testFloor.transform.up);
+				AddForce(normalForce);
+				break;
+			case ForceType.slide:
+				gravitationalForce = ForceGenerator.GenerateForce_Gravity(mass, -Gravity.y, Vector2.up);
+				normalForce = ForceGenerator.GenerateForce_Normal(-gravitationalForce, testFloor.transform.up);
+				slideForce = ForceGenerator.GenerateForce_Sliding(gravitationalForce, normalForce);
+				AddForce(slideForce);
+				break;
+			case ForceType.friction:
+				gravitationalForce = ForceGenerator.GenerateForce_Gravity(mass, -Gravity.y, Vector2.up);
+				normalForce = ForceGenerator.GenerateForce_Normal(-gravitationalForce, testFloor.transform.up);
+				slideForce = ForceGenerator.GenerateForce_Sliding(gravitationalForce, normalForce);
+				frictionForce = ForceGenerator.GenerateForce_Friction(normalForce, slideForce, Velocity, frictionStatic, frictionKinetic);
+				AddForce(slideForce);
+				AddForce(frictionForce);
+				break;
+			case ForceType.drag:
+				dragForce = ForceGenerator.GenerateForce_Drag(Velocity, new Vector2(0.2f, 0.0f), 10.0f, 10.0f, 4.0f);
+				AddForce(dragForce);
+				break;
+			case ForceType.spring:
+				springForce = ForceGenerator.GenerateForce_Spring(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength);
+				AddForce(springForce);
+				break;
+			case ForceType.springDamping:
+				springForce = ForceGenerator.GenerateForce_Spring(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength);
+				springDampForce = ForceGenerator.GenerateForce_SpringDamping(mass, Velocity, springStrength, 5.0f);
+				gravitationalForce = ForceGenerator.GenerateForce_Gravity(mass, -Gravity.y, Vector2.up);
+				AddForce(springForce);
+				AddForce(springDampForce);
+				AddForce(gravitationalForce);
+				break;
+			case ForceType.springWithMaxLength:
+				springMaxLengthForce = ForceGenerator.GenerateForce_SpringWithMax(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength, maxSpringLength);
+				springDampForce = ForceGenerator.GenerateForce_SpringDamping(mass, Velocity, springStrength, 5.0f);
+				gravitationalForce = ForceGenerator.GenerateForce_Gravity(mass, -Gravity.y, Vector2.up);
+				AddForce(springMaxLengthForce);
+				AddForce(springDampForce);
+				AddForce(gravitationalForce);
+				break;
+			case ForceType.none:
+				//Debug.Log("We ain't movin chief.");
+				break;
+			default:
+				gravitationalForce = ForceGenerator.GenerateForce_Gravity(mass, -Gravity.y, Vector2.up);
+				AddForce(gravitationalForce);
+				break;
+		}
+		
 
 		//lab03		
 		ApplyTorque(pointApplied, forceApplied);
