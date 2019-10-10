@@ -453,6 +453,7 @@ GameObject:
   - component: {fileID: 1047125423}
   - component: {fileID: 1047125424}
   - component: {fileID: 1047125425}
+  - component: {fileID: 1047125426}
   m_Layer: 0
   m_Name: Ship
   m_TagString: Untagged
@@ -501,11 +502,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 1047125422}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3064e8ffe6e3784ba157e31681b1d0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 3eed5478fa3949a4aaafa7e4b576c7c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Gravity: {x: 0, y: 9.8}
+  InitialVel: {x: 0, y: 0}
+  testFloor: {fileID: 0}
+  testSpringAnchor: {fileID: 0}
   positionType: 1
   rotationType: 1
+  forceType: 0
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
   startingMass: 10
   Position: {x: 0, y: 0}
   Velocity: {x: 0, y: 0}
@@ -513,10 +524,25 @@ MonoBehaviour:
   Rotation: 0
   RotVelocity: 0
   RotAcceleration: 0
+  helperRot: {x: 0, y: 0, z: 0}
   pointApplied: {x: 0, y: 0}
   forceApplied: {x: 0, y: 0}
   centerOfMass: {x: 0, y: 0}
   particleShape: 0
+--- !u!114 &1047125426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047125422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a30518269e4dc74aaa17dba6a6896cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 302688628}
+  radius: 200
 --- !u!1 &1150100548
 GameObject:
   m_ObjectHideFlags: 0
@@ -603,7 +629,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 959.99994
+  orthographic size: 960
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

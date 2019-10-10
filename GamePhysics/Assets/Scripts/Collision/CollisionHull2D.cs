@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshRenderer))]
 public abstract class CollisionHull2D : MonoBehaviour
 {
     public class Collision
@@ -14,11 +13,12 @@ public abstract class CollisionHull2D : MonoBehaviour
             public Vector2 Normal { get; private set; }
             public float CoefficientRestitution { get; private set; }
 
-            public Contact(Vector2 p, Vector2 n, float coeff)
+            public Contact(Vector2 p, Vector2 n, float coeffRes, float depPen)
             {
                 Point = p;
                 Normal = n;
-                CoefficientRestitution = coeff;
+                CoefficientRestitution = coeffRes;
+				Penetration = depPen;
             }
         }
 
@@ -26,17 +26,17 @@ public abstract class CollisionHull2D : MonoBehaviour
         public bool status = false;
         public Contact[] contactPoints = new Contact[4];
         public int contactCount = 0;
-        public float closingVelocity = 0.0f;
+        public float separatingVelocity = 0.0f;
 
-        public Collision(CollisionHull2D hullA, CollisionHull2D hullB, Contact[] c, float closingVel)
+        public Collision(CollisionHull2D hullA, CollisionHull2D hullB, Contact[] c, float separatingVel)
         {
             a = hullA;
             b = hullB;
             contactPoints = c;
-            closingVelocity = closingVel;
+            separatingVelocity = separatingVel;
         }
 
-        protected void Resolve()
+        public void Resolve()
         {
             ResolveVelocity();
             ResolveInterpenetration();
@@ -48,7 +48,11 @@ public abstract class CollisionHull2D : MonoBehaviour
             {
                 if (c == null) break;
 
-                if (c.Penetration <= 0) return;
+				if (c.Penetration <= 0)
+				{
+					Debug.Log("No pen");
+					return;
+				}
 
                 float totalInverseMass = a.GetComponent<Particle2D>().MassInv;
 
@@ -60,26 +64,24 @@ public abstract class CollisionHull2D : MonoBehaviour
                 if (totalInverseMass <= 0) return;
 
                 Vector2 movePerIMass = c.Normal * (c.Penetration / totalInverseMass);
+				Debug.Log(movePerIMass);
+				Debug.Log(c.Penetration);
+				Vector2 aMovement = movePerIMass * a.GetComponent<Particle2D>().MassInv;
+				a.GetComponent<Particle2D>().SetPosition(a.GetComponent<Particle2D>().Position + aMovement);
 
-                Vector2 aMovement = movePerIMass * a.GetComponent<Particle2D>().MassInv;
-                Vector2 bMovement = Vector2.zero;
-
-                if (b != null)
+				if (b != null)
                 {
-                    bMovement = movePerIMass * -b.GetComponent<Particle2D>().MassInv;
-                }
+					Vector2 bMovement = movePerIMass * b.GetComponent<Particle2D>().MassInv;
+					b.GetComponent<Particle2D>().SetPosition(b.GetComponent<Particle2D>().Position + bMovement);
+				}
 
-                a.GetComponent<Particle2D>().SetPosition(a.GetComponent<Particle2D>().Position + aMovement);
-                b.GetComponent<Particle2D>().SetPosition(b.GetComponent<Particle2D>().Position + bMovement);
-            }
+			}
 
         }
 
         protected void ResolveVelocity()
         {
-            float separatingVel = -closingVelocity;
-
-            if (separatingVel > 0.0f)
+            if (separatingVelocity > 0.0f)
             {
                 //No impulse
                 return;
@@ -89,11 +91,11 @@ public abstract class CollisionHull2D : MonoBehaviour
             {
                 if (c == null) break;
 
-                //Calculate the new separating vel.
-                float newSepVel = closingVelocity * c.CoefficientRestitution;
-                float deltaVel = newSepVel - separatingVel;
+				//Calculate the new separating vel.
+				float newSepVel = -separatingVelocity * c.CoefficientRestitution;
+                float deltaVel = newSepVel - separatingVelocity;
 
-                //We apply the change in velocity to each object in proportion to their mass
+                //We apply the change in velocity to each object in proportion to their inverse mass
                 float totalInverseMass = a.GetComponent<Particle2D>().MassInv;
 
                 if (b != null)
@@ -104,6 +106,7 @@ public abstract class CollisionHull2D : MonoBehaviour
                 //Infinite mass
                 if (totalInverseMass <= 0)
                 {
+					Debug.Log("Inf Mass");
                     return;
                 }
 
@@ -115,7 +118,7 @@ public abstract class CollisionHull2D : MonoBehaviour
 
                 if (b != null)
                 {
-                    b.GetComponent<Particle2D>().SetVelocity(b.GetComponent<Particle2D>().Velocity + impulsePerIMass * b.GetComponent<Particle2D>().MassInv);
+                    b.GetComponent<Particle2D>().SetVelocity(b.GetComponent<Particle2D>().Velocity + impulsePerIMass * -b.GetComponent<Particle2D>().MassInv);
                 }
             }
 
@@ -131,34 +134,43 @@ public abstract class CollisionHull2D : MonoBehaviour
     }
 
     private Material material;
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
     protected Particle2D particle;
 
     private CollisionHullType2D type { get; }
 
-    private Dictionary<CollisionHull2D, Collision> collidingWith = new Dictionary<CollisionHull2D, Collision>();
+    private List<CollisionHull2D> collidingWith = new List<CollisionHull2D>();
 
-    public void SetColliding(bool colliding, CollisionHull2D otherObj, Collision c)
+    public void SetColliding(bool colliding, CollisionHull2D otherObj)
     {
         if (colliding)
         {
             if (!IsColliding(otherObj))
             {
-                collidingWith.Add(otherObj, c);
+                collidingWith.Add(otherObj);
+                //otherObj.collidingWith.Add(this, c);
             }
         }
         else
         {
             collidingWith.Remove(otherObj);
+            //otherObj.collidingWith.Remove(this);
         }
 
         if (IsColliding())
         {
-            material.color = Color.red;
+            if (material)
+                material.color = Color.red;
+            else
+                spriteRenderer.color = Color.red;
         }
         else
         {
-            material.color = Color.green;
+            if (material)
+                material.color = Color.green;
+            else
+                spriteRenderer.color = Color.red;
         }
     }
 
@@ -169,7 +181,7 @@ public abstract class CollisionHull2D : MonoBehaviour
 
     public bool IsColliding(CollisionHull2D other)
     {
-        return collidingWith.ContainsKey(other);
+        return collidingWith.Contains(other);
     }
 
     protected CollisionHull2D(CollisionHullType2D _type)
@@ -180,7 +192,15 @@ public abstract class CollisionHull2D : MonoBehaviour
     private void Awake()
     {
         particle = GetComponent<Particle2D>();
-        material = GetComponent<MeshRenderer>().material;
+
+        material = GetComponent<Material>();
+
+        CollisionManager.Instance.RegisterObject(this);
+    }
+
+    private void OnDestroy()
+    {
+        CollisionManager.Instance.UnRegisterObject(this);
     }
 
     public static bool TestCollision(CollisionHull2D a, CollisionHull2D b, ref Collision col)

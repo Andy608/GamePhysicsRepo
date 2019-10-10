@@ -4,10 +4,24 @@ using UnityEngine;
 
 public class Particle2D : MonoBehaviour
 {
-    private static Vector2 Gravity = new Vector2(0.0f, -10.0f);
+    public Vector2 Gravity = new Vector2(0.0f, 9.8f);
+
+	[SerializeField] private Vector2 InitialVel = Vector2.zero;
+
+    [SerializeField] private GameObject testFloor = null;
+    [SerializeField] private Transform testSpringAnchor = null;
 
     [SerializeField] private PosIntegrationType positionType = PosIntegrationType.EulerExplicit;
     [SerializeField] private RotIntegrationType rotationType = RotIntegrationType.EulerExplicit;
+	[SerializeField] private ForceType forceType = ForceType.gravity;
+
+	//[SerializeField] [Range(0.0f, 10.0f)] private float scaleX = 1.0f;
+	//[SerializeField] [Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
+	[SerializeField] [Range(0.0f, 1.0f)] private float frictionStatic = 0.75f;
+	[SerializeField] [Range(0.0f, 1.0f)] private float frictionKinetic = 0.75f;
+	[SerializeField] [Range(1.0f, 1.0f)] private float springRestingLength = 0.3f;
+	[SerializeField] [Range(0.0f, 8.0f)] private float springStrength = 1.0f;
+	[SerializeField] [Range(1.0f, 8.0f)] private float maxSpringLength = 1.0f;
 
 	[SerializeField] private float startingMass = 1.0f;
 
@@ -24,11 +38,7 @@ public class Particle2D : MonoBehaviour
     public float Rotation;
     public float RotVelocity;
     public float RotAcceleration;
-    private Vector3 helperRot;
-
-    //public float RotUpperBound;
-    //public float RotLowerBound;
-    //public bool IsRotBounded = false;
+    public Vector3 helperRot;
 
     //lab3
     private float momentOfInertia = 0;
@@ -81,8 +91,10 @@ public class Particle2D : MonoBehaviour
         Mass = startingMass;
         Position = transform.position;
 
-        //lab3
-        switch (particleShape)
+		Velocity = InitialVel;
+
+		//lab3
+		switch (particleShape)
         {
             case ParticleShape.ring:
                 //inertia = 0.5 * mass * (radiusOuter^2 + radiusInner^2)
@@ -155,52 +167,52 @@ public class Particle2D : MonoBehaviour
 
         transform.position = Position;
 
-        //Vector2 gravitationalForce = ForceGenerator.GenerateForce_Gravity(mass, -9.8f, Vector2.up);
-        //Vector2 normalForce = ForceGenerator.GenerateForce_Normal(-gravitationalForce, testFloor.transform.up);
-        //Vector2 slideForce = ForceGenerator.GenerateForce_Sliding(gravitationalForce, normalForce);
-        //Vector2 frictionForce = ForceGenerator.GenerateForce_Friction(normalForce, slideForce, velocity, frictionStatic, frictionKinetic);
-        //Vector2 dragForce = ForceGenerator.GenerateForce_Drag(velocity, new Vector2(0.2f, 0.0f), 10.0f, 10.0f, 4.0f);
-        //Vector2 springForce = ForceGenerator.GenerateForce_Spring(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength);
-        //Vector2 springDampForce = ForceGenerator.GenerateForce_SpringDamping(mass, velocity, springStrength, 5.0f);
-        //Vector2 springMaxLengthForce = ForceGenerator.GenerateForce_SpringWithMax(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength, maxSpringLength);
+		//Vector2 gravitationalForce = ForceGenerator.GenerateForce_Gravity(mass, -Gravity.y, Vector2.up);
+		//Vector2 normalForce = ForceGenerator.GenerateForce_Normal(-gravitationalForce, testFloor.transform.up);
+		//Vector2 slideForce = ForceGenerator.GenerateForce_Sliding(gravitationalForce, normalForce);
+		//Vector2 frictionForce = ForceGenerator.GenerateForce_Friction(normalForce, slideForce, Velocity, frictionStatic, frictionKinetic);
+		//Vector2 dragForce = ForceGenerator.GenerateForce_Drag(Velocity, new Vector2(0.2f, 0.0f), 10.0f, 10.0f, 4.0f);
+		//Vector2 springForce = ForceGenerator.GenerateForce_Spring(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength);
+		//Vector2 springDampForce = ForceGenerator.GenerateForce_SpringDamping(mass, Velocity, springStrength, 5.0f);
+		//Vector2 springMaxLengthForce = ForceGenerator.GenerateForce_SpringWithMax(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength, maxSpringLength);
 
-        //switch (forceType)
-        //{
-        //    case ForceType.gravity:
-        //        AddForce(gravitationalForce);
-        //        break;
-        //    case ForceType.normal:
-		//		AddForce(normalForce);
-		//		break;
-		//	case ForceType.slide:
-		//		AddForce(slideForce);
-		//		break;
-		//	case ForceType.friction:
-		//		AddForce(slideForce);
-		//		AddForce(frictionForce);
-		//		break;
-		//	case ForceType.drag:
-		//		AddForce(dragForce);
-		//		break;
-		//	case ForceType.spring:
-		//		AddForce(springForce);
-		//		break;
-		//	case ForceType.springDamping:
-		//		AddForce(springForce);
-		//		AddForce(springDampForce);
-		//		AddForce(gravitationalForce);
-		//		break;
-		//	case ForceType.springWithMaxLength:
-		//		AddForce(springMaxLengthForce);
-		//		AddForce(springDampForce);
-		//		AddForce(gravitationalForce);
-		//		break;
-		//	case ForceType.none:
-		//		//Debug.Log("We ain't movin chief.");
-		//		break;
-		//	default:
-		//		AddForce(gravitationalForce);
-		//		break;
+		//switch (forceType)
+		//{
+			//case ForceType.gravity:
+				//AddForce(gravitationalForce);
+				//break;
+			//case ForceType.normal:
+				//AddForce(normalForce);
+				//break;
+			//case ForceType.slide:
+				//AddForce(slideForce);
+				//break;
+			//case ForceType.friction:
+				//AddForce(slideForce);
+				//AddForce(frictionForce);
+				//break;
+			//case ForceType.drag:
+				//AddForce(dragForce);
+				//break;
+			//case ForceType.spring:
+				//AddForce(springForce);
+				//break;
+			//case ForceType.springDamping:
+				//AddForce(springForce);
+				//AddForce(springDampForce);
+				//AddForce(gravitationalForce);
+				//break;
+			//case ForceType.springWithMaxLength:
+				//AddForce(springMaxLengthForce);
+				//AddForce(springDampForce);
+				//AddForce(gravitationalForce);
+				//break;
+			//case ForceType.none:
+				////Debug.Log("We ain't movin chief.");
+				//break;
+			//default:
+				//AddForce(gravitationalForce);
+				//break;
 		//}
 
 		//lab03		
@@ -209,14 +221,6 @@ public class Particle2D : MonoBehaviour
         //clamps rotation to 360
         SetRotation(Rotation %= 360.0f);
         RotAcceleration = angularAccel;
-
-        //Cut rot off at bounds
-        //if (IsRotBounded)
-        //{
-        //    Rotation = Mathf.Clamp(Rotation, RotLowerBound, RotUpperBound);
-        //    //RotAcceleration = 0.0f;
-        //    //RotVelocity = 0.0f;
-        //}
     }
 
     /// <summary>

@@ -70,6 +70,11 @@ public class Fishy : MonoBehaviour
         return maxGroupSpawn;
     }
 
+    private void Update()
+    {
+        BoundsCheck();
+    }
+
     private void BoundsCheck()
     {
         float topBounds = Camera.main.orthographicSize + Camera.main.transform.position.y;

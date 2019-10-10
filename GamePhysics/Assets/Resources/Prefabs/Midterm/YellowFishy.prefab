@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6818671362662292976}
   - component: {fileID: 6818671362662292991}
   - component: {fileID: 6818671362662292990}
+  - component: {fileID: 4821037915082846464}
   m_Layer: 0
   m_Name: YellowFishy
   m_TagString: Fishy
@@ -91,11 +92,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 6818671362662292979}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3064e8ffe6e3784ba157e31681b1d0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 3eed5478fa3949a4aaafa7e4b576c7c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Gravity: {x: 0, y: 9.8}
+  InitialVel: {x: 0, y: 0}
+  testFloor: {fileID: 0}
+  testSpringAnchor: {fileID: 0}
   positionType: 1
   rotationType: 1
+  forceType: 8
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
   startingMass: 1
   Position: {x: 0, y: 0}
   Velocity: {x: 0, y: 0}
@@ -103,6 +114,7 @@ MonoBehaviour:
   Rotation: 0
   RotVelocity: 0
   RotAcceleration: 0
+  helperRot: {x: 0, y: 0, z: 0}
   pointApplied: {x: 0, y: 0}
   forceApplied: {x: 0, y: 0}
   centerOfMass: {x: 0, y: 0}
@@ -120,8 +132,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fishSprite: {fileID: 6818671362662292976}
+  SwimRight: 0
   spawnRate: 2
   fishSpeed: 1
-  fishSecondCounter: 1.5141413
+  fishSecondCounter: 1.9153414
   minGroupSpawn: 1
   maxGroupSpawn: 10
+--- !u!114 &4821037915082846464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6818671362662292979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a30518269e4dc74aaa17dba6a6896cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 6818671362662292976}
+  radius: 100

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TorpedoSpawner : MonoBehaviour
 {
-    [SerializeField] private Torpedo torpedoPrefab;
+    [SerializeField] private Torpedo torpedoPrefab = null;
     [SerializeField] private float torpedoSpeed = 10.0f;
 
     public void FireTorpedo(bool isSpriteFlipped)

@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5403143900049122068}
   - component: {fileID: 5403143900049122071}
-  - component: {fileID: 5403143900049122074}
   - component: {fileID: 5403143900049122069}
+  - component: {fileID: 1218491243461975604}
+  - component: {fileID: -163340519300075836}
   m_Layer: 0
   m_Name: SharkFishy 1
   m_TagString: Fishy
@@ -82,31 +83,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5403143900049122074
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5403143900049122070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3064e8ffe6e3784ba157e31681b1d0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  positionType: 1
-  rotationType: 1
-  startingMass: 1
-  Position: {x: 0, y: 0}
-  Velocity: {x: 0, y: 0}
-  Acceleration: {x: 0, y: 0}
-  Rotation: 0
-  RotVelocity: 0
-  RotAcceleration: 0
-  pointApplied: {x: 0, y: 0}
-  forceApplied: {x: 0, y: 0}
-  centerOfMass: {x: 0, y: 0}
-  particleShape: 0
 --- !u!114 &5403143900049122069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,8 +96,59 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fishSprite: {fileID: 5403143900049122071}
+  SwimRight: 0
   spawnRate: 10
   fishSpeed: 1
-  fishSecondCounter: 7.74881
+  fishSecondCounter: 4.3582253
   minGroupSpawn: 1
   maxGroupSpawn: 10
+--- !u!114 &1218491243461975604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5403143900049122070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eed5478fa3949a4aaafa7e4b576c7c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gravity: {x: 0, y: 9.8}
+  InitialVel: {x: 0, y: 0}
+  testFloor: {fileID: 0}
+  testSpringAnchor: {fileID: 0}
+  positionType: 1
+  rotationType: 1
+  forceType: 8
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
+  startingMass: 1
+  Position: {x: 0, y: 0}
+  Velocity: {x: 0, y: 0}
+  Acceleration: {x: 0, y: 0}
+  Rotation: 0
+  RotVelocity: 0
+  RotAcceleration: 0
+  helperRot: {x: 0, y: 0, z: 0}
+  pointApplied: {x: 0, y: 0}
+  forceApplied: {x: 0, y: 0}
+  centerOfMass: {x: 0, y: 0}
+  particleShape: 0
+--- !u!114 &-163340519300075836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5403143900049122070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a30518269e4dc74aaa17dba6a6896cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 5403143900049122071}
+  radius: 200
