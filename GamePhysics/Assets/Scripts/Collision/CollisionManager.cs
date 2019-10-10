@@ -16,23 +16,67 @@ public class CollisionManager : MonoBehaviour
     {
         unCheckedObjs.AddRange(objs);
 
-        foreach (CollisionHull2D otherObj in objs)
-        {
-            for (int i = 0; i < unCheckedObjs.Count; ++i)
-            {
-                CollisionHull2D currentObj = unCheckedObjs[i];
+		List<CollisionHull2D.Collision> collisions = new List<CollisionHull2D.Collision>();
 
-                if (currentObj.GetInstanceID() == otherObj.GetInstanceID()) continue;
+		int count = 0;
 
-                CollisionHull2D.Collision col = null;
-                bool isColliding = CollisionHull2D.TestCollision(currentObj, otherObj, ref col);
-                currentObj.SetColliding(isColliding, otherObj, col);
-                //otherObj.SetColliding(isColliding, currentObj, col);
-            }
+		for (int i = 0; i < unCheckedObjs.Count; i++)
+		{
+			CollisionHull2D currentObj = unCheckedObjs[i];
 
-            //unCheckedObjs.RemoveAt(0);
-        }
+			for (int j = i+1; j < unCheckedObjs.Count; j++)
+			{
+				CollisionHull2D otherObj = unCheckedObjs[j];
 
-        unCheckedObjs.Clear();
+				CollisionHull2D.Collision col = null;
+				bool isColliding = CollisionHull2D.TestCollision(currentObj, otherObj, ref col);
+				currentObj.SetColliding(isColliding, otherObj, col);
+
+				if (currentObj.IsColliding())
+				{
+					collisions.Add(col);
+				}
+				count++;
+			}
+		}
+
+		Debug.Log("I've counted " + count + " collisions!");
+
+
+		//foreach (CollisionHull2D otherObj in objs)
+        //{
+        //    for (int i = 0; i < unCheckedObjs.Count; ++i)
+        //    {
+        //        CollisionHull2D currentObj = unCheckedObjs[i];
+		//
+        //        if (currentObj.GetInstanceID() == otherObj.GetInstanceID()) continue;
+		//
+        //        CollisionHull2D.Collision col = null;
+        //        bool isColliding = CollisionHull2D.TestCollision(currentObj, otherObj, ref col);
+        //        currentObj.SetColliding(isColliding, otherObj, col);
+		//
+		//		if (currentObj.IsColliding())
+		//		{
+		//			collisions.Add(col);
+		//		}
+		//
+		//		//otherObj.SetColliding(isColliding, currentObj, col);
+        //    }
+		//
+        //    //unCheckedObjs.RemoveAt(0);
+        //}
+
+		//if (collisions.Count > 0)
+		//{
+		//	collisions[0].Resolve();
+		//}
+
+		foreach (CollisionHull2D.Collision cols in collisions)
+		{
+			cols.Resolve();			
+		}
+
+		collisions.Clear();
+		unCheckedObjs.Clear();
     }
 }

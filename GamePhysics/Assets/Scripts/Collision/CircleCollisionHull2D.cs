@@ -33,22 +33,24 @@ public class CircleCollisionHull2D : CollisionHull2D
 		// 6. do test. johnny test. it passes if distSq <= sumSq
 		if (distSqr < radiiSum)
 		{
-            Debug.Log("CIRCLE -> CIRCLE");
-
             Particle2D aParticle = GetComponent<Particle2D>();
             Particle2D bParticle = other.GetComponent<Particle2D>();
 
             Collision.Contact[] contacts = new Collision.Contact[4];
-            Collision.Contact c1 = new Collision.Contact(
-                distance * 0.5f, 
-                (aParticle.Position - bParticle.Position).normalized,
-                0.001f);
+
+			Vector2 normal = (aParticle.Position - bParticle.Position).normalized;
+			//Collision.Contact c1 = new Collision.Contact(distance * 0.5f, (aParticle.Position - bParticle.Position).normalized, 0.0f);
+
+			float penDepth = other.radius + radius - distance.magnitude;
+
+			Collision.Contact c1 = new Collision.Contact(distance * 0.5f, normal, 0.0f, penDepth);
 
             contacts[0] = c1;
 
-            float closingVel = -Vector2.Dot((aParticle.Velocity - bParticle.Velocity), c1.Normal);
+            float separatingVel = Vector2.Dot((aParticle.Velocity - bParticle.Velocity), c1.Normal);
 
-            c = new Collision(this, other, contacts, closingVel);
+			c = new Collision(this, other, contacts, separatingVel);
+			
 			return true;
 		}
 
@@ -102,7 +104,6 @@ public class CircleCollisionHull2D : CollisionHull2D
         // 8. do test (if in circle, true, else false)
 		if (distSqr < radius * radius)
 		{
-            Debug.Log("CIRCLE -> BOX");
             return true;
 		}
 
@@ -163,7 +164,6 @@ public class CircleCollisionHull2D : CollisionHull2D
 		// 8. check if closest point of box is within the circle
 		if (distSqr < radius * radius)
 		{
-            Debug.Log("CIRCLE -> OBB");
             return true;
         }
 
