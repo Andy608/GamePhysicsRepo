@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/Scripts/Controller/ShipControls.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Scripts/Controller/Ship/ShipControls.inputactions'
 
 using System.Collections;
 using System.Collections.Generic;
@@ -77,6 +77,46 @@ public class ShipControls : IInputActionCollection
                     ""name"": ""RightReleased"",
                     ""type"": ""Value"",
                     ""id"": ""c41ea025-fce6-4e29-b872-2ea7c94e5dca"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=1)""
+                },
+                {
+                    ""name"": ""RotUpPressed"",
+                    ""type"": ""Button"",
+                    ""id"": ""7d5a69af-b662-413d-b3fd-adbf8a16ceff"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": ""Press""
+                },
+                {
+                    ""name"": ""RotUpReleased"",
+                    ""type"": ""Button"",
+                    ""id"": ""429cae70-bd85-46fd-884f-6f2733db8549"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=1)""
+                },
+                {
+                    ""name"": ""RotDownPressed"",
+                    ""type"": ""Button"",
+                    ""id"": ""c883aaec-f4d0-40e4-81ab-fa271e574000"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": ""Press""
+                },
+                {
+                    ""name"": ""RotDownReleased"",
+                    ""type"": ""Button"",
+                    ""id"": ""c43292dc-237b-4e3a-b66f-a81057bbb964"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=1)""
+                },
+                {
+                    ""name"": ""FireTorpedo"",
+                    ""type"": ""Button"",
+                    ""id"": ""333272b7-bde7-433e-b084-009441788bb7"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": ""Press(behavior=1)""
@@ -258,6 +298,61 @@ public class ShipControls : IInputActionCollection
                     ""action"": ""DownPressed"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0fb9845c-aa5f-4d62-8474-5697842226ca"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotUpPressed"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5e1e23ca-2ec6-4392-a2f6-99db66874afa"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotUpReleased"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""da2f0fef-faa8-409e-a5ec-8d81093ef465"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotDownPressed"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7f5be17a-ad99-4415-9607-1f74c8732749"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotDownReleased"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""04701142-1917-47a9-8403-d7f57e6c3213"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FireTorpedo"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -286,6 +381,11 @@ public class ShipControls : IInputActionCollection
         m_Movement_DownPressed = m_Movement.FindAction("DownPressed", throwIfNotFound: true);
         m_Movement_RightPressed = m_Movement.FindAction("RightPressed", throwIfNotFound: true);
         m_Movement_RightReleased = m_Movement.FindAction("RightReleased", throwIfNotFound: true);
+        m_Movement_RotUpPressed = m_Movement.FindAction("RotUpPressed", throwIfNotFound: true);
+        m_Movement_RotUpReleased = m_Movement.FindAction("RotUpReleased", throwIfNotFound: true);
+        m_Movement_RotDownPressed = m_Movement.FindAction("RotDownPressed", throwIfNotFound: true);
+        m_Movement_RotDownReleased = m_Movement.FindAction("RotDownReleased", throwIfNotFound: true);
+        m_Movement_FireTorpedo = m_Movement.FindAction("FireTorpedo", throwIfNotFound: true);
     }
 
     ~ShipControls()
@@ -343,6 +443,11 @@ public class ShipControls : IInputActionCollection
     private readonly InputAction m_Movement_DownPressed;
     private readonly InputAction m_Movement_RightPressed;
     private readonly InputAction m_Movement_RightReleased;
+    private readonly InputAction m_Movement_RotUpPressed;
+    private readonly InputAction m_Movement_RotUpReleased;
+    private readonly InputAction m_Movement_RotDownPressed;
+    private readonly InputAction m_Movement_RotDownReleased;
+    private readonly InputAction m_Movement_FireTorpedo;
     public struct MovementActions
     {
         private ShipControls m_Wrapper;
@@ -355,6 +460,11 @@ public class ShipControls : IInputActionCollection
         public InputAction @DownPressed => m_Wrapper.m_Movement_DownPressed;
         public InputAction @RightPressed => m_Wrapper.m_Movement_RightPressed;
         public InputAction @RightReleased => m_Wrapper.m_Movement_RightReleased;
+        public InputAction @RotUpPressed => m_Wrapper.m_Movement_RotUpPressed;
+        public InputAction @RotUpReleased => m_Wrapper.m_Movement_RotUpReleased;
+        public InputAction @RotDownPressed => m_Wrapper.m_Movement_RotDownPressed;
+        public InputAction @RotDownReleased => m_Wrapper.m_Movement_RotDownReleased;
+        public InputAction @FireTorpedo => m_Wrapper.m_Movement_FireTorpedo;
         public InputActionMap Get() { return m_Wrapper.m_Movement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -388,6 +498,21 @@ public class ShipControls : IInputActionCollection
                 RightReleased.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnRightReleased;
                 RightReleased.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnRightReleased;
                 RightReleased.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnRightReleased;
+                RotUpPressed.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnRotUpPressed;
+                RotUpPressed.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnRotUpPressed;
+                RotUpPressed.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnRotUpPressed;
+                RotUpReleased.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnRotUpReleased;
+                RotUpReleased.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnRotUpReleased;
+                RotUpReleased.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnRotUpReleased;
+                RotDownPressed.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnRotDownPressed;
+                RotDownPressed.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnRotDownPressed;
+                RotDownPressed.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnRotDownPressed;
+                RotDownReleased.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnRotDownReleased;
+                RotDownReleased.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnRotDownReleased;
+                RotDownReleased.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnRotDownReleased;
+                FireTorpedo.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnFireTorpedo;
+                FireTorpedo.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnFireTorpedo;
+                FireTorpedo.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnFireTorpedo;
             }
             m_Wrapper.m_MovementActionsCallbackInterface = instance;
             if (instance != null)
@@ -416,6 +541,21 @@ public class ShipControls : IInputActionCollection
                 RightReleased.started += instance.OnRightReleased;
                 RightReleased.performed += instance.OnRightReleased;
                 RightReleased.canceled += instance.OnRightReleased;
+                RotUpPressed.started += instance.OnRotUpPressed;
+                RotUpPressed.performed += instance.OnRotUpPressed;
+                RotUpPressed.canceled += instance.OnRotUpPressed;
+                RotUpReleased.started += instance.OnRotUpReleased;
+                RotUpReleased.performed += instance.OnRotUpReleased;
+                RotUpReleased.canceled += instance.OnRotUpReleased;
+                RotDownPressed.started += instance.OnRotDownPressed;
+                RotDownPressed.performed += instance.OnRotDownPressed;
+                RotDownPressed.canceled += instance.OnRotDownPressed;
+                RotDownReleased.started += instance.OnRotDownReleased;
+                RotDownReleased.performed += instance.OnRotDownReleased;
+                RotDownReleased.canceled += instance.OnRotDownReleased;
+                FireTorpedo.started += instance.OnFireTorpedo;
+                FireTorpedo.performed += instance.OnFireTorpedo;
+                FireTorpedo.canceled += instance.OnFireTorpedo;
             }
         }
     }
@@ -439,5 +579,10 @@ public class ShipControls : IInputActionCollection
         void OnDownPressed(InputAction.CallbackContext context);
         void OnRightPressed(InputAction.CallbackContext context);
         void OnRightReleased(InputAction.CallbackContext context);
+        void OnRotUpPressed(InputAction.CallbackContext context);
+        void OnRotUpReleased(InputAction.CallbackContext context);
+        void OnRotDownPressed(InputAction.CallbackContext context);
+        void OnRotDownReleased(InputAction.CallbackContext context);
+        void OnFireTorpedo(InputAction.CallbackContext context);
     }
 }

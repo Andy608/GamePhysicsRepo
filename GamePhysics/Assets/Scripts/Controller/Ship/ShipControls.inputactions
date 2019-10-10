@@ -68,6 +68,46 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "Press(behavior=1)"
+                },
+                {
+                    "name": "RotUpPressed",
+                    "type": "Button",
+                    "id": "7d5a69af-b662-413d-b3fd-adbf8a16ceff",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press"
+                },
+                {
+                    "name": "RotUpReleased",
+                    "type": "Button",
+                    "id": "429cae70-bd85-46fd-884f-6f2733db8549",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press(behavior=1)"
+                },
+                {
+                    "name": "RotDownPressed",
+                    "type": "Button",
+                    "id": "c883aaec-f4d0-40e4-81ab-fa271e574000",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press"
+                },
+                {
+                    "name": "RotDownReleased",
+                    "type": "Button",
+                    "id": "c43292dc-237b-4e3a-b66f-a81057bbb964",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press(behavior=1)"
+                },
+                {
+                    "name": "FireTorpedo",
+                    "type": "Button",
+                    "id": "333272b7-bde7-433e-b084-009441788bb7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press(behavior=1)"
                 }
             ],
             "bindings": [
@@ -244,6 +284,61 @@
                     "processors": "",
                     "groups": "Controls",
                     "action": "DownPressed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0fb9845c-aa5f-4d62-8474-5697842226ca",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotUpPressed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5e1e23ca-2ec6-4392-a2f6-99db66874afa",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotUpReleased",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "da2f0fef-faa8-409e-a5ec-8d81093ef465",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotDownPressed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7f5be17a-ad99-4415-9607-1f74c8732749",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotDownReleased",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "04701142-1917-47a9-8403-d7f57e6c3213",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FireTorpedo",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -6,20 +6,8 @@ public class Particle2D : MonoBehaviour
 {
     private static Vector2 Gravity = new Vector2(0.0f, -10.0f);
 
-    //[SerializeField] private GameObject testFloor = null;
-    //[SerializeField] private Transform testSpringAnchor = null;
-
     [SerializeField] private PosIntegrationType positionType = PosIntegrationType.EulerExplicit;
     [SerializeField] private RotIntegrationType rotationType = RotIntegrationType.EulerExplicit;
-	//[SerializeField] private ForceType forceType = ForceType.gravity;
-
-	//[SerializeField] [Range(0.0f, 10.0f)] private float scaleX = 1.0f;
-	//[SerializeField] [Range(-100.0f, 100.0f)] private float rotAccZ = 0.0f;
-	//[SerializeField] [Range(0.0f, 1.0f)] private float frictionStatic = 0.75f;
-	//[SerializeField] [Range(0.0f, 1.0f)] private float frictionKinetic = 0.75f;
-	//[SerializeField] [Range(1.0f, 1.0f)] private float springRestingLength = 0.3f;
-	//[SerializeField] [Range(0.0f, 8.0f)] private float springStrength = 1.0f;
-	//[SerializeField] [Range(1.0f, 8.0f)] private float maxSpringLength = 1.0f;
 
 	[SerializeField] private float startingMass = 1.0f;
 
@@ -29,14 +17,18 @@ public class Particle2D : MonoBehaviour
     public float MassInv { get; private set; }
     private Vector2 force = Vector2.zero;
 
-    public Vector2 Position { get; private set; }
-    public Vector2 Velocity { get; private set; }
-    public Vector2 Acceleration { get; private set; }
+    public Vector2 Position;
+    public Vector2 Velocity;
+    public Vector2 Acceleration;
 
-    private float rotation;
-    private float rotVelocity;
-    private float rotAcceleration;
+    public float Rotation;
+    public float RotVelocity;
+    public float RotAcceleration;
     private Vector3 helperRot;
+
+    //public float RotUpperBound;
+    //public float RotLowerBound;
+    //public bool IsRotBounded = false;
 
     //lab3
     private float momentOfInertia = 0;
@@ -131,8 +123,8 @@ public class Particle2D : MonoBehaviour
     /// <param name="dt"></param>
     private void UpdateRotationKinematic(float dt)
     {
-        rotation += rotVelocity * dt + 0.5f * rotAcceleration * dt * dt;
-        rotVelocity += rotAcceleration * dt;
+        Rotation += RotVelocity * dt + 0.5f * RotAcceleration * dt * dt;
+        RotVelocity += RotAcceleration * dt;
     }
 
     private void FixedUpdate()
@@ -215,8 +207,16 @@ public class Particle2D : MonoBehaviour
 		ApplyTorque(pointApplied, forceApplied);
 
         //clamps rotation to 360
-        SetRotation(rotation %= 360.0f);
-        rotAcceleration = angularAccel;
+        SetRotation(Rotation %= 360.0f);
+        RotAcceleration = angularAccel;
+
+        //Cut rot off at bounds
+        //if (IsRotBounded)
+        //{
+        //    Rotation = Mathf.Clamp(Rotation, RotLowerBound, RotUpperBound);
+        //    //RotAcceleration = 0.0f;
+        //    //RotVelocity = 0.0f;
+        //}
     }
 
     /// <summary>
@@ -262,8 +262,8 @@ public class Particle2D : MonoBehaviour
     /// <param name="dt"></param>
     private void UpdateRotationEulerExplicit(float dt)
     {
-        rotation += rotVelocity * dt;
-        rotVelocity += rotAcceleration * dt;
+        Rotation += RotVelocity * dt;
+        RotVelocity += RotAcceleration * dt;
     }
 
     //lab3
@@ -286,7 +286,7 @@ public class Particle2D : MonoBehaviour
 	/// </summary>
 	/// <param name="pointAppliedWorld"> The point the force is applied at world space </param>
 	/// <param name="forceApplied"> Strength and direction of force applied. </param>
-    private void ApplyTorque(Vector2 pointAppliedWorld, Vector2 forceApplied)
+    public void ApplyTorque(Vector2 pointAppliedWorld, Vector2 forceApplied)
     {
 		//Transform world space coord to local space
         Vector2 pointAppliedLocal = pointAppliedWorld - centerOfMass;
