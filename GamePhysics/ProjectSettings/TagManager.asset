@@ -36,8 +36,17 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - PostProcessing
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Light
+    uniqueID: 440439959
+    locked: 0
+  - name: Propeller
+    uniqueID: 3917330927
+    locked: 0
+  - name: Hull
+    uniqueID: 1352956931
     locked: 0
