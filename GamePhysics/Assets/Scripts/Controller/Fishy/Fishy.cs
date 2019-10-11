@@ -17,8 +17,10 @@ public class Fishy : MonoBehaviour
     [SerializeField] private float fishSecondCounter = 0.0f;
     [SerializeField] private int minGroupSpawn = 1;
     [SerializeField] private int maxGroupSpawn = 10;
+	[SerializeField] private int pointsAwarded = 10;
+	[SerializeField] private int health = 1;
 
-    private void Awake()
+	private void Awake()
     {
         FishyParticle = GetComponent<Particle2D>();
         fishSecondCounter = 0.0f;
@@ -113,4 +115,15 @@ public class Fishy : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+	//call when hit by a bubble! again, that collision response tag thing
+	public void DamageFish(int damage)
+	{
+		health -= damage;
+		if (health <= 0)
+		{
+			ScoreManager.Instance.AddScore(pointsAwarded);
+			DestroyFish();
+		}
+	}
 }

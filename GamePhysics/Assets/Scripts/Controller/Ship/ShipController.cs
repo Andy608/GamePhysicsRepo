@@ -29,6 +29,7 @@ public class ShipController : MonoBehaviour
 
     private bool isSpriteFlipped = false;
 
+	[SerializeField] private int health = 5;
 
     private void OnEnable()
     {
@@ -194,4 +195,16 @@ public class ShipController : MonoBehaviour
         LEFT,
         RIGHT
     }
+
+	//TODO: This is called when ship collides with any fish. Collision system should support the unity tags somehow
+	public void DamageShip(int damageTaken)
+	{
+		health -= damageTaken;
+
+		if (health <= 0)
+		{
+			Debug.Log("SHIP IS DEAD BAYBEEEEE");
+			EventAnnouncer.OnRequestSceneChange(EnumScene.RESULTS, new TransitionEffect(1.0f, Color.white));
+		}
+	}
 }

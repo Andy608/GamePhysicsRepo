@@ -120,6 +120,92 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &42226788 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4356686846349863409, guid: 9283e5eac8455be4d8190158fff93e1b,
+    type: 3}
+  m_PrefabInstance: {fileID: 130143035}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &42226789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 42226788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eed5478fa3949a4aaafa7e4b576c7c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gravity: {x: 0, y: 9.8}
+  InitialVel: {x: 0, y: 0}
+  testFloor: {fileID: 0}
+  testSpringAnchor: {fileID: 0}
+  positionType: 1
+  rotationType: 1
+  forceType: 0
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
+  startingMass: 1
+  Position: {x: 0, y: 0}
+  PrevPosition: {x: 0, y: 0}
+  Velocity: {x: 0, y: 0}
+  Acceleration: {x: 0, y: 0}
+  Rotation: 0
+  RotVelocity: 0
+  RotAcceleration: 0
+  helperRot: {x: 0, y: 0, z: 0}
+  pointApplied: {x: 0, y: 0}
+  forceApplied: {x: 0, y: 0}
+  centerOfMass: {x: 0, y: 0}
+  particleShape: 0
+--- !u!1 &45651363 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4557440412919789246, guid: 004d40b0a32009f4894ff818eb48b831,
+    type: 3}
+  m_PrefabInstance: {fileID: 687323509}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &45651364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 45651363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eed5478fa3949a4aaafa7e4b576c7c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gravity: {x: 0, y: 9.8}
+  InitialVel: {x: 0, y: 0}
+  testFloor: {fileID: 0}
+  testSpringAnchor: {fileID: 0}
+  positionType: 1
+  rotationType: 1
+  forceType: 0
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
+  startingMass: 1
+  Position: {x: 0, y: 0}
+  PrevPosition: {x: 0, y: 0}
+  Velocity: {x: 0, y: 0}
+  Acceleration: {x: 0, y: 0}
+  Rotation: 0
+  RotVelocity: 0
+  RotAcceleration: 0
+  helperRot: {x: 0, y: 0, z: 0}
+  pointApplied: {x: 0, y: 0}
+  forceApplied: {x: 0, y: 0}
+  centerOfMass: {x: 0, y: 0}
+  particleShape: 0
 --- !u!4 &90201434 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4557440412919789234, guid: 004d40b0a32009f4894ff818eb48b831,
@@ -260,7 +346,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -7231507826142070513, guid: 9283e5eac8455be4d8190158fff93e1b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9283e5eac8455be4d8190158fff93e1b, type: 3}
 --- !u!4 &130143036 stripped
 Transform:
@@ -347,6 +434,43 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1050373094}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &286239036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 286239035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eed5478fa3949a4aaafa7e4b576c7c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gravity: {x: 0, y: 9.8}
+  InitialVel: {x: 0, y: 0}
+  testFloor: {fileID: 0}
+  testSpringAnchor: {fileID: 0}
+  positionType: 1
+  rotationType: 1
+  forceType: 0
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
+  startingMass: 1
+  Position: {x: 0, y: 0}
+  PrevPosition: {x: 0, y: 0}
+  Velocity: {x: 0, y: 0}
+  Acceleration: {x: 0, y: 0}
+  Rotation: 0
+  RotVelocity: 0
+  RotAcceleration: 0
+  helperRot: {x: 0, y: 0, z: 0}
+  pointApplied: {x: 0, y: 0}
+  forceApplied: {x: 0, y: 0}
+  centerOfMass: {x: 0, y: 0}
+  particleShape: 0
 --- !u!4 &288061523 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4356686846349863404, guid: 9283e5eac8455be4d8190158fff93e1b,
@@ -435,7 +559,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4169887772689912252, guid: 004d40b0a32009f4894ff818eb48b831, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 004d40b0a32009f4894ff818eb48b831, type: 3}
 --- !u!4 &340782876 stripped
 Transform:
@@ -475,12 +600,135 @@ Transform:
   m_Father: {fileID: 280790161}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &458280823 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5565508528838701365, guid: 186d348e593fed24682bdaaca89a884c,
+    type: 3}
+  m_PrefabInstance: {fileID: 5565508528711078192}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &458280824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 458280823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eed5478fa3949a4aaafa7e4b576c7c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gravity: {x: 0, y: 9.8}
+  InitialVel: {x: 0, y: 0}
+  testFloor: {fileID: 0}
+  testSpringAnchor: {fileID: 0}
+  positionType: 1
+  rotationType: 1
+  forceType: 8
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
+  startingMass: 1
+  Position: {x: 0, y: 0}
+  PrevPosition: {x: 0, y: 0}
+  Velocity: {x: 0, y: 0}
+  Acceleration: {x: 0, y: 0}
+  Rotation: 0
+  RotVelocity: 0
+  RotAcceleration: 0
+  helperRot: {x: 0, y: 0, z: 0}
+  pointApplied: {x: 0, y: 0}
+  forceApplied: {x: 0, y: 0}
+  centerOfMass: {x: 0, y: 0}
+  particleShape: 0
+--- !u!1 &483981333 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5565508528838701365, guid: 186d348e593fed24682bdaaca89a884c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1919112019}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &483981334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 483981333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eed5478fa3949a4aaafa7e4b576c7c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gravity: {x: 0, y: 9.8}
+  InitialVel: {x: 0, y: 0}
+  testFloor: {fileID: 0}
+  testSpringAnchor: {fileID: 0}
+  positionType: 1
+  rotationType: 1
+  forceType: 0
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
+  startingMass: 1
+  Position: {x: 0, y: 0}
+  PrevPosition: {x: 0, y: 0}
+  Velocity: {x: 0, y: 0}
+  Acceleration: {x: 0, y: 0}
+  Rotation: 0
+  RotVelocity: 0
+  RotAcceleration: 0
+  helperRot: {x: 0, y: 0, z: 0}
+  pointApplied: {x: 0, y: 0}
+  forceApplied: {x: 0, y: 0}
+  centerOfMass: {x: 0, y: 0}
+  particleShape: 0
 --- !u!1 &495872281 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5565508528838701365, guid: 186d348e593fed24682bdaaca89a884c,
     type: 3}
   m_PrefabInstance: {fileID: 922095185}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &495872282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 495872281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eed5478fa3949a4aaafa7e4b576c7c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gravity: {x: 0, y: 9.8}
+  InitialVel: {x: 0, y: 0}
+  testFloor: {fileID: 0}
+  testSpringAnchor: {fileID: 0}
+  positionType: 1
+  rotationType: 1
+  forceType: 0
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
+  startingMass: 1
+  Position: {x: 0, y: 0}
+  PrevPosition: {x: 0, y: 0}
+  Velocity: {x: 0, y: 0}
+  Acceleration: {x: 0, y: 0}
+  Rotation: 0
+  RotVelocity: 0
+  RotAcceleration: 0
+  helperRot: {x: 0, y: 0, z: 0}
+  pointApplied: {x: 0, y: 0}
+  forceApplied: {x: 0, y: 0}
+  centerOfMass: {x: 0, y: 0}
+  particleShape: 0
 --- !u!1001 &528111310
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -558,7 +806,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -7231507826142070513, guid: 9283e5eac8455be4d8190158fff93e1b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9283e5eac8455be4d8190158fff93e1b, type: 3}
 --- !u!4 &528111311 stripped
 Transform:
@@ -689,7 +938,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -1913080382141479448, guid: 186d348e593fed24682bdaaca89a884c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 186d348e593fed24682bdaaca89a884c, type: 3}
 --- !u!4 &633869006 stripped
 Transform:
@@ -774,7 +1024,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4169887772689912252, guid: 004d40b0a32009f4894ff818eb48b831, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 004d40b0a32009f4894ff818eb48b831, type: 3}
 --- !u!4 &687323510 stripped
 Transform:
@@ -1010,7 +1261,13 @@ PrefabInstance:
       propertyPath: canMove
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 5565508528838701367, guid: 186d348e593fed24682bdaaca89a884c,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 45d385ee73df88741ae6b6ffbe687611, type: 2}
+    m_RemovedComponents:
+    - {fileID: -1913080382141479448, guid: 186d348e593fed24682bdaaca89a884c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 186d348e593fed24682bdaaca89a884c, type: 3}
 --- !u!4 &922095186 stripped
 Transform:
@@ -1101,6 +1358,49 @@ Transform:
   m_Father: {fileID: 1440832015}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &994955337 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4356686846349863409, guid: 9283e5eac8455be4d8190158fff93e1b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1014098147}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &994955338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 994955337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eed5478fa3949a4aaafa7e4b576c7c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gravity: {x: 0, y: 9.8}
+  InitialVel: {x: 0, y: 0}
+  testFloor: {fileID: 0}
+  testSpringAnchor: {fileID: 0}
+  positionType: 1
+  rotationType: 1
+  forceType: 0
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
+  startingMass: 1
+  Position: {x: 0, y: 0}
+  PrevPosition: {x: 0, y: 0}
+  Velocity: {x: 0, y: 0}
+  Acceleration: {x: 0, y: 0}
+  Rotation: 0
+  RotVelocity: 0
+  RotAcceleration: 0
+  helperRot: {x: 0, y: 0, z: 0}
+  pointApplied: {x: 0, y: 0}
+  forceApplied: {x: 0, y: 0}
+  centerOfMass: {x: 0, y: 0}
+  particleShape: 0
 --- !u!1001 &1014098147
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1203,7 +1503,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -7231507826142070513, guid: 9283e5eac8455be4d8190158fff93e1b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9283e5eac8455be4d8190158fff93e1b, type: 3}
 --- !u!4 &1014098148 stripped
 Transform:
@@ -1298,7 +1599,8 @@ PrefabInstance:
       propertyPath: testSpringAnchor
       value: 
       objectReference: {fileID: 90201434}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -7231507826142070513, guid: 9283e5eac8455be4d8190158fff93e1b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9283e5eac8455be4d8190158fff93e1b, type: 3}
 --- !u!4 &1050373095 stripped
 Transform:
@@ -1370,6 +1672,49 @@ Transform:
   m_Father: {fileID: 280790161}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1299196221 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4557440412919789246, guid: 004d40b0a32009f4894ff818eb48b831,
+    type: 3}
+  m_PrefabInstance: {fileID: 340782875}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1299196222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1299196221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eed5478fa3949a4aaafa7e4b576c7c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gravity: {x: 0, y: 9.8}
+  InitialVel: {x: 0, y: 0}
+  testFloor: {fileID: 0}
+  testSpringAnchor: {fileID: 0}
+  positionType: 1
+  rotationType: 1
+  forceType: 0
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
+  startingMass: 1
+  Position: {x: 0, y: 0}
+  PrevPosition: {x: 0, y: 0}
+  Velocity: {x: 0, y: 0}
+  Acceleration: {x: 0, y: 0}
+  Rotation: 0
+  RotVelocity: 0
+  RotAcceleration: 0
+  helperRot: {x: 0, y: 0, z: 0}
+  pointApplied: {x: 0, y: 0}
+  forceApplied: {x: 0, y: 0}
+  centerOfMass: {x: 0, y: 0}
+  particleShape: 0
 --- !u!1 &1440832014
 GameObject:
   m_ObjectHideFlags: 0
@@ -1401,6 +1746,135 @@ Transform:
   m_Father: {fileID: 607008824}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1478894909 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4557440412919789246, guid: 004d40b0a32009f4894ff818eb48b831,
+    type: 3}
+  m_PrefabInstance: {fileID: 4557440412976393192}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1478894910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1478894909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eed5478fa3949a4aaafa7e4b576c7c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gravity: {x: 0, y: 9.8}
+  InitialVel: {x: 0, y: 0}
+  testFloor: {fileID: 0}
+  testSpringAnchor: {fileID: 0}
+  positionType: 1
+  rotationType: 1
+  forceType: 0
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
+  startingMass: 1
+  Position: {x: 0, y: 0}
+  PrevPosition: {x: 0, y: 0}
+  Velocity: {x: 0, y: 0}
+  Acceleration: {x: 0, y: 0}
+  Rotation: 0
+  RotVelocity: 0
+  RotAcceleration: 0
+  helperRot: {x: 0, y: 0, z: 0}
+  pointApplied: {x: 0, y: 0}
+  forceApplied: {x: 0, y: 0}
+  centerOfMass: {x: 0, y: 0}
+  particleShape: 0
+--- !u!1 &1640081820 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4356686846349863409, guid: 9283e5eac8455be4d8190158fff93e1b,
+    type: 3}
+  m_PrefabInstance: {fileID: 528111310}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1640081821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640081820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eed5478fa3949a4aaafa7e4b576c7c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gravity: {x: 0, y: 9.8}
+  InitialVel: {x: 0, y: 0}
+  testFloor: {fileID: 0}
+  testSpringAnchor: {fileID: 0}
+  positionType: 1
+  rotationType: 1
+  forceType: 0
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
+  startingMass: 1
+  Position: {x: 0, y: 0}
+  PrevPosition: {x: 0, y: 0}
+  Velocity: {x: 0, y: 0}
+  Acceleration: {x: 0, y: 0}
+  Rotation: 0
+  RotVelocity: 0
+  RotAcceleration: 0
+  helperRot: {x: 0, y: 0, z: 0}
+  pointApplied: {x: 0, y: 0}
+  forceApplied: {x: 0, y: 0}
+  centerOfMass: {x: 0, y: 0}
+  particleShape: 0
+--- !u!1 &1684753590 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5565508528838701365, guid: 186d348e593fed24682bdaaca89a884c,
+    type: 3}
+  m_PrefabInstance: {fileID: 633869005}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1684753591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1684753590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eed5478fa3949a4aaafa7e4b576c7c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gravity: {x: 0, y: 9.8}
+  InitialVel: {x: 0, y: 0}
+  testFloor: {fileID: 0}
+  testSpringAnchor: {fileID: 0}
+  positionType: 1
+  rotationType: 1
+  forceType: 0
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
+  startingMass: 1
+  Position: {x: 0, y: 0}
+  PrevPosition: {x: 0, y: 0}
+  Velocity: {x: 0, y: 0}
+  Acceleration: {x: 0, y: 0}
+  Rotation: 0
+  RotVelocity: 0
+  RotAcceleration: 0
+  helperRot: {x: 0, y: 0, z: 0}
+  pointApplied: {x: 0, y: 0}
+  forceApplied: {x: 0, y: 0}
+  centerOfMass: {x: 0, y: 0}
+  particleShape: 0
 --- !u!1 &1701884951
 GameObject:
   m_ObjectHideFlags: 0
@@ -1542,7 +2016,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -1913080382141479448, guid: 186d348e593fed24682bdaaca89a884c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 186d348e593fed24682bdaaca89a884c, type: 3}
 --- !u!4 &1919112020 stripped
 Transform:
@@ -1550,6 +2025,49 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1919112019}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2121652519 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4356686846349863409, guid: 9283e5eac8455be4d8190158fff93e1b,
+    type: 3}
+  m_PrefabInstance: {fileID: 4356686846636822975}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2121652520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2121652519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eed5478fa3949a4aaafa7e4b576c7c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gravity: {x: 0, y: 9.8}
+  InitialVel: {x: 0, y: 0}
+  testFloor: {fileID: 0}
+  testSpringAnchor: {fileID: 0}
+  positionType: 1
+  rotationType: 1
+  forceType: 0
+  frictionStatic: 0.75
+  frictionKinetic: 0.75
+  springRestingLength: 0.3
+  springStrength: 1
+  maxSpringLength: 1
+  startingMass: 1
+  Position: {x: 0, y: 0}
+  PrevPosition: {x: 0, y: 0}
+  Velocity: {x: 0, y: 0}
+  Acceleration: {x: 0, y: 0}
+  Rotation: 0
+  RotVelocity: 0
+  RotAcceleration: 0
+  helperRot: {x: 0, y: 0, z: 0}
+  pointApplied: {x: 0, y: 0}
+  forceApplied: {x: 0, y: 0}
+  centerOfMass: {x: 0, y: 0}
+  particleShape: 0
 --- !u!1001 &4356686846636822975
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1652,7 +2170,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -7231507826142070513, guid: 9283e5eac8455be4d8190158fff93e1b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9283e5eac8455be4d8190158fff93e1b, type: 3}
 --- !u!1001 &4557440412976393192
 PrefabInstance:
@@ -1756,7 +2275,8 @@ PrefabInstance:
       propertyPath: testSpringAnchor
       value: 
       objectReference: {fileID: 1050373095}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4169887772689912252, guid: 004d40b0a32009f4894ff818eb48b831, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 004d40b0a32009f4894ff818eb48b831, type: 3}
 --- !u!1001 &5565508528711078192
 PrefabInstance:
@@ -1865,5 +2385,11 @@ PrefabInstance:
       propertyPath: InitialVel.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 5565508528838701367, guid: 186d348e593fed24682bdaaca89a884c,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 45d385ee73df88741ae6b6ffbe687611, type: 2}
+    m_RemovedComponents:
+    - {fileID: -1913080382141479448, guid: 186d348e593fed24682bdaaca89a884c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 186d348e593fed24682bdaaca89a884c, type: 3}
