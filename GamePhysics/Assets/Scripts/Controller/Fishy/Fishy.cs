@@ -8,12 +8,13 @@ public class Fishy : MonoBehaviour
     public Particle2D FishyParticle { get; private set; }
 
     [SerializeField] private SpriteRenderer fishSprite = null;
+    [SerializeField] private int damageValue = 5;
     private Vector2 fishSpriteSize;
 
     public bool SwimRight = false;
 
     [SerializeField] private float spawnRate = 10.0f;
-    [SerializeField] private float fishSpeed = 1.0f;
+    [SerializeField] private float fishSpeed = 5.0f;
     [SerializeField] private float fishSecondCounter = 0.0f;
     [SerializeField] private int minGroupSpawn = 1;
     [SerializeField] private int maxGroupSpawn = 10;
@@ -25,7 +26,12 @@ public class Fishy : MonoBehaviour
         FishyParticle = GetComponent<Particle2D>();
         fishSecondCounter = 0.0f;
 
-        fishSpriteSize = new Vector2(fishSprite.sprite.texture.width, fishSprite.sprite.texture.height);
+        fishSpriteSize = new Vector2(fishSprite.sprite.texture.width / fishSprite.sprite.pixelsPerUnit * 0.5f, fishSprite.sprite.texture.height / fishSprite.sprite.pixelsPerUnit * 0.5f);
+    }
+
+    public int GetDamageValue()
+    {
+        return 100;
     }
 
     public void FlipX(bool flip)
@@ -86,44 +92,28 @@ public class Fishy : MonoBehaviour
         float leftBounds = -rightBounds;
 
 
-        topBounds -= fishSpriteSize.y;
-        bottomBounds += fishSpriteSize.y;
+        topBounds += fishSpriteSize.y;
+        bottomBounds -= fishSpriteSize.y;
 
-        rightBounds -= fishSpriteSize.x;
-        leftBounds += fishSpriteSize.x;
+        rightBounds += fishSpriteSize.x;
+        leftBounds -= fishSpriteSize.x;
 
         if (FishyParticle.Position.x < leftBounds && !SwimRight)
         {
-            DestroyFish();
+            FishPool.Instance.DestroyFish(this);
         }
         else if (FishyParticle.Position.x > rightBounds && SwimRight)
         {
-            DestroyFish();
+            FishPool.Instance.DestroyFish(this);
         }
 
         if (FishyParticle.Position.y < bottomBounds)
         {
-            DestroyFish();
+            FishPool.Instance.DestroyFish(this);
         }
         else if (FishyParticle.Position.y > topBounds)
         {
-            DestroyFish();
+            FishPool.Instance.DestroyFish(this);
         }
     }
-
-    private void DestroyFish()
-    {
-        Destroy(gameObject);
-    }
-
-	//call when hit by a bubble! again, that collision response tag thing
-	public void DamageFish(int damage)
-	{
-		health -= damage;
-		if (health <= 0)
-		{
-			ScoreManager.Instance.AddScore(pointsAwarded);
-			DestroyFish();
-		}
-	}
 }

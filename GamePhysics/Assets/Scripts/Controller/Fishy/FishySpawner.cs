@@ -36,11 +36,14 @@ public class FishySpawner : MonoBehaviour
 
         for (int i = 0; i < spawnAmount; ++i)
         {
-            pos.x += Random.Range(-50, 50);
-            pos.y += Random.Range(0.0f, 10.0f);
+            pos.x += Random.Range(-1, 1);
+            pos.y += Random.Range(0.0f, 5.0f);
 
-            Fishy fishy = Instantiate(fish, pos, Quaternion.identity);
-            Vector2 acceleration = Vector2.right * Random.Range(fishy.GetFishSpeed() * 0.5f, fishy.GetFishSpeed()) * 10000;
+            Fishy fishy = FishPool.Instance.CanSpawnFish(fish, pos);
+
+            if (fishy == null) return;
+
+            Vector2 acceleration = Vector2.right * Random.Range(fishy.GetFishSpeed() * 0.5f, fishy.GetFishSpeed()) * 100.0f;
             fishy.SwimRight = swimRight;
 
             if (swimRight)

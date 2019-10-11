@@ -32,7 +32,7 @@ public class ForceGenerator : MonoBehaviour
         }
         else
         {
-            return  -opposingForce * frictionForceMax / oppMag;
+            return -opposingForce * frictionForceMax / oppMag;
         }
     }
 
@@ -42,7 +42,7 @@ public class ForceGenerator : MonoBehaviour
         return -materialCoefficientKinetic * normalForce.magnitude * particleVelocity.normalized;
     }
 
-    public static Vector2 GenerateForce_Friction(Vector2 normalForce, Vector2 opposingForce, Vector2 particleVelocity, 
+    public static Vector2 GenerateForce_Friction(Vector2 normalForce, Vector2 opposingForce, Vector2 particleVelocity,
         float materialCoefficientStatic, float materialCofficientKinetic)
     {
         Vector2 frictionForce = Vector2.zero;
