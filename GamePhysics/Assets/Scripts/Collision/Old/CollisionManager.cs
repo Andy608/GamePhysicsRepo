@@ -59,16 +59,18 @@ public class CollisionManager : ManagerBase<CollisionManager>
     private List<ParticleContact> contacts = new List<ParticleContact>();
 
     private ContactResolver contactResolver;
-    [SerializeField] private int maxCollisionIterations = 5000;
+    [SerializeField] private int maxCollisionIterations = 2;
 
     public void RegisterObject(CollisionHull2D hull)
     {
+        Debug.Log("REGISTERED");
         particles.Add(hull.GetComponent<Particle2D>());
         particleColliders.Add(hull);
     }
 
     public void UnRegisterObject(CollisionHull2D hull)
     {
+        Debug.Log("UNREGISTERED");
         particles.Remove(hull.GetComponent<Particle2D>());
         particleColliders.Remove(hull);
     }
@@ -105,7 +107,7 @@ public class CollisionManager : ManagerBase<CollisionManager>
 
         if (contacts.Count > 0)
         {
-            contactResolver.ResolveContacts(contacts.ToArray(), Time.fixedDeltaTime);
+            contactResolver.ResolveContacts(ref contacts, Time.fixedDeltaTime);
             contacts.Clear();
         }
     }

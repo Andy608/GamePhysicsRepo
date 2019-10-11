@@ -122,6 +122,7 @@ MonoBehaviour:
   maxSpringLength: 1
   startingMass: 1
   Position: {x: 0, y: 0}
+  PrevPosition: {x: 0, y: 0}
   Velocity: {x: 0, y: 0}
   Acceleration: {x: 0, y: 0}
   Rotation: 0
@@ -145,4 +146,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 7158922361215895744}
-  radius: 50
+  radius: 0.5

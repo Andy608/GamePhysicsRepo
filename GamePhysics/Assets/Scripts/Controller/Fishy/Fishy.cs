@@ -23,7 +23,7 @@ public class Fishy : MonoBehaviour
         FishyParticle = GetComponent<Particle2D>();
         fishSecondCounter = 0.0f;
 
-        fishSpriteSize = new Vector2(fishSprite.sprite.texture.width, fishSprite.sprite.texture.height);
+        fishSpriteSize = new Vector2(fishSprite.sprite.texture.width / fishSprite.sprite.pixelsPerUnit * 0.5f, fishSprite.sprite.texture.height / fishSprite.sprite.pixelsPerUnit * 0.5f);
     }
 
     public void FlipX(bool flip)

@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraResize : MonoBehaviour
 {
     public static int TARGET_SCREEN_DENSITY = 96;
-    [SerializeField] private Vector2 nativeResolution = new Vector2(1080, 1920);
+    [SerializeField] private Vector2 nativeResolution = new Vector2(480, 270);
     private float scale = 1.0f;
 
     private Camera currentCamera;

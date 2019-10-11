@@ -6,6 +6,8 @@ public class AxisAlignedBoundingBoxCollision2D : CollisionHull2D
 {
 	public AxisAlignedBoundingBoxCollision2D() : base(CollisionHullType2D.aabb) { }
 
+    public Vector2 bounds;
+
     //private Transform OBJtrAABB, OBJtlAABB, OBJbrAABB, OBJblAABB;
     //private Transform OBJtrTranOBB, OBJtlTranOBB, OBJbrTranOBB, OBJblTranOBB;
     //private Transform OBJtrOBB, OBJtlOBB, OBJbrOBB, OBJblOBB;
@@ -13,6 +15,8 @@ public class AxisAlignedBoundingBoxCollision2D : CollisionHull2D
 
 	void Start()
     {
+        bounds = new Vector2(transform.localScale.x, transform.localScale.y);
+
         //OBJtrAABB = Instantiate(testPoint);
         //OBJtlAABB = Instantiate(testPoint);
         //OBJbrAABB = Instantiate(testPoint);
@@ -44,7 +48,7 @@ public class AxisAlignedBoundingBoxCollision2D : CollisionHull2D
         //OBJblOBB = Instantiate(testPoint);
     }
 
-    public override bool TestCollisionVsCircle(CircleCollisionHull2D other, ref List<ParticleContact> col)
+    public override bool TestCollisionVsCircle(CircleCollisionHull2D other, ref List<ParticleContact> c)
 	{
         //SEE CIRCLE
 
@@ -96,6 +100,18 @@ public class AxisAlignedBoundingBoxCollision2D : CollisionHull2D
         if (distSqr < other.radius * other.radius)
         {
             Debug.Log("BOX -> CIRCLE");
+            //Todo Add the contact data to the contact list.
+            //Particle2D aParticle = GetComponent<Particle2D>();
+            //Particle2D bParticle = other.GetComponent<Particle2D>();
+
+            //Vector2 normal = Vector2.down;
+
+            //float penetration = (aParticle.Position - bParticle.Position).magnitude - distance.magnitude;
+
+            //ParticleContact contact = new ParticleContact(
+            //    aParticle, bParticle, 0.0f, normal, penetration);
+
+            //c.Add(contact);
             return true;
         }
 

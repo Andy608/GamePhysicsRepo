@@ -7,29 +7,29 @@ public class ParticleContact
     //Holds the particles that are involved in this isolated contact.
     //If we are dealing with a contact between an object and scenery,
     //the second partice in this array will be null.
-    private Particle2D[] particles = new Particle2D[2];
+    public Particle2D[] Particles = new Particle2D[2];
 
     //The restitution value of the contact.
     private float restitution;
 
     //The contact normal, from the first objects perspective, in world coordinates.
-    private Vector2 contactNormal;
+    public Vector2 ContactNormal;
 
     //Holds the depth of penetration
     //Negative = no interpenetration, Positive = interpenetration
     //Our goal is the get this the 0 if it is above 0.
     //The depth of penetration in the direction of the contact normal.
-    public float Penetration { private set; get; }
+    public float Penetration;
 
     //Holds the amount each particle is moved during interpenetration.
-    private Vector2[] particleMovement = new Vector2[2];
+    public Vector2[] ParticleMovement = new Vector2[2];
 
     public ParticleContact(Particle2D a, Particle2D b, float r, Vector2 n, float p)
     {
-        particles[0] = a;
-        particles[1] = b;
+        Particles[0] = a;
+        Particles[1] = b;
         restitution = r;
-        contactNormal = n;
+        ContactNormal = n;
         Penetration = p;
     }
 
@@ -43,15 +43,15 @@ public class ParticleContact
     //Calcuates the separating velocity at this contact.
     public float CalculateSeparatingVelocity()
     {
-        Vector2 relativeVelocity = particles[0].Velocity;
+        Vector2 relativeVelocity = Particles[0].Velocity;
 
         //If we have another particle
-        if (particles[1])
+        if (Particles[1])
         {
-            relativeVelocity -= particles[1].Velocity;
+            relativeVelocity -= Particles[1].Velocity;
         }
 
-        return Vector2.Dot(relativeVelocity, contactNormal);
+        return Vector2.Dot(relativeVelocity, ContactNormal);
     }
 
     //Handles the impulse calculations for this collision.
@@ -72,14 +72,14 @@ public class ParticleContact
         float newSeparatingVelocity = -separatingVelocity * restitution;
 
         //Check the velocity buildup due to acceleration only.
-        Vector2 accelerationCausedVelocity = particles[0].Acceleration;
+        Vector2 accelerationCausedVelocity = Particles[0].Acceleration;
 
-        if (particles[1])
+        if (Particles[1])
         {
-            accelerationCausedVelocity -= particles[1].Acceleration;
+            accelerationCausedVelocity -= Particles[1].Acceleration;
         }
 
-        float accelerationCausedSeperationVelocity = Vector2.Dot(accelerationCausedVelocity, contactNormal) * deltaTime;
+        float accelerationCausedSeperationVelocity = Vector2.Dot(accelerationCausedVelocity, ContactNormal) * deltaTime;
 
         //If we've got a closing velocity due to acceleration buildup,
         //remove it from the new separating velocity.
@@ -98,11 +98,11 @@ public class ParticleContact
 
         //Apply the change in velocity to each object in proportion to
         //their inverse mass. (Higher mass gets less change in velocity)
-        float totalInverseMass = particles[0].MassInv;
+        float totalInverseMass = Particles[0].MassInv;
 
-        if (particles[1])
+        if (Particles[1])
         {
-            totalInverseMass += particles[1].MassInv;
+            totalInverseMass += Particles[1].MassInv;
         }
 
         //If all particles have infinite mass, then impules have no effect.
@@ -115,15 +115,15 @@ public class ParticleContact
         float impulse = deltaVelocity / totalInverseMass;
 
         //Find the amount of impulse per unit of inverse mass.
-        Vector2 impulsePerIMass = impulse * contactNormal;
+        Vector2 impulsePerIMass = ContactNormal * impulse;
 
         //Apply impulses in the direction of the contact normal,
         //and are proportional to the inverse mass.
-        particles[0].Velocity += (impulsePerIMass * particles[0].MassInv);
+        Particles[0].Velocity = Particles[0].Velocity + impulsePerIMass * Particles[0].MassInv;
 
-        if (particles[1])
+        if (Particles[1])
         {
-            particles[1].Velocity += (impulsePerIMass * -particles[1].MassInv);
+            Particles[1].Velocity = Particles[1].Velocity + impulsePerIMass * -Particles[1].MassInv;
         }
     }
 
@@ -136,11 +136,11 @@ public class ParticleContact
         }
 
         //The movement of each object is based on their inverse mass.
-        float totalInverseMass = particles[0].MassInv;
+        float totalInverseMass = Particles[0].MassInv;
 
-        if (particles[1])
+        if (Particles[1])
         {
-            totalInverseMass += particles[1].MassInv;
+            totalInverseMass += Particles[1].MassInv;
         }
 
         //If all particles have infinite mass, then we do nothing.
@@ -150,26 +150,26 @@ public class ParticleContact
         }
 
         //Find the amount of penetration resoluion per unit of inverse mass.
-        Vector2 movePerIMass = (Penetration / totalInverseMass) * contactNormal;
+        Vector2 movePerIMass = ContactNormal * (Penetration / totalInverseMass);
 
         //Calculate the movement amounts.
-        particleMovement[0] = movePerIMass * particles[0].MassInv;
+        ParticleMovement[0] = movePerIMass * Particles[0].MassInv;
 
-        if (particles[1])
+        if (Particles[1])
         {
-            particleMovement[1] = movePerIMass * -particles[1].MassInv;
+            ParticleMovement[1] = movePerIMass * -Particles[1].MassInv;
         }
         else
         {
-            particleMovement[1] = Vector2.zero;
+            ParticleMovement[1] = Vector2.zero;
         }
 
         //Apply the penetration resolution.
-        particles[0].Position += particleMovement[0];
+        Particles[0].Position = Particles[0].Position + ParticleMovement[0];
 
-        if (particles[1])
+        if (Particles[1])
         {
-            particles[1].Position += particleMovement[1];
+            Particles[1].Position = Particles[1].Position + ParticleMovement[1];
         }
     }
 }

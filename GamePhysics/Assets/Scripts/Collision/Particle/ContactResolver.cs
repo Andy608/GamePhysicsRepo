@@ -21,7 +21,7 @@ public class ContactResolver
     }
 
     //Chapter 16 optimizes this.
-    public void ResolveContacts(ParticleContact[] contacts, float deltaTime)
+    public void ResolveContacts(ref List<ParticleContact> contacts, float deltaTime)
     {
         int i;
         iterationsUsed = 0;
@@ -30,10 +30,11 @@ public class ContactResolver
         {
             //Find the contact with the largest closing velocity.
             float max = float.MaxValue;
-            int maxIndex = contacts.Length;
-            for (i = 0; i < maxIndex; ++i)
+            int maxIndex = contacts.Count;
+            for (i = 0; i < contacts.Count; ++i)
             {
                 float separationVelocity = contacts[i].CalculateSeparatingVelocity();
+                //Debug.Log("Sep Vel: " + separationVelocity);
                 if (separationVelocity < max && (separationVelocity < 0 || contacts[i].Penetration > 0.0f))
                 {
                     max = separationVelocity;
@@ -42,13 +43,40 @@ public class ContactResolver
             }
 
             //Do we have anything worth resolving?
-            if (maxIndex == contacts.Length)
+            if (maxIndex == contacts.Count)
             {
                 break;
             }
 
             //Resolve this contact.
             contacts[maxIndex].Resolve(deltaTime);
+
+            Vector2[] move = contacts[maxIndex].ParticleMovement;
+
+            for (i = 0; i < contacts.Count; ++i)
+            {
+                if (contacts[i].Particles[0] == contacts[maxIndex].Particles[0])
+                {
+                    contacts[i].Penetration -= Vector2.Dot(move[0], contacts[i].ContactNormal);
+                }
+                else if (contacts[i].Particles[0] == contacts[maxIndex].Particles[1])
+                {
+                    contacts[i].Penetration -= Vector2.Dot(move[1], contacts[i].ContactNormal);
+                }
+
+                if (contacts[i].Particles[1])
+                {
+                    if (contacts[i].Particles[1] == contacts[maxIndex].Particles[0])
+                    {
+                        contacts[i].Penetration += Vector2.Dot(move[0], contacts[i].ContactNormal);
+                    }
+                    else if (contacts[i].Particles[1] == contacts[maxIndex].Particles[1])
+                    {
+                        contacts[i].Penetration += Vector2.Dot(move[1], contacts[i].ContactNormal);
+                    }
+                }
+            }
+
             ++iterationsUsed;
         }
     }

@@ -28,13 +28,13 @@ public abstract class CollisionHull2D : MonoBehaviour
             if (!IsColliding(otherObj))
             {
                 collidingWith.Add(otherObj);
-                //otherObj.collidingWith.Add(this, c);
+                otherObj.collidingWith.Add(this);
             }
         }
         else
         {
             collidingWith.Remove(otherObj);
-            //otherObj.collidingWith.Remove(this);
+            otherObj.collidingWith.Remove(this);
         }
 
         if (IsColliding())
@@ -72,12 +72,16 @@ public abstract class CollisionHull2D : MonoBehaviour
     {
         particle = GetComponent<Particle2D>();
 
-        material = GetComponent<Material>();
+        if (GetComponent<MeshRenderer>() != null)
+        {
+            material = GetComponent<MeshRenderer>().material;
+        }
     }
 
     private void OnEnable()
     {
         CollisionManager.Instance?.RegisterObject(this);
+        Debug.Log("HELLO?");
     }
 
     private void OnDisable()

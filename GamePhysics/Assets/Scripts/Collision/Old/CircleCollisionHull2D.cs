@@ -9,10 +9,6 @@ public class CircleCollisionHull2D : CollisionHull2D
 	public float radius = 5.0f;
 
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
 	public override bool TestCollisionVsCircle(CircleCollisionHull2D other, ref List<ParticleContact> c)
 	{
@@ -36,23 +32,11 @@ public class CircleCollisionHull2D : CollisionHull2D
             Particle2D aParticle = GetComponent<Particle2D>();
             Particle2D bParticle = other.GetComponent<Particle2D>();
 
-            //Collision.Contact[] contacts = new Collision.Contact[4];
-
 			Vector2 normal = (aParticle.Position - bParticle.Position).normalized;
-			//Collision.Contact c1 = new Collision.Contact(distance * 0.5f, (aParticle.Position - bParticle.Position).normalized, 0.0f);
-
 			float penetration = other.radius + radius - distance.magnitude;
 
-            //Collision.Contact c1 = new Collision.Contact(distance * 0.5f, normal, 0.0f, penDepth);
-
-            //contacts[0] = c1;
-
-            //float separatingVel = Vector2.Dot((aParticle.Velocity - bParticle.Velocity), c1.Normal);
-
-            //c = new Collision(this, other, contacts, separatingVel);
-
             ParticleContact contact = new ParticleContact(
-                aParticle, bParticle, 1.0f, normal, penetration);
+                aParticle, bParticle, 0.0f, normal, penetration);
             c.Add(contact);
 			
 			return true;
@@ -108,6 +92,16 @@ public class CircleCollisionHull2D : CollisionHull2D
 		if (distSqr < radius * radius)
 		{
             //Todo Add the contact data to the contact list.
+            //Particle2D aParticle = GetComponent<Particle2D>();
+            //Particle2D bParticle = other.GetComponent<Particle2D>();
+
+            //Vector2 normal = (aParticle.Position - bParticle.Position).normalized;
+
+            //float penetration = (aParticle.Position - bParticle.Position).magnitude - distance.magnitude;
+
+            //ParticleContact contact = new ParticleContact(
+            //    aParticle, bParticle, 0.0f, normal, penetration);
+            //c.Add(contact);
             return true;
 		}
 

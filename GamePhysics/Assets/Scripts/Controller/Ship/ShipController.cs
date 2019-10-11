@@ -17,7 +17,7 @@ public class ShipController : MonoBehaviour
 
     [SerializeField] private float movementSpeed = 100.0f;
     //[SerializeField] private float maxRotationOffset = 80.0f;
-    [SerializeField] private float rotationSpeed = 100.0f;
+    private float rotationSpeed = 500.0f;
 
 
     private Vector2 RotationalForce;
@@ -71,7 +71,7 @@ public class ShipController : MonoBehaviour
 
         RotationalForce = Vector2.right * rotationSpeed;
 
-        halfHullSize = new Vector2(hull.sprite.texture.width * 0.5f, hull.sprite.texture.height * 0.5f);
+        halfHullSize = new Vector2(hull.sprite.texture.width / hull.sprite.pixelsPerUnit * 0.5f, hull.sprite.texture.height / hull.sprite.pixelsPerUnit * 0.5f);
     }
 
     private void OnPressedUp()

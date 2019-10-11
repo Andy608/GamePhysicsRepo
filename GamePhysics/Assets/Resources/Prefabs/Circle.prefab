@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2469094003175066390
+--- !u!1 &9159317549245518237
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,39 +8,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2469094003175066386}
-  - component: {fileID: 2469094003175066385}
-  - component: {fileID: 2469094003175066391}
-  - component: {fileID: 8033253323944034711}
-  - component: {fileID: 4615812475146144991}
+  - component: {fileID: 9159317549245518239}
+  - component: {fileID: 9159317549245518238}
+  - component: {fileID: 9159317549245518304}
+  - component: {fileID: 9159317549245518305}
   m_Layer: 0
-  m_Name: BlueFishy
-  m_TagString: Fishy
+  m_Name: Circle
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2469094003175066386
+--- !u!4 &9159317549245518239
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2469094003175066390}
+  m_GameObject: {fileID: 9159317549245518237}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 408, y: 52, z: 0}
+  m_LocalPosition: {x: -11, y: 334, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &2469094003175066385
+--- !u!212 &9159317549245518238
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2469094003175066390}
+  m_GameObject: {fileID: 9159317549245518237}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -72,7 +71,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 6653f66cff72ed6449fe7e150475d438, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 01f0d98f57fcdf14ba70a520730d9921, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -83,32 +82,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2469094003175066391
+--- !u!114 &9159317549245518304
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2469094003175066390}
+  m_GameObject: {fileID: 9159317549245518237}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c51a780a30b83b4ebe4d5bcdc52f187, type: 3}
+  m_Script: {fileID: 11500000, guid: 4a30518269e4dc74aaa17dba6a6896cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fishSprite: {fileID: 2469094003175066385}
-  SwimRight: 0
-  spawnRate: 5
-  fishSpeed: 1
-  fishSecondCounter: 1.9234288
-  minGroupSpawn: 1
-  maxGroupSpawn: 10
---- !u!114 &8033253323944034711
+  spriteRenderer: {fileID: 9159317549245518238}
+  radius: 64
+--- !u!114 &9159317549245518305
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2469094003175066390}
+  m_GameObject: {fileID: 9159317549245518237}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3eed5478fa3949a4aaafa7e4b576c7c7, type: 3}
@@ -120,13 +114,13 @@ MonoBehaviour:
   testSpringAnchor: {fileID: 0}
   positionType: 1
   rotationType: 1
-  forceType: 8
+  forceType: 0
   frictionStatic: 0.75
   frictionKinetic: 0.75
   springRestingLength: 0.3
   springStrength: 1
   maxSpringLength: 1
-  startingMass: 1
+  startingMass: 100
   Position: {x: 0, y: 0}
   PrevPosition: {x: 0, y: 0}
   Velocity: {x: 0, y: 0}
@@ -139,17 +133,3 @@ MonoBehaviour:
   forceApplied: {x: 0, y: 0}
   centerOfMass: {x: 0, y: 0}
   particleShape: 0
---- !u!114 &4615812475146144991
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2469094003175066390}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a30518269e4dc74aaa17dba6a6896cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 2469094003175066385}
-  radius: 1
