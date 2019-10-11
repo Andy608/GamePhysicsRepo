@@ -13,7 +13,7 @@ public class ObjectBoundingBoxCollisionHull2D : CollisionHull2D
     //    //transform.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
     //}
 
-	public override bool TestCollisionVsCircle(CircleCollisionHull2D other, ref Collision col)
+	public override bool TestCollisionVsCircle(CircleCollisionHull2D other, ref List<ParticleContact> col)
 	{
         //same as above but first...
         //multiply circle center by box inverse matrix 
@@ -73,7 +73,7 @@ public class ObjectBoundingBoxCollisionHull2D : CollisionHull2D
         return false;
 	}
 
-	public override bool TestCollisionVsAABB(AxisAlignedBoundingBoxCollision2D other, ref Collision col)
+	public override bool TestCollisionVsAABB(AxisAlignedBoundingBoxCollision2D other, ref List<ParticleContact> col)
 	{
         // 1. Find width and height for both boxes.
 
@@ -164,7 +164,7 @@ public class ObjectBoundingBoxCollisionHull2D : CollisionHull2D
         }
     }
 
-	public override bool TestCollisionVsObject(ObjectBoundingBoxCollisionHull2D other, ref Collision col)
+	public override bool TestCollisionVsObject(ObjectBoundingBoxCollisionHull2D other, ref List<ParticleContact> col)
 	{
         // 1. Find width and height for both boxes.
 

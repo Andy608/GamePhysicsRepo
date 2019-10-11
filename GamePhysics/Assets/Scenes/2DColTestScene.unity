@@ -302,54 +302,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &418700283
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 418700285}
-  - component: {fileID: 418700284}
-  m_Layer: 0
-  m_Name: FishySpawnerLeft
-  m_TagString: Untagged
-  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &418700284
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 418700283}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 971e8765b717afa41a9447d21ffd660b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fishPrefabs:
-  - {fileID: 6818671362662292990, guid: 0aee2276be449df48a63662fb8703ffc, type: 3}
-  - {fileID: 2469094003175066391, guid: 1821d290159ba2f408fcc9bab266b66b, type: 3}
-  - {fileID: 5403143900049122069, guid: c5c6f96d7d13c20468b12e1e6e1c6abb, type: 3}
-  swimRight: 1
---- !u!4 &418700285
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 418700283}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2927, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &490127421
 GameObject:
   m_ObjectHideFlags: 0
@@ -426,11 +378,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 490127421}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 263, y: 60, z: 0}
+  m_LocalPosition: {x: -11, y: 334, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &490127424
 MonoBehaviour:
@@ -460,17 +412,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Gravity: {x: 0, y: 9.8}
   InitialVel: {x: 0, y: 0}
-  testFloor: {fileID: 0}
+  testFloor: {fileID: 1047125422}
   testSpringAnchor: {fileID: 0}
   positionType: 1
   rotationType: 1
-  forceType: 8
+  forceType: 0
   frictionStatic: 0.75
   frictionKinetic: 0.75
   springRestingLength: 0.3
   springStrength: 1
   maxSpringLength: 1
-  startingMass: 1
+  startingMass: 100
   Position: {x: 0, y: 0}
   PrevPosition: {x: 0, y: 0}
   Velocity: {x: 0, y: 0}
@@ -493,6 +445,7 @@ GameObject:
   m_Component:
   - component: {fileID: 524582421}
   - component: {fileID: 524582422}
+  - component: {fileID: 524582423}
   m_Layer: 0
   m_Name: _SCENE_MANAGER
   m_TagString: Untagged
@@ -527,54 +480,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02d17f19d38465c43aa811b0b983c113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &622716092
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 622716093}
-  - component: {fileID: 622716094}
-  m_Layer: 0
-  m_Name: FishySpawnerRight
-  m_TagString: Untagged
-  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &622716093
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 622716092}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3018, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &622716094
+  maxCollisionIterations: 5000
+--- !u!114 &524582423
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 622716092}
+  m_GameObject: {fileID: 524582420}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 971e8765b717afa41a9447d21ffd660b, type: 3}
+  m_Script: {fileID: 11500000, guid: 46efdb9cfcec67e46a5fbcb397f3f5ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fishPrefabs:
-  - {fileID: 6818671362662292990, guid: 0aee2276be449df48a63662fb8703ffc, type: 3}
-  - {fileID: 2469094003175066391, guid: 1821d290159ba2f408fcc9bab266b66b, type: 3}
-  - {fileID: 5403143900049122069, guid: c5c6f96d7d13c20468b12e1e6e1c6abb, type: 3}
-  swimRight: 0
 --- !u!1 &1047125422
 GameObject:
   m_ObjectHideFlags: 0
@@ -644,7 +562,7 @@ MonoBehaviour:
   testSpringAnchor: {fileID: 0}
   positionType: 1
   rotationType: 1
-  forceType: 0
+  forceType: 8
   frictionStatic: 0.75
   frictionKinetic: 0.75
   springRestingLength: 0.3
@@ -676,7 +594,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 302688628}
-  radius: 200
+  radius: 20
 --- !u!1 &1150100548
 GameObject:
   m_ObjectHideFlags: 0
@@ -993,11 +911,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1467288210}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 468, y: 64, z: 0}
+  m_LocalPosition: {x: 561, y: 257, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1502952779
 GameObject:
