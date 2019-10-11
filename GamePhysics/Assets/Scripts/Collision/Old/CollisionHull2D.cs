@@ -12,56 +12,9 @@ public abstract class CollisionHull2D : MonoBehaviour
         penis
     }
 
-    private Material material;
-    [SerializeField] private SpriteRenderer spriteRenderer;
-
     protected Particle2D particle;
 
     private CollisionHullType2D type { get; }
-
-    private List<CollisionHull2D> collidingWith = new List<CollisionHull2D>();
-
-    public void SetColliding(bool colliding, CollisionHull2D otherObj)
-    {
-        if (colliding)
-        {
-            if (!IsColliding(otherObj))
-            {
-                collidingWith.Add(otherObj);
-                otherObj.collidingWith.Add(this);
-            }
-        }
-        else
-        {
-            collidingWith.Remove(otherObj);
-            otherObj.collidingWith.Remove(this);
-        }
-
-        if (IsColliding())
-        {
-            if (material)
-                material.color = Color.red;
-            else
-                spriteRenderer.color = Color.red;
-        }
-        else
-        {
-            if (material)
-                material.color = Color.green;
-            else
-                spriteRenderer.color = Color.green;
-        }
-    }
-
-    public bool IsColliding()
-    {
-        return collidingWith.Count != 0;
-    }
-
-    public bool IsColliding(CollisionHull2D other)
-    {
-        return collidingWith.Contains(other);
-    }
 
     protected CollisionHull2D(CollisionHullType2D _type)
     {
@@ -71,22 +24,17 @@ public abstract class CollisionHull2D : MonoBehaviour
     private void Awake()
     {
         particle = GetComponent<Particle2D>();
-
-        if (GetComponent<MeshRenderer>() != null)
-        {
-            material = GetComponent<MeshRenderer>().material;
-        }
     }
 
     private void OnEnable()
     {
-        CollisionManager.Instance?.RegisterObject(this);
-        Debug.Log("HELLO?");
+        CollisionManager.Instance?.RegisterHull(this);
+        //Debug.Log("HELLO?");
     }
 
     private void OnDisable()
     {
-        CollisionManager.Instance?.UnRegisterObject(this);
+        CollisionManager.Instance?.UnRegisterHull(this);
     }
 
     public static bool TestCollision(CollisionHull2D a, CollisionHull2D b, ref List<ParticleContact> contacts)

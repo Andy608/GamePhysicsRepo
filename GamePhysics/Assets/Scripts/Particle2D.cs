@@ -119,6 +119,16 @@ public class Particle2D : MonoBehaviour
         other
     }
 
+    private void OnEnable()
+    {
+        CollisionManager.Instance?.RegisterParticle(this);
+    }
+
+    private void OnDisable()
+    {
+        CollisionManager.Instance?.UnRegisterParticle(this);
+    }
+
     public void SetVelocity(Vector2 v)
     {
         Velocity = v;

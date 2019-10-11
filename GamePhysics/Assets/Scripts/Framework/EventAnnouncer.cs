@@ -26,4 +26,12 @@ public class EventAnnouncer : ManagerBase<EventAnnouncer>
     public static SceneChanged OnSceneChanged;
 
     #endregion
+
+    #region Collision Events
+
+    //Announce that a collision happened
+    public delegate void CollisionOccurred(Particle2D a, Particle2D b);
+    public static CollisionOccurred OnCollisionOccurred;
+
+    #endregion
 }

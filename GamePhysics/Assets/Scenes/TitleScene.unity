@@ -702,7 +702,7 @@ GameObject:
   - component: {fileID: 562095837}
   m_Layer: 0
   m_Name: Main Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -756,7 +756,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 960
+  orthographic size: 10.62
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -844,7 +844,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cc88ad5b5df94044b68f1cd9565c2ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nativeResolution: {x: 1080, y: 1920}
+  nativeResolution: {x: 24, y: 13.5}
 --- !u!1 &670216837
 GameObject:
   m_ObjectHideFlags: 0

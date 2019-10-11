@@ -111,7 +111,7 @@ public class ParticleContact
             return;
         }
 
-        //Calculate the impule to apply.
+        //Calculate the impulse to apply.
         float impulse = deltaVelocity / totalInverseMass;
 
         //Find the amount of impulse per unit of inverse mass.
@@ -125,6 +125,8 @@ public class ParticleContact
         {
             Particles[1].Velocity = Particles[1].Velocity + impulsePerIMass * -Particles[1].MassInv;
         }
+
+        EventAnnouncer.OnCollisionOccurred?.Invoke(Particles[0], Particles[1]);
     }
 
     private void ResolveInterpenetration(float deltaTime)

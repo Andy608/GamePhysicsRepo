@@ -17,7 +17,7 @@ public class ShipController : MonoBehaviour
 
     [SerializeField] private float movementSpeed = 100.0f;
     //[SerializeField] private float maxRotationOffset = 80.0f;
-    private float rotationSpeed = 500.0f;
+    private float rotationSpeed = 360.0f;
 
 
     private Vector2 RotationalForce;
@@ -135,7 +135,7 @@ public class ShipController : MonoBehaviour
             shipParticle.ApplyTorque(RotationalPoint, rotForce);
         }
 
-        BoundsCheck();
+        //BoundsCheck();
     }
 
     private void FlipShip(bool flip)
@@ -146,40 +146,40 @@ public class ShipController : MonoBehaviour
         shipTransform.localScale = flippedScale;
     }
 
-    private void BoundsCheck()
-    {
-        float topBounds = Camera.main.orthographicSize + Camera.main.transform.position.y;
-        float bottomBounds = -topBounds;
+    //private void BoundsCheck()
+    //{
+    //    float topBounds = Camera.main.orthographicSize + Camera.main.transform.position.y;
+    //    float bottomBounds = -topBounds;
 
-        float rightBounds = Camera.main.orthographicSize * Screen.width / Screen.height + Camera.main.transform.position.x;
-        float leftBounds = -rightBounds;
+    //    float rightBounds = Camera.main.orthographicSize * Screen.width / Screen.height + Camera.main.transform.position.x;
+    //    float leftBounds = -rightBounds;
 
 
-        topBounds -= halfHullSize.y;
-        bottomBounds += halfHullSize.y;
+    //    topBounds -= halfHullSize.y;
+    //    bottomBounds += halfHullSize.y;
 
-        rightBounds -= halfHullSize.x;
-        leftBounds += halfHullSize.x;
+    //    rightBounds -= halfHullSize.x;
+    //    leftBounds += halfHullSize.x;
 
-        //TODO: USE REAL PHYSICS FOR THIS. MAKE WALLS ALL AROUND THE CAMERA
-        if (shipParticle.Position.x < leftBounds)
-        {
-            shipParticle.Position.x = leftBounds;
-        }
-        else if (shipParticle.Position.x > rightBounds)
-        {
-            shipParticle.Position.x = rightBounds;
-        }
+    //    //TODO: USE REAL PHYSICS FOR THIS. MAKE WALLS ALL AROUND THE CAMERA
+    //    if (shipParticle.Position.x < leftBounds)
+    //    {
+    //        shipParticle.Position.x = leftBounds;
+    //    }
+    //    else if (shipParticle.Position.x > rightBounds)
+    //    {
+    //        shipParticle.Position.x = rightBounds;
+    //    }
 
-        if (shipParticle.Position.y < bottomBounds)
-        {
-            shipParticle.Position.y = bottomBounds;
-        }
-        else if (shipParticle.Position.y > topBounds)
-        {
-            shipParticle.Position.y = topBounds;
-        }
-    }
+    //    if (shipParticle.Position.y < bottomBounds)
+    //    {
+    //        shipParticle.Position.y = bottomBounds;
+    //    }
+    //    else if (shipParticle.Position.y > topBounds)
+    //    {
+    //        shipParticle.Position.y = topBounds;
+    //    }
+    //}
 
     private enum EnumRotDirection
     {

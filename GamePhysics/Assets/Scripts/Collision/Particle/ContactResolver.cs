@@ -34,7 +34,6 @@ public class ContactResolver
             for (i = 0; i < contacts.Count; ++i)
             {
                 float separationVelocity = contacts[i].CalculateSeparatingVelocity();
-                //Debug.Log("Sep Vel: " + separationVelocity);
                 if (separationVelocity < max && (separationVelocity < 0 || contacts[i].Penetration > 0.0f))
                 {
                     max = separationVelocity;

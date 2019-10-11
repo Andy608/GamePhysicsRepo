@@ -13,7 +13,7 @@ public class Fishy : MonoBehaviour
     public bool SwimRight = false;
 
     [SerializeField] private float spawnRate = 10.0f;
-    [SerializeField] private float fishSpeed = 1.0f;
+    [SerializeField] private float fishSpeed = 5.0f;
     [SerializeField] private float fishSecondCounter = 0.0f;
     [SerializeField] private int minGroupSpawn = 1;
     [SerializeField] private int maxGroupSpawn = 10;
@@ -84,11 +84,11 @@ public class Fishy : MonoBehaviour
         float leftBounds = -rightBounds;
 
 
-        topBounds -= fishSpriteSize.y;
-        bottomBounds += fishSpriteSize.y;
+        topBounds += fishSpriteSize.y;
+        bottomBounds -= fishSpriteSize.y;
 
-        rightBounds -= fishSpriteSize.x;
-        leftBounds += fishSpriteSize.x;
+        rightBounds += fishSpriteSize.x;
+        leftBounds -= fishSpriteSize.x;
 
         if (FishyParticle.Position.x < leftBounds && !SwimRight)
         {
