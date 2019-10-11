@@ -120,22 +120,24 @@ public class ShipController : MonoBehaviour
 
     private void OnTorpedoFired()
     {
+        EventAnnouncer.OnButtonPressed?.Invoke(EnumSound.BUBBLE_FIRE);
         torpedoSpawner.FireTorpedo(isSpriteFlipped);
     }
 
     private void FixedUpdate()
     {
-        foreach (Vector2 force in totalDirectionalForces.Values)
+        if (GameScene.Instance.IsRunning)
         {
-            shipParticle.AddForce(force);
-        }
+            foreach (Vector2 force in totalDirectionalForces.Values)
+            {
+                shipParticle.AddForce(force);
+            }
 
-        foreach (Vector2 rotForce in totalRotDirectionalForces.Values)
-        {
-            shipParticle.ApplyTorque(RotationalPoint, rotForce);
+            foreach (Vector2 rotForce in totalRotDirectionalForces.Values)
+            {
+                shipParticle.ApplyTorque(RotationalPoint, rotForce);
+            }
         }
-
-        //BoundsCheck();
     }
 
     private void FlipShip(bool flip)
@@ -145,41 +147,6 @@ public class ShipController : MonoBehaviour
         flippedScale.x = (flip ? -1.0f : 1.0f);
         shipTransform.localScale = flippedScale;
     }
-
-    //private void BoundsCheck()
-    //{
-    //    float topBounds = Camera.main.orthographicSize + Camera.main.transform.position.y;
-    //    float bottomBounds = -topBounds;
-
-    //    float rightBounds = Camera.main.orthographicSize * Screen.width / Screen.height + Camera.main.transform.position.x;
-    //    float leftBounds = -rightBounds;
-
-
-    //    topBounds -= halfHullSize.y;
-    //    bottomBounds += halfHullSize.y;
-
-    //    rightBounds -= halfHullSize.x;
-    //    leftBounds += halfHullSize.x;
-
-    //    //TODO: USE REAL PHYSICS FOR THIS. MAKE WALLS ALL AROUND THE CAMERA
-    //    if (shipParticle.Position.x < leftBounds)
-    //    {
-    //        shipParticle.Position.x = leftBounds;
-    //    }
-    //    else if (shipParticle.Position.x > rightBounds)
-    //    {
-    //        shipParticle.Position.x = rightBounds;
-    //    }
-
-    //    if (shipParticle.Position.y < bottomBounds)
-    //    {
-    //        shipParticle.Position.y = bottomBounds;
-    //    }
-    //    else if (shipParticle.Position.y > topBounds)
-    //    {
-    //        shipParticle.Position.y = topBounds;
-    //    }
-    //}
 
     private enum EnumRotDirection
     {

@@ -127,6 +127,7 @@ public class ParticleContact
         }
 
         EventAnnouncer.OnCollisionOccurred?.Invoke(Particles[0], Particles[1]);
+        AudioSource collisionSound = EventAnnouncer.OnButtonPressed?.Invoke(EnumSound.COLLISION);
     }
 
     private void ResolveInterpenetration(float deltaTime)

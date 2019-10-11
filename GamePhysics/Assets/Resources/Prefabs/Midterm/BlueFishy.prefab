@@ -97,10 +97,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fishSprite: {fileID: 2469094003175066385}
+  damageValue: 10
   SwimRight: 0
   spawnRate: 5
   fishSpeed: 1
-  fishSecondCounter: 1.124991
+  fishSecondCounter: 2.7157862
   minGroupSpawn: 1
   maxGroupSpawn: 10
 --- !u!114 &8033253323944034711

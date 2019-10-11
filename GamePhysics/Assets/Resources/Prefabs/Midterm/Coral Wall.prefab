@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2460790372009427011}
   m_Layer: 0
   m_Name: Coral Wall
-  m_TagString: Untagged
+  m_TagString: Coral
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -98,8 +98,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9159317549245518237, guid: 99354ee4c4b9f8340a3f30062c48bb60,
         type: 3}
-      propertyPath: m_TagString
-      value: Coral
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9159317549245518239, guid: 99354ee4c4b9f8340a3f30062c48bb60,
         type: 3}
@@ -161,21 +161,6 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9159317549245518304, guid: 99354ee4c4b9f8340a3f30062c48bb60,
-        type: 3}
-      propertyPath: radius
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 9159317549245518305, guid: 99354ee4c4b9f8340a3f30062c48bb60,
-        type: 3}
-      propertyPath: startingMass
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9159317549245518305, guid: 99354ee4c4b9f8340a3f30062c48bb60,
-        type: 3}
-      propertyPath: forceType
-      value: 8
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 99354ee4c4b9f8340a3f30062c48bb60, type: 3}
 --- !u!4 &6717704911295960759 stripped
@@ -198,8 +183,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9159317549245518237, guid: 99354ee4c4b9f8340a3f30062c48bb60,
         type: 3}
-      propertyPath: m_TagString
-      value: Coral
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9159317549245518239, guid: 99354ee4c4b9f8340a3f30062c48bb60,
         type: 3}
@@ -261,21 +246,6 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9159317549245518304, guid: 99354ee4c4b9f8340a3f30062c48bb60,
-        type: 3}
-      propertyPath: radius
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 9159317549245518305, guid: 99354ee4c4b9f8340a3f30062c48bb60,
-        type: 3}
-      propertyPath: startingMass
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9159317549245518305, guid: 99354ee4c4b9f8340a3f30062c48bb60,
-        type: 3}
-      propertyPath: forceType
-      value: 8
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 99354ee4c4b9f8340a3f30062c48bb60, type: 3}
 --- !u!4 &6717704911289475255 stripped
@@ -298,8 +268,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9159317549245518237, guid: 99354ee4c4b9f8340a3f30062c48bb60,
         type: 3}
-      propertyPath: m_TagString
-      value: Coral
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9159317549245518239, guid: 99354ee4c4b9f8340a3f30062c48bb60,
         type: 3}
@@ -361,21 +331,6 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9159317549245518304, guid: 99354ee4c4b9f8340a3f30062c48bb60,
-        type: 3}
-      propertyPath: radius
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 9159317549245518305, guid: 99354ee4c4b9f8340a3f30062c48bb60,
-        type: 3}
-      propertyPath: startingMass
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9159317549245518305, guid: 99354ee4c4b9f8340a3f30062c48bb60,
-        type: 3}
-      propertyPath: forceType
-      value: 8
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 99354ee4c4b9f8340a3f30062c48bb60, type: 3}
 --- !u!4 &6717704910372197497 stripped
@@ -398,8 +353,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9159317549245518237, guid: 99354ee4c4b9f8340a3f30062c48bb60,
         type: 3}
-      propertyPath: m_TagString
-      value: Coral
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9159317549245518239, guid: 99354ee4c4b9f8340a3f30062c48bb60,
         type: 3}
@@ -460,21 +415,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9159317549245518304, guid: 99354ee4c4b9f8340a3f30062c48bb60,
-        type: 3}
-      propertyPath: radius
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 9159317549245518305, guid: 99354ee4c4b9f8340a3f30062c48bb60,
-        type: 3}
-      propertyPath: startingMass
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9159317549245518305, guid: 99354ee4c4b9f8340a3f30062c48bb60,
-        type: 3}
-      propertyPath: forceType
-      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 99354ee4c4b9f8340a3f30062c48bb60, type: 3}

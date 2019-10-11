@@ -36,7 +36,7 @@ public class CircleCollisionHull2D : CollisionHull2D
 			float penetration = other.radius + radius - distance.magnitude;
 
             ParticleContact contact = new ParticleContact(
-                aParticle, bParticle, 0.0f, normal, penetration);
+                aParticle, bParticle, 0.2f, normal, penetration);
             c.Add(contact);
 			
 			return true;

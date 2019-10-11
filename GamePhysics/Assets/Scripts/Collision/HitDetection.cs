@@ -16,20 +16,27 @@ public class HitDetection : ManagerBase<HitDetection>
 
     private void DetectHit(Particle2D a, Particle2D b)
     {
-        if ((a.tag == "Player" && b.tag == "Fishy") || (a.tag == "Fishy" && b.tag == "Player"))
+        if (a.tag == "Player" && b.tag == "Fishy")
         {
-            Debug.Log("Player got hit!");
+            //Debug.Log("Player got hit!");
+            GameScene.Instance.DamagePlayer(b.GetComponent<Fishy>().GetDamageValue());
+            return;
+        }
+        else if (a.tag == "Fishy" && b.tag == "Player")
+        {
+            //Debug.Log("Player got hit!");
+            GameScene.Instance.DamagePlayer(a.GetComponent<Fishy>().GetDamageValue());
             return;
         }
         else if (a.tag == "Bubble" && b.tag == "Fishy")
         {
-            Debug.Log("Fishy got hit by a torpedo!");
+            //Debug.Log("Fishy got hit by a torpedo!");
             b.GetComponent<FishDieWithPhysics>().Activate();
             Destroy(a.gameObject);
         }
         else if (a.tag == "Fishy" && b.tag == "Bubble")
         {
-            Debug.Log("Fishy got hit by a torpedo!");
+            //Debug.Log("Fishy got hit by a torpedo!");
             a.GetComponent<FishDieWithPhysics>().Activate();
             Destroy(b.gameObject);
         }

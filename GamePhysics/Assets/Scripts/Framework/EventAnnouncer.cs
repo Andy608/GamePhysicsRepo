@@ -34,4 +34,39 @@ public class EventAnnouncer : ManagerBase<EventAnnouncer>
     public static CollisionOccurred OnCollisionOccurred;
 
     #endregion
+
+    #region Game Events
+
+    //Announce that the player got damaged
+    public delegate void PlayerDamaged(float damage, float health);
+    public static PlayerDamaged OnPlayerDamaged;
+
+    //Announce that the player's health reached 0
+    public delegate void PlayerDied(float score);
+    public static PlayerDied OnPlayerDied;
+
+    //Announce that the player's health reached 0
+    public delegate float RequestPlayerInvincible();
+    public static RequestPlayerInvincible OnRequestPlayerInvincible;
+
+    #endregion
+
+    #region Audio Events
+
+    public delegate void PlayMusicRequested();
+    public static PlayMusicRequested OnPlayMusicRequested;
+
+    public delegate void StopMusicRequested();
+    public static StopMusicRequested OnStopMusicRequested;
+
+    public delegate void MusicVolumeChanged(float volume);
+    public static MusicVolumeChanged OnMusicVolumeChanged;
+
+    public delegate void SoundVolumeChanged(float volume);
+    public static SoundVolumeChanged OnSoundVolumeChanged;
+
+    public delegate AudioSource ButtonPressed(EnumSound soundID);
+    public static ButtonPressed OnButtonPressed;
+
+    #endregion
 }

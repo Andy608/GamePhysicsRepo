@@ -8,6 +8,7 @@ public class Fishy : MonoBehaviour
     public Particle2D FishyParticle { get; private set; }
 
     [SerializeField] private SpriteRenderer fishSprite = null;
+    [SerializeField] private int damageValue = 5;
     private Vector2 fishSpriteSize;
 
     public bool SwimRight = false;
@@ -24,6 +25,11 @@ public class Fishy : MonoBehaviour
         fishSecondCounter = 0.0f;
 
         fishSpriteSize = new Vector2(fishSprite.sprite.texture.width / fishSprite.sprite.pixelsPerUnit * 0.5f, fishSprite.sprite.texture.height / fishSprite.sprite.pixelsPerUnit * 0.5f);
+    }
+
+    public int GetDamageValue()
+    {
+        return 100;
     }
 
     public void FlipX(bool flip)
@@ -92,25 +98,20 @@ public class Fishy : MonoBehaviour
 
         if (FishyParticle.Position.x < leftBounds && !SwimRight)
         {
-            DestroyFish();
+            FishPool.Instance.DestroyFish(this);
         }
         else if (FishyParticle.Position.x > rightBounds && SwimRight)
         {
-            DestroyFish();
+            FishPool.Instance.DestroyFish(this);
         }
 
         if (FishyParticle.Position.y < bottomBounds)
         {
-            DestroyFish();
+            FishPool.Instance.DestroyFish(this);
         }
         else if (FishyParticle.Position.y > topBounds)
         {
-            DestroyFish();
+            FishPool.Instance.DestroyFish(this);
         }
-    }
-
-    private void DestroyFish()
-    {
-        Destroy(gameObject);
     }
 }
