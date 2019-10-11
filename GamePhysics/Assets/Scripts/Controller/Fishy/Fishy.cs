@@ -9,6 +9,7 @@ public class Fishy : MonoBehaviour
 
     [SerializeField] private SpriteRenderer fishSprite = null;
     [SerializeField] private int damageValue = 5;
+    [SerializeField] private bool speedDamageDebug = false;
     private Vector2 fishSpriteSize;
 
     public bool SwimRight = false;
@@ -31,7 +32,7 @@ public class Fishy : MonoBehaviour
 
     public int GetDamageValue()
     {
-        return 100;
+        return speedDamageDebug ? 100 : damageValue;
     }
 
     public void FlipX(bool flip)
