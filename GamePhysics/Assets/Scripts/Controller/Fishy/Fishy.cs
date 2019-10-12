@@ -6,6 +6,7 @@ using UnityEngine;
 public class Fishy : MonoBehaviour
 {
     public Particle2D FishyParticle { get; private set; }
+	private Vector2 oldVel = Vector2.zero;
 
     [SerializeField] private SpriteRenderer fishSprite = null;
     [SerializeField] private int damageValue = 5;
@@ -19,7 +20,7 @@ public class Fishy : MonoBehaviour
     [SerializeField] private float fishSecondCounter = 0.0f;
     [SerializeField] private int minGroupSpawn = 1;
     [SerializeField] private int maxGroupSpawn = 10;
-	[SerializeField] private int pointsAwarded = 10;
+	[SerializeField] public int pointsAwarded = 10;
 	[SerializeField] private int health = 1;
 
 	private void Awake()
@@ -28,9 +29,11 @@ public class Fishy : MonoBehaviour
         fishSecondCounter = 0.0f;
 
         fishSpriteSize = new Vector2(fishSprite.sprite.texture.width / fishSprite.sprite.pixelsPerUnit * 0.5f, fishSprite.sprite.texture.height / fishSprite.sprite.pixelsPerUnit * 0.5f);
-    }
 
-    public int GetDamageValue()
+		oldVel = FishyParticle.Velocity;
+	}
+
+	public int GetDamageValue()
     {
         return speedDamageDebug ? 100 : damageValue;
     }
@@ -41,8 +44,6 @@ public class Fishy : MonoBehaviour
         flippedScale.x = (flip ? -1.0f : 1.0f);
         transform.localScale = flippedScale;
     }
-
-    //Do something with collison?
 
     public void AddTime(float t)
     {
@@ -82,9 +83,20 @@ public class Fishy : MonoBehaviour
     private void Update()
     {
         BoundsCheck();
-    }
 
-    private void BoundsCheck()
+		if (FishyParticle.Velocity.x > 0 && oldVel.x < 0)
+		{
+			FlipX(true);
+		}
+		if (FishyParticle.Velocity.x < 0 && oldVel.x > 0)
+		{
+			FlipX(false);
+		}
+		oldVel = FishyParticle.Velocity;
+
+	}
+
+	private void BoundsCheck()
     {
         float topBounds = Camera.main.orthographicSize + Camera.main.transform.position.y;
         float bottomBounds = -topBounds;

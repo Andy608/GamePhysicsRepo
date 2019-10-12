@@ -32,13 +32,15 @@ public class HitDetection : ManagerBase<HitDetection>
         {
             //Debug.Log("Fishy got hit by a torpedo!");
             b.GetComponent<FishDieWithPhysics>().Activate();
-            Destroy(a.gameObject);
+			ScoreManager.Instance.AddScore(b.GetComponent<Fishy>().pointsAwarded);
+			Destroy(a.gameObject);
         }
         else if (a.tag == "Fishy" && b.tag == "Bubble")
         {
             //Debug.Log("Fishy got hit by a torpedo!");
             a.GetComponent<FishDieWithPhysics>().Activate();
-            Destroy(b.gameObject);
+			ScoreManager.Instance.AddScore(a.GetComponent<Fishy>().pointsAwarded);
+			Destroy(b.gameObject);
         }
     }
 }

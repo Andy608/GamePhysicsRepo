@@ -8,7 +8,7 @@ public class GameSceneManager : ManagerBase<GameSceneManager>
 {
     [SerializeField] private CanvasGroup transitionImage = null;
 
-    public EnumScene CurrentScene { private set; get; }
+	public EnumScene CurrentScene { private set; get; }
     public EnumScene TargetScene { private set; get; }
 
     private SceneBundle sceneBundle = null;

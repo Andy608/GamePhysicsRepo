@@ -6,13 +6,16 @@ using TMPro;
 public class ResultsScene : SceneBase<ResultsScene>
 {
     [SerializeField] private TextMeshProUGUI score;
+	[SerializeField] private TextMeshProUGUI points;
 
-    private void OnEnable()
+
+	private void OnEnable()
     {
         score.text = PersistentData.Instance.GetScore().ToString("n2") + " meters";
-    }
+		points.text = PersistentData.Instance.GetPoints().ToString();
+	}
 
-    public void OnMainMenuClicked()
+	public void OnMainMenuClicked()
     {
         EventAnnouncer.OnRequestSceneChange(EnumScene.TITLE, new TransitionEffect(1.0f, Color.white));
     }

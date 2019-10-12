@@ -18,7 +18,7 @@ public class Healthbar : MonoBehaviour
 
     private void OnDisable()
     {
-        EventAnnouncer.OnPlayerDamaged += UpdateHealthbar;
+        EventAnnouncer.OnPlayerDamaged -= UpdateHealthbar;
     }
 
     private void UpdateHealthbar(float damage, float health)

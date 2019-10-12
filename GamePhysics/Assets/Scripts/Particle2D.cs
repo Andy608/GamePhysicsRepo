@@ -59,6 +59,7 @@ public class Particle2D : MonoBehaviour
 
     [SerializeField] private PosIntegrationType positionType = PosIntegrationType.EulerExplicit;
     [SerializeField] private RotIntegrationType rotationType = RotIntegrationType.EulerExplicit;
+	[SerializeField] private float drag;
     [SerializeField] private ForceType forceType = ForceType.gravity;
 
     //[SerializeField] [Range(0.0f, 10.0f)] private float scaleX = 1.0f;
@@ -266,9 +267,13 @@ public class Particle2D : MonoBehaviour
                 AddForce(frictionForce);
                 break;
             case ForceType.drag:
-                dragForce = ForceGenerator.GenerateForce_Drag(Velocity, new Vector2(0.2f, 0.0f), 10.0f, 10.0f, 4.0f);
+                //dragForce = ForceGenerator.GenerateForce_Drag(Velocity, new Vector2(0.2f, 0.0f), 10.0f, 10.0f, 4.0f);
+                dragForce = ForceGenerator.GenerateForce_Drag(Velocity, 5.0f, 2.0f);
                 AddForce(dragForce);
-                break;
+				//Vector2 rotDragForce = ForceGenerator.GenerateForce_Drag(new Vector2(RotVelocity, RotVelocity), 0.003f, 0.003f);
+				//ApplyTorque(Vector2.right * 5.0f, rotDragForce);
+				RotVelocity -= 0.05f * RotVelocity;
+				break;
             case ForceType.spring:
                 springForce = ForceGenerator.GenerateForce_Spring(transform.position, testSpringAnchor.position, springRestingLength, springStrength * springStrength);
                 AddForce(springForce);

@@ -21,11 +21,13 @@ public class FishySpawner : MonoBehaviour
         {
             fish.AddTime(Time.deltaTime);
 
-            if (fish.GetFishSecondCounter() >= fish.GetSpawnRate())
-            {
-                fish.SetTime(Random.Range(0, fish.GetSpawnRate()));
-                SpawnFish(fish);
-            }
+			
+			if (fish.GetFishSecondCounter() >= fish.GetSpawnRate())
+			{
+				fish.SetTime(Random.Range(0, fish.GetSpawnRate()));
+				SpawnFish(fish);
+			}
+			
         }
     }
 
@@ -55,6 +57,7 @@ public class FishySpawner : MonoBehaviour
             {
                 fishy.FishyParticle.AddForce(-acceleration);
             }
+
         }
     }
 }

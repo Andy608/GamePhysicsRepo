@@ -90,13 +90,13 @@ public class ShipController : MonoBehaviour
     private void OnPressedLeft()
     {
         totalDirectionalForces[EnumDirection.LEFT] = Vector2.left * movementSpeed;
-        FlipShip(true);
+        //FlipShip(true);
     }
 
     private void OnPressedRight()
     {
         totalDirectionalForces[EnumDirection.RIGHT] = Vector2.right * movementSpeed;
-        FlipShip(false);
+        //FlipShip(false);
     }
 
     private void OnReleased(EnumDirection dir)
@@ -162,16 +162,4 @@ public class ShipController : MonoBehaviour
         LEFT,
         RIGHT
     }
-
-	//TODO: This is called when ship collides with any fish. Collision system should support the unity tags somehow
-	public void DamageShip(int damageTaken)
-	{
-		health -= damageTaken;
-
-		if (health <= 0)
-		{
-			Debug.Log("SHIP IS DEAD BAYBEEEEE");
-			EventAnnouncer.OnRequestSceneChange(EnumScene.RESULTS, new TransitionEffect(1.0f, Color.white));
-		}
-	}
 }

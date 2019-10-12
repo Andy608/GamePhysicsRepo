@@ -7,6 +7,7 @@ public class CircleCollisionHull2D : CollisionHull2D
 	public CircleCollisionHull2D() : base(CollisionHullType2D.circle) { }
 
 	public float radius = 5.0f;
+	public float restitution = 0.0f;
 
     // Start is called before the first frame update
 
@@ -36,7 +37,7 @@ public class CircleCollisionHull2D : CollisionHull2D
 			float penetration = other.radius + radius - distance.magnitude;
 
             ParticleContact contact = new ParticleContact(
-                aParticle, bParticle, 0.2f, normal, penetration);
+                aParticle, bParticle, restitution, normal, penetration);
             c.Add(contact);
 			
 			return true;

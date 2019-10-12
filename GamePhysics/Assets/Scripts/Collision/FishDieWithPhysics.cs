@@ -83,9 +83,9 @@ public class FishDieWithPhysics : MonoBehaviour
 
         active = null;
         FishPool.Instance.DestroyFish(GetComponent<Fishy>());
-    }
+	}
 
-    private void RandomizeColor(float minRange, float maxRange, ref Color c)
+	private void RandomizeColor(float minRange, float maxRange, ref Color c)
     {
         c.r = Random.Range(minRange, maxRange);
         c.g = Random.Range(minRange, maxRange);

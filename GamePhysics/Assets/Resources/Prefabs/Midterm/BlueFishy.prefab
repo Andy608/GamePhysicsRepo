@@ -102,7 +102,7 @@ MonoBehaviour:
   SwimRight: 0
   spawnRate: 5
   fishSpeed: 1
-  fishSecondCounter: 3.0577114
+  fishSecondCounter: 2.960392
   minGroupSpawn: 1
   maxGroupSpawn: 10
   pointsAwarded: 10
@@ -157,6 +157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 0.5
+  restitution: 1
 --- !u!114 &5167878658582150017
 MonoBehaviour:
   m_ObjectHideFlags: 0

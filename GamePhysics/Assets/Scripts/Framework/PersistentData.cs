@@ -5,6 +5,7 @@ using UnityEngine;
 public class PersistentData : ManagerBase<PersistentData>
 {
     [SerializeField] private static float score;
+	[SerializeField] private static int points;
 
     private void OnEnable()
     {
@@ -20,6 +21,7 @@ public class PersistentData : ManagerBase<PersistentData>
     {
         Debug.Log("HELLO: " + s);
         score = s;
+		points = ScoreManager.Instance.GetScore();
     }
 
     public float GetScore()
@@ -27,4 +29,10 @@ public class PersistentData : ManagerBase<PersistentData>
         Debug.Log("SCORE: " + score);
         return score;
     }
+	public float GetPoints()
+	{
+		Debug.Log("POINTS: " + points);
+		return points;
+	}
+
 }

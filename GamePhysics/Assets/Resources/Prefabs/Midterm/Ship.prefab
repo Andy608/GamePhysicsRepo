@@ -278,6 +278,7 @@ MonoBehaviour:
   torpedoSpawner: {fileID: 3504519863684923925}
   hull: {fileID: 3504519865125192921}
   movementSpeed: 50
+  health: 5
 --- !u!114 &1201551071970216311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,9 +293,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   flashColor: {r: 0.9528302, g: 0.17528482, b: 0.17528482, a: 1}
+  randomFlashColor: 0
   baseColorTime: 0.3
   flashColorTime: 0.3
-  startingScale: {x: 1.5, y: 1.5, z: 1.5}
   totalFlashDuration: 2
 --- !u!114 &3504519864661651484
 MonoBehaviour:
@@ -346,6 +347,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 1
+  restitution: 0.2
 --- !u!212 &915647810340180890
 SpriteRenderer:
   m_ObjectHideFlags: 0

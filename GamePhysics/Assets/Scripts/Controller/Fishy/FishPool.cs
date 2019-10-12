@@ -27,6 +27,6 @@ public class FishPool : ManagerBase<FishPool>
     public void DestroyFish(Fishy fish)
     {
         fishCount--;
-        Destroy(fish.gameObject);
+		Destroy(fish.gameObject);
     }
 }

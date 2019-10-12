@@ -102,10 +102,10 @@ MonoBehaviour:
   SwimRight: 0
   spawnRate: 10
   fishSpeed: 1
-  fishSecondCounter: 8.445432
+  fishSecondCounter: 6.0937514
   minGroupSpawn: 1
   maxGroupSpawn: 10
-  pointsAwarded: 10
+  pointsAwarded: 15
   health: 1
 --- !u!114 &1218491243461975604
 MonoBehaviour:
@@ -125,6 +125,7 @@ MonoBehaviour:
   testSpringAnchor: {fileID: 0}
   positionType: 1
   rotationType: 1
+  drag: 0
   forceType: 8
   frictionStatic: 0.75
   frictionKinetic: 0.75
@@ -157,6 +158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 1
+  restitution: 0.5
 --- !u!114 &5877104512906376599
 MonoBehaviour:
   m_ObjectHideFlags: 0
