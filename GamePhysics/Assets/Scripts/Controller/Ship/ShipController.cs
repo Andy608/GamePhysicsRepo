@@ -90,13 +90,13 @@ public class ShipController : MonoBehaviour
     private void OnPressedLeft()
     {
         totalDirectionalForces[EnumDirection.LEFT] = Vector2.left * movementSpeed;
-        //FlipShip(true);
+        FlipShip(true);
     }
 
     private void OnPressedRight()
     {
         totalDirectionalForces[EnumDirection.RIGHT] = Vector2.right * movementSpeed;
-        //FlipShip(false);
+        FlipShip(false);
     }
 
     private void OnReleased(EnumDirection dir)
@@ -139,7 +139,7 @@ public class ShipController : MonoBehaviour
                 shipParticle.ApplyTorque(RotationalPoint, rotForce);
             }
         }
-    }
+	}
 
     private void FlipShip(bool flip)
     {
