@@ -23,8 +23,11 @@ public class ScoreManager : ManagerBase<ScoreManager>
 
 	public void AddScore(int amountAdded)
 	{
-		score += amountAdded;
-		text.text = score.ToString();
+        if (GameScene.Instance.IsRunning)
+        {
+            score += amountAdded;
+            text.text = score.ToString();
+        }
 	}
 
 	public int GetScore()
