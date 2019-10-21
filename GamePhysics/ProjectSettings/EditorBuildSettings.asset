@@ -6,13 +6,13 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/TitleScene.unity
+    path: Assets/Scenes/_OceanExplorer/TitleScene.unity
     guid: c85fc01115406534a883c117d1f74993
   - enabled: 1
-    path: Assets/Scenes/GameScene.unity
+    path: Assets/Scenes/_OceanExplorer/GameScene.unity
     guid: a0c5a349ee19a3640a9204f46749ee3e
   - enabled: 1
-    path: Assets/Scenes/ResultsScene.unity
+    path: Assets/Scenes/_OceanExplorer/ResultsScene.unity
     guid: e253cdbcaae41e147b4c75f4df714cc4
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 19625c0426a9648488f022e04caedb34,
