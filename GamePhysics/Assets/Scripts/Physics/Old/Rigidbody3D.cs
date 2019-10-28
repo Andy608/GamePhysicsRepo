@@ -5,36 +5,24 @@ using UnityEngine;
 public class Rigidbody3D : MonoBehaviour
 {
 	private Vector3 force = Vector3.zero;
-	/// <summary>
-	/// Enum for Position Integration Type
-	/// </summary>
-	public enum PosIntegrationType
-	{
-		Kinematic,
-		EulerExplicit
-	}
 
 	/// <summary>
-	/// Enum for Rotation Integration Type
+	/// Enum for Integration Type
 	/// </summary>
-	public enum RotIntegrationType
+	public enum IntegrationType
 	{
 		Kinematic,
 		EulerExplicit
 	}
-	[SerializeField] private PosIntegrationType positionType = PosIntegrationType.EulerExplicit;
-	[SerializeField] private RotIntegrationType rotationType = RotIntegrationType.EulerExplicit;
+	[SerializeField] private IntegrationType positionType = IntegrationType.EulerExplicit;
+	[SerializeField] private IntegrationType rotationType = IntegrationType.EulerExplicit;
 
 	private Vector3 Position;
-	//private Vector3 PrevPosition;
-	//private Vector3 PosDiff = Vector3.zero;
 
 	public Vector3 Velocity;
-	[SerializeField] private Vector3 InitialVel = Vector3.zero;
 	public Vector3 Acceleration;
 
-	public Quaternion Rotation;
-	private Quaternion helperRot;
+	private Quaternion Rotation;
 
 	public Vector3 RotVelocity;
 	public Vector3 RotAcceleration;
@@ -74,11 +62,8 @@ public class Rigidbody3D : MonoBehaviour
     {
 		Mass = startingMass;
 		Position = transform.position;
-		//PrevPosition = transform.position;
 
-		Velocity = InitialVel;
-		//Rotation = transform.rotation;
-
+		Rotation = transform.rotation;
 	}
 
 	// Update is called once per frame
@@ -86,7 +71,7 @@ public class Rigidbody3D : MonoBehaviour
     {
 		switch (positionType)
 		{
-			case PosIntegrationType.EulerExplicit:
+			case IntegrationType.EulerExplicit:
 				UpdatePositionEulerExplicit(Time.deltaTime);
 				break;
 			default:
@@ -96,7 +81,7 @@ public class Rigidbody3D : MonoBehaviour
 
 		switch (rotationType)
 		{
-			case RotIntegrationType.EulerExplicit:
+			case IntegrationType.EulerExplicit:
 				UpdateRotationEulerExplicit(Time.deltaTime);
 				break;
 			default:
@@ -105,7 +90,7 @@ public class Rigidbody3D : MonoBehaviour
 		}
 
 		transform.position = Position;
-		SetRotation(Rotation);// %= 360.0f);//360 was for when it was float
+		transform.rotation = Rotation;
 	}
 
 	//Pre: Implement operators for multiplying quaternion by scalar
@@ -131,17 +116,26 @@ public class Rigidbody3D : MonoBehaviour
 		Velocity += Acceleration * dt;
 	}
 
+	/// <summary>
+	/// Integrates the particles rotation using the euler explicit formula
+	/// </summary>
+	/// <param name="dt"></param>
 	private void UpdateRotationEulerExplicit(float dt)
 	{
+		//Turn the angular velocity into a quaternion with w = 0
 		Quaternion angularVelAsQuat = new Quaternion(RotVelocity.x, RotVelocity.y, RotVelocity.z, 0);
 
+		//multiply the current Rot by the velocity to get half the derivative
 		Quaternion rotDeriv = angularVelAsQuat * Rotation;
-		rotDeriv = QuaternionExt.ScalarQuat(rotDeriv, dt/0.5f);
+		//complete the derivative by multiplying it by 1/2 delta time
+		rotDeriv = QuaternionExt.ScalarQuat(rotDeriv, dt*0.5f);
 
-		//Rotation = QuaternionExt.ScalarQuat(angularVelAsQuat, dt/0.5f) * Rotation;
-
+		//add the new derivative to the current rotation
 		Rotation = new Quaternion(Rotation.x + rotDeriv.x, Rotation.y + rotDeriv.y, Rotation.z + rotDeriv.z, Rotation.w + rotDeriv.w);
+		//normalize to remove scaling
 		Rotation = Quaternion.Normalize(Rotation);
+
+		//update the velocity
 		RotVelocity += RotAcceleration * dt;
 	}
 	
@@ -152,18 +146,7 @@ public class Rigidbody3D : MonoBehaviour
 
 	}
 
-	/// <summary>
-	/// Sets rotation of euler angle without creating new vectors
-	/// </summary>
-	/// <param name="rot"></param>
-	private void SetRotation(Quaternion rot)
-	{
-		//helperRot = transform.rotation;
-		//helperRot = rot;
-		transform.rotation = Rotation;
-	}
-
-
+	//Not used?
 	private Vector3 RotateVector3(Quaternion q, Vector3 v)
 	{
 		Vector3 vFinal = Vector3.zero;
