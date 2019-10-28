@@ -10,11 +10,11 @@ public enum EnumMusicState
 
 public class MusicManager : ManagerBase<MusicManager>
 {
-    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioSource audioSource = null;
 
-    [SerializeField] private AudioClip[] titleSceneMusic;
-    [SerializeField] private AudioClip[] gameSceneMusic;
-    [SerializeField] private AudioClip[] resultSceneMusic;
+    [SerializeField] private AudioClip[] titleSceneMusic = null;
+    [SerializeField] private AudioClip[] gameSceneMusic = null;
+    [SerializeField] private AudioClip[] resultSceneMusic = null;
 
     private EnumMusicState musicState = EnumMusicState.OFF;
     private int currentSongIndex = -1;

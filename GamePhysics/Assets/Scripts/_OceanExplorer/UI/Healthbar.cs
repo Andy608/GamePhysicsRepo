@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class Healthbar : MonoBehaviour
 {
     //[SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private Image healthbar;
-    private float originalWidth;
+    [SerializeField] private Image healthbar = null;
+    private float originalWidth = 0.0f;
 
     private void OnEnable()
     {

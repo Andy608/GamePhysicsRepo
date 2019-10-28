@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class WallMover : MonoBehaviour
 {
-    [SerializeField] private GameObject wallPrefab;
-    [SerializeField] private Vector3 repeatOffset;
-    [SerializeField] private int wallAmount;
-    [SerializeField] private float movementVelocity;
+    [SerializeField] private GameObject wallPrefab = null;
+    [SerializeField] private Vector3 repeatOffset = Vector3.zero;
+    [SerializeField] private int wallAmount = 0;
+    [SerializeField] private float movementVelocity = 0.0f;
 
     private GameObject[] walls;
 

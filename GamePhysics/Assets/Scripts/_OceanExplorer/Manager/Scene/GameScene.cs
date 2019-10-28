@@ -12,11 +12,11 @@ public class GameScene : SceneBase<GameScene>
     public bool IsInvincible { get; private set; }
     private Coroutine invincibleCoroutine = null;
 
-    [SerializeField] private ShipController ship;
-    private FlashColor shipColor;
+    [SerializeField] private ShipController ship = null;
+    private FlashColor shipColor = null;
 
-    private int health;
-    private float score;
+    private int health = 0;
+    private float score = 0.0f;
 
     //Could implement a powerup that when collected, the multipler goes up?
     private float multiplier = 1.4f;
