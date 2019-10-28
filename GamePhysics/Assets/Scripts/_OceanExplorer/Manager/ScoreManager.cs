@@ -7,7 +7,7 @@ using TMPro;
 public class ScoreManager : ManagerBase<ScoreManager>
 {
 	private int score = 0;
-	[SerializeField] private TextMeshProUGUI text;
+	[SerializeField] private TextMeshProUGUI text = null;
 
     // Start is called before the first frame update
     void Start()

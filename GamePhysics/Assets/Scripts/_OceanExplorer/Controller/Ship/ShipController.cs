@@ -29,8 +29,6 @@ public class ShipController : MonoBehaviour
 
     private bool isSpriteFlipped = false;
 
-	[SerializeField] private int health = 5;
-
     private void OnEnable()
     {
         controls.Enable();

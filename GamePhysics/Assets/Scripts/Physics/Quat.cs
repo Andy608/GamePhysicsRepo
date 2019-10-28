@@ -17,14 +17,14 @@ public class Quat
     {
         angle = (angle / 360.0f) * Mathf.PI * 2.0f;
 
-        w = angle;//Mathf.Cos(angle / 2.0f);
-        v = axis; //axis.normalized * Mathf.Sin(angle / 2.0f);
+        w = Mathf.Cos(angle / 2.0f);
+        v = axis.normalized * Mathf.Sin(angle / 2.0f);
     }
 
     public void normalize()
     {
         //Squared dist / magnitude of the quat
-        float d = w * w + v.x * v.x + v.y * v.y + v.z * v.z;
+        float d = GetSquaredMagnitude();
 
         if (d < double.Epsilon)
         {
@@ -37,7 +37,6 @@ public class Quat
         v.x *= d;
         v.y *= d;
         v.z *= d;
-        Debug.Log(this);
     }
 
     //Invert the quaternion.
@@ -154,6 +153,11 @@ public class Quat
     
     public float GetMagnitude()
     {
-        return Mathf.Sqrt(v.x * v.x + v.y * v.y + v.z + v.z + w * w);
+        return Mathf.Sqrt(GetSquaredMagnitude());
+    }
+
+    public float GetSquaredMagnitude()
+    {
+        return Mathf.Abs(v.x * v.x + v.y * v.y + v.z + v.z + w * w);
     }
 }

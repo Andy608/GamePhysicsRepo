@@ -5,9 +5,8 @@ using TMPro;
 
 public class ResultsScene : SceneBase<ResultsScene>
 {
-    [SerializeField] private TextMeshProUGUI score;
-	[SerializeField] private TextMeshProUGUI points;
-
+    [SerializeField] private TextMeshProUGUI score = null;
+	[SerializeField] private TextMeshProUGUI points = null;
 
 	private void OnEnable()
     {

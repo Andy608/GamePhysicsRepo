@@ -21,7 +21,6 @@ public class Fishy : MonoBehaviour
     [SerializeField] private int minGroupSpawn = 1;
     [SerializeField] private int maxGroupSpawn = 10;
 	[SerializeField] public int pointsAwarded = 10;
-	[SerializeField] private int health = 1;
 
 	private void Awake()
     {

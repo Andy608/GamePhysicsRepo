@@ -144,8 +144,11 @@ public class Rigidbody3D : MonoBehaviour
         //Debug.Log(currentRot);
         //nextRot.normalize();
 
-        Quat angularVelAsQuat = new Quat(RotVelocity, 0.0f);
+        Quat angularVelAsQuat = new Quat();
+        angularVelAsQuat.v = RotVelocity;
+
         Quat rotDeriv = angularVelAsQuat * Rotation;
+
         rotDeriv = rotDeriv.Scale(dt * 0.5f);
         Rotation = Rotation + rotDeriv;
         Rotation.normalize();

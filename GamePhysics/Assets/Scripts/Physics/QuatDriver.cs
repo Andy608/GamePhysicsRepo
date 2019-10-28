@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//For testing to see if the quaternion returns the correct values.
 public class QuatDriver : MonoBehaviour
 {
     Quat q1 = new Quat(new Vector3(0, 1, 0), 90);
@@ -28,14 +29,5 @@ public class QuatDriver : MonoBehaviour
 
         vRotated = q2.Rotate(vRotated);
         Debug.Log(vRotated);
-    }
-
-    private void Update()
-    {
-        float a = Mathf.Cos(vRotated.magnitude * Time.deltaTime / 2.0f);
-        Vector3 v = Mathf.Sin(vRotated.magnitude * Time.deltaTime / 2.0f) * vRotated / vRotated.magnitude;
-        qNext = new Quat(v, a);
-        qCurrent = qCurrent * qNext;
-        Debug.Log(qCurrent);
     }
 }
