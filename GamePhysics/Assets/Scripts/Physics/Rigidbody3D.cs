@@ -5,38 +5,34 @@ using UnityEngine;
 public class Rigidbody3D : MonoBehaviour
 {
 	private Vector3 force = Vector3.zero;
-	/// <summary>
-	/// Enum for Position Integration Type
-	/// </summary>
+
+	/// <summary> Enum for Position Integration Type </summary>
 	public enum PosIntegrationType
 	{
 		Kinematic,
 		EulerExplicit
 	}
 
-	/// <summary>
-	/// Enum for Rotation Integration Type
-	/// </summary>
+	/// <summary> Enum for Rotation Integration Type </summary>
 	public enum RotIntegrationType
 	{
 		Kinematic,
 		EulerExplicit
 	}
+
 	[SerializeField] private PosIntegrationType positionType = PosIntegrationType.EulerExplicit;
 	[SerializeField] private RotIntegrationType rotationType = RotIntegrationType.EulerExplicit;
 
 	private Vector3 Position;
-	//private Vector3 PrevPosition;
-	//private Vector3 PosDiff = Vector3.zero;
 
 	public Vector3 Velocity;
 	[SerializeField] private Vector3 InitialVel = Vector3.zero;
+
 	public Vector3 Acceleration;
 
-	public Quaternion Rotation;
-	private Quaternion helperRot;
+    private Quat Rotation = new Quat();
 
-	public Vector3 RotVelocity;
+    public Vector3 RotVelocity = Vector3.zero;
 	public Vector3 RotAcceleration;
 
 	[SerializeField] private float startingMass = 1.0f;
@@ -46,10 +42,8 @@ public class Rigidbody3D : MonoBehaviour
 	public float MassInv { get; private set; }
 
 
-	/// <summary>
-	/// Quick direct changes to Velocity.
-	/// </summary>
-	/// <param name="v"></param>
+	/// <summary> Quick direct changes to Velocity. </summary> 
+    /// <param name="v"></param>
 	public void SetVelocity(Vector2 v)
 	{
 		Velocity = v;
@@ -77,7 +71,7 @@ public class Rigidbody3D : MonoBehaviour
 		//PrevPosition = transform.position;
 
 		Velocity = InitialVel;
-
+        //Rotation = new Quat(new Vector3(transform.rotation.x, transform.rotation.y, transform.rotation.z), transform.rotation.w);
 	}
 
 	// Update is called once per frame
@@ -104,11 +98,14 @@ public class Rigidbody3D : MonoBehaviour
 		}
 
 		transform.position = Position;
+
+        Debug.Log("ROT: " + Rotation);
+        //transform.rotation = Rotation.ToUnityQuaternion();
+
 		//SetRotation(Rotation);// %= 360.0f);//360 was for when it was float
 		Quaternion thing = new Quaternion(1, 2, 3, 4);
 		Vector3 thing2 = new Vector3(1, 2, 3);
-		Debug.Log(thing * thing2);
-
+		//Debug.Log(thing * thing2);
 	}
 
 	//Pre: Implement operators for multiplying quaternion by scalar
@@ -136,9 +133,30 @@ public class Rigidbody3D : MonoBehaviour
 
 	private void UpdateRotationEulerExplicit(float dt)
 	{
-		Vector3 oldAngle = transform.rotation.eulerAngles;
-		transform.rotation = Quaternion.Euler(RotateVector3(Rotation, oldAngle));
-	}
+        //Vector3 oldAngle = transform.rotation.eulerAngles;
+        //transform.rotation = Quaternion.Euler(RotateVector3(Rotation, oldAngle));
+
+        //Quat qr = new Quat(RotVelocity, 0);
+        //qr.normalize();
+        //nextRot = currentRot; // + currentRot.Scale(dt * 0.5f) * qr;
+        //Debug.Log(currentRot);
+        //nextRot.normalize();
+
+        //Quat angularVelAsQuat = new Quat(RotVelocity, 0.0f);
+        //Quat rotDeriv = angularVelAsQuat * Rotation;
+
+        //rotDeriv = rotDeriv.Scale(dt * 0.5f);
+
+        //Rotation = Rotation + rotDeriv;
+        //Rotation.normalize();
+
+        //RotVelocity += RotAcceleration * dt;
+
+        //float a = Mathf.Cos(RotVelocity.magnitude * Time.deltaTime / 2.0f);
+        //Vector3 v = Mathf.Sin(RotVelocity.magnitude * Time.deltaTime / 2.0f) * RotVelocity / RotVelocity.magnitude;
+        //nextRot = new Quat(v, a);
+        //currentRot = currentRot * nextRot;
+    }
 	
 	private void UpdateRotationKinematic(float dt)
 	{
@@ -151,9 +169,9 @@ public class Rigidbody3D : MonoBehaviour
 	/// <param name="rot"></param>
 	private void SetRotation(Quaternion rot)
 	{
-		helperRot = transform.rotation;
-		helperRot = rot;
-		transform.rotation = helperRot;
+		//helperRot = transform.rotation;
+		//helperRot = rot;
+		//transform.rotation = helperRot;
 	}
 
 
