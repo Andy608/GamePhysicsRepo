@@ -77,6 +77,7 @@ public class Rigidbody3D : MonoBehaviour
 		//PrevPosition = transform.position;
 
 		Velocity = InitialVel;
+		//Rotation = transform.rotation;
 
 	}
 
@@ -104,11 +105,7 @@ public class Rigidbody3D : MonoBehaviour
 		}
 
 		transform.position = Position;
-		//SetRotation(Rotation);// %= 360.0f);//360 was for when it was float
-		Quaternion thing = new Quaternion(1, 2, 3, 4);
-		Vector3 thing2 = new Vector3(1, 2, 3);
-		Debug.Log(thing * thing2);
-
+		SetRotation(Rotation);// %= 360.0f);//360 was for when it was float
 	}
 
 	//Pre: Implement operators for multiplying quaternion by scalar
@@ -136,12 +133,22 @@ public class Rigidbody3D : MonoBehaviour
 
 	private void UpdateRotationEulerExplicit(float dt)
 	{
-		Vector3 oldAngle = transform.rotation.eulerAngles;
-		transform.rotation = Quaternion.Euler(RotateVector3(Rotation, oldAngle));
+		Quaternion angularVelAsQuat = new Quaternion(RotVelocity.x, RotVelocity.y, RotVelocity.z, 0);
+
+		Quaternion rotDeriv = angularVelAsQuat * Rotation;
+		rotDeriv = QuaternionExt.ScalarQuat(rotDeriv, dt/0.5f);
+
+		//Rotation = QuaternionExt.ScalarQuat(angularVelAsQuat, dt/0.5f) * Rotation;
+
+		Rotation = new Quaternion(Rotation.x + rotDeriv.x, Rotation.y + rotDeriv.y, Rotation.z + rotDeriv.z, Rotation.w + rotDeriv.w);
+		Rotation = Quaternion.Normalize(Rotation);
+		RotVelocity += RotAcceleration * dt;
 	}
 	
 	private void UpdateRotationKinematic(float dt)
 	{
+		//Rotation += RotVelocity * dt + 0.5f * RotAcceleration * dt * dt;
+		//RotVelocity += RotAcceleration * dt;
 
 	}
 
@@ -151,9 +158,9 @@ public class Rigidbody3D : MonoBehaviour
 	/// <param name="rot"></param>
 	private void SetRotation(Quaternion rot)
 	{
-		helperRot = transform.rotation;
-		helperRot = rot;
-		transform.rotation = helperRot;
+		//helperRot = transform.rotation;
+		//helperRot = rot;
+		transform.rotation = Rotation;
 	}
 
 
