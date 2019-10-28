@@ -222,8 +222,8 @@ GameObject:
   - component: {fileID: 316023843}
   - component: {fileID: 316023842}
   - component: {fileID: 316023841}
-  - component: {fileID: 316023840}
   - component: {fileID: 316023844}
+  - component: {fileID: 316023840}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -240,17 +240,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 316023839}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16e9b6a1e2e395f4d922f75451968861, type: 3}
+  m_Script: {fileID: 11500000, guid: 1b96767360daa5a4a824798b5455de3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   positionType: 1
   rotationType: 1
+  Position: {x: 0, y: 0, z: 0}
   Velocity: {x: 0, y: 0, z: 0}
-  InitialVel: {x: 0, y: 0, z: 0}
   Acceleration: {x: 0, y: 0, z: 0}
   RotVelocity: {x: 0, y: 0, z: 0}
   RotAcceleration: {x: 0, y: 0, z: 0}
-  startingMass: 1
+  TotalForce: {x: 0, y: 0, z: 0}
+  startingMass: 10
 --- !u!23 &316023841
 MeshRenderer:
   m_ObjectHideFlags: 0

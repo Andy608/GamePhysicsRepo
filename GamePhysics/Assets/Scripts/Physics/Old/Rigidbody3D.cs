@@ -31,7 +31,7 @@ public class Rigidbody3D : MonoBehaviour
 	public Vector3 Acceleration;
 
     //private Quaternion Rotation;
-    private Quat Rotation;
+    private QuatBaby Rotation;
 
     public Vector3 RotVelocity = Vector3.zero;
 	public Vector3 RotAcceleration;
@@ -72,7 +72,7 @@ public class Rigidbody3D : MonoBehaviour
 		//PrevPosition = transform.position;
 
 		Velocity = InitialVel;
-        Rotation = new Quat(new Vector3(transform.rotation.x, transform.rotation.y, transform.rotation.z), transform.rotation.w);
+        Rotation = new QuatBaby(new Vector3(transform.rotation.x, transform.rotation.y, transform.rotation.z), transform.rotation.w);
 	}
 
 	// Update is called once per frame
@@ -144,10 +144,10 @@ public class Rigidbody3D : MonoBehaviour
         //Debug.Log(currentRot);
         //nextRot.normalize();
 
-        Quat angularVelAsQuat = new Quat();
+        QuatBaby angularVelAsQuat = new QuatBaby();
         angularVelAsQuat.v = RotVelocity;
 
-        Quat rotDeriv = angularVelAsQuat * Rotation;
+        QuatBaby rotDeriv = angularVelAsQuat * Rotation;
 
         rotDeriv = rotDeriv.Scale(dt * 0.5f);
         Rotation = Rotation + rotDeriv;

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //For testing to see if the quaternion returns the correct values.
-public class QuatDriver : MonoBehaviour
+public class QuatBabyDriver : MonoBehaviour
 {
-    Quat q1 = new Quat(new Vector3(0, 1, 0), 90);
-    Quat q2 = new Quat(new Vector3(1, 0, 0), 45);
-    Quat q3;
+    QuatBaby q1 = new QuatBaby(new Vector3(0, 1, 0), 90);
+    QuatBaby q2 = new QuatBaby(new Vector3(1, 0, 0), 45);
+    QuatBaby q3;
 
-    Quat qCurrent = new Quat(new Vector3(0, 1, 0), 90);
-    Quat qNext = new Quat();
+    QuatBaby qCurrent = new QuatBaby(new Vector3(0, 1, 0), 90);
+    QuatBaby qNext = new QuatBaby();
 
     Vector3 vRotated;
 
