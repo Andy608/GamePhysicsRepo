@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/Scripts/Controller/Ship/ShipControls.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Scripts/_OceanExplorer/Controller/Ship/ShipControls.inputactions'
 
 using System.Collections;
 using System.Collections.Generic;
