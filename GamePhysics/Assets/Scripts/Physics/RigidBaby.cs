@@ -128,7 +128,7 @@ public class RigidBaby : MonoBehaviour
     }
 
     /// <summary> Integrates the particles position using the kinematic formula. </summary>
-    /// <param name="dt"> Delta time.</param>
+    /// <param name="dt"> Delta time. </param>
     private void UpdatePositionKinematic(float dt)
     {
         Position += Velocity * dt + 0.5f * Acceleration * dt * dt;
@@ -136,7 +136,7 @@ public class RigidBaby : MonoBehaviour
     }
 
     /// <summary> Integrates the particles rotation using the euler explicit formula. </summary>
-    /// <param name="dt"></param>
+    /// <param name="dt"> Delta Time. </param>
     private void UpdateRotationEulerExplicit(float dt)
     {
         //Turn the angular velocity into a quaternion with w = 0

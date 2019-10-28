@@ -183,7 +183,7 @@ public class QuatBaby
     /// <returns> The squared magnitude of the QuatBaby. </returns>
     public float GetSquaredMagnitude()
     {
-        return Mathf.Abs(v.x * v.x + v.y * v.y + v.z + v.z + w * w);
+        return v.x * v.x + v.y * v.y + v.z * v.z + w * w;
     }
     
     /// <summary> Converts QuatBaby to Unity's quaternion class. </summary>
