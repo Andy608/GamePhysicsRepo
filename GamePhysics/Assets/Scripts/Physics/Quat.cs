@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Quat : MonoBehaviour
+public class Quat
 {
-    private float w;
-    private Vector3 v;
+    public float w;
+    public Vector3 v;
 
     public Quat()
     {
@@ -17,13 +17,13 @@ public class Quat : MonoBehaviour
     {
         angle = (angle / 360.0f) * Mathf.PI * 2.0f;
 
-        w = Mathf.Cos(angle / 2.0f);
-        v = axis * Mathf.Sin(angle / 2.0f);
-        normalize();
+        w = angle;//Mathf.Cos(angle / 2.0f);
+        v = axis; //axis.normalized * Mathf.Sin(angle / 2.0f);
     }
 
     public void normalize()
     {
+        //Squared dist / magnitude of the quat
         float d = w * w + v.x * v.x + v.y * v.y + v.z * v.z;
 
         if (d < double.Epsilon)
@@ -32,12 +32,12 @@ public class Quat : MonoBehaviour
             return;
         }
 
-        Debug.Log("D: " + d);
-        d = (float)1.0 / Mathf.Sqrt(d);
+        d = 1.0f / Mathf.Sqrt(d);
         w *= d;
         v.x *= d;
         v.y *= d;
         v.z *= d;
+        Debug.Log(this);
     }
 
     //Invert the quaternion.
@@ -50,31 +50,50 @@ public class Quat : MonoBehaviour
     }
 
     //Create new rotation from two quaternion rotations.
-    public static Quat operator*(Quat lhs, Quat rhs)
+    public static Quat operator*(Quat q1, Quat q2)
     {
-        Quat rotated = new Quat();
-        rotated.w = lhs.w * rhs.w + Vector3.Dot(lhs.v, rhs.v);
-        rotated.v = lhs.v * rhs.w + rhs.v * lhs.w + Vector3.Cross(lhs.v, rhs.v);
-        return rotated;
+        //1. Break quaternions into variables, vectors, and real
+        Vector3 v1 = new Vector3(q1.v.x, q1.v.y, q1.v.z);
+        Vector3 v2 = new Vector3(q2.v.x, q2.v.y, q2.v.z);
+        float w1 = q1.w;
+        float w2 = q2.w;
+
+        //2. calculate real part
+        //-2.1 Get dot product of vectors
+        float vDot = Vector3.Dot(v1, v2);
+
+        float wFinal = w1 * w2 - vDot;
+
+        //3. calculate vector component
+        //-3.1 Get cross of vectors
+        Vector3 vCross = Vector3.Cross(v1, v2);
+
+        Vector3 vFinal = w1 * v2 + w2 * v1 + vCross;
+
+        Quat qFinal = new Quat();
+        qFinal.v = vFinal;
+        qFinal.w = wFinal;
+
+        return qFinal;
     }
 
     public Quat Scale(float scalar)
     {
-        Quat q = this;
-        q.v.x *= scalar;
-        q.v.y *= scalar;
-        q.v.z *= scalar;
-        q.w *= scalar;
+        Quat q = new Quat();
+        q.v.x = v.x * scalar;
+        q.v.y = v.y * scalar;
+        q.v.z = v.z * scalar;
+        q.w = w * scalar;
         return q;
     }
 
     public static Quat operator+(Quat lhs, Quat rhs)
     {
-        Quat q = lhs;
-        q.v.x += rhs.v.x;
-        q.v.y += rhs.v.y;
-        q.v.z += rhs.v.z;
-        q.w += rhs.w;
+        Quat q = new Quat();
+        q.v.x = lhs.v.x + rhs.v.x;
+        q.v.y = lhs.v.y + rhs.v.y;
+        q.v.z = lhs.v.z + rhs.v.z;
+        q.w = lhs.w + rhs.w;
         return q;
     }
 
@@ -125,11 +144,16 @@ public class Quat : MonoBehaviour
 
     public Quaternion ToUnityQuaternion()
     {
-        return new Quaternion(v.x, v.y, v.z, w);
+        return new Quaternion(v.x, v.y, v.z, w).normalized;
     }
 
     public override string ToString()
     {
-        return "Axis: (" + v.x + ", " + v.y + ", " + v.z + "), Angle: " + w;
+        return "Axis: (" + v.x + ", " + v.y + ", " + v.z + "), Angle: " + w + " Mag: " + GetMagnitude();
+    }
+    
+    public float GetMagnitude()
+    {
+        return Mathf.Sqrt(v.x * v.x + v.y * v.y + v.z + v.z + w * w);
     }
 }
