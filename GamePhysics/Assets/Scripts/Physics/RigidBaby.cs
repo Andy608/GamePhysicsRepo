@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class RigidBaby : MonoBehaviour
 {
-    [SerializeField] private IntegrationType positionType = IntegrationType.EulerExplicit;
+	/// <summary> Enum for Integration Type. </summary>
+	public enum IntegrationType
+	{
+		Kinematic,
+		EulerExplicit
+	}
+	[SerializeField] private IntegrationType positionType = IntegrationType.EulerExplicit;
     [SerializeField] private IntegrationType rotationType = IntegrationType.EulerExplicit;
 
     [SerializeField] private Vector3 Position = Vector3.zero;
@@ -18,6 +24,13 @@ public class RigidBaby : MonoBehaviour
     [SerializeField] private Vector3 TotalForce = Vector3.zero;
 
     [SerializeField] private float startingMass = 1.0f;
+
+	//lab 07
+	Matrix4x4 worldTransform, inverseWorldTransform;
+	Vector3 localCenterOfMass, worldCenterofMass;
+	Matrix4x4 localInertiaTensor, worldInertiaTensor; //these are actually 3x3 matricies
+	Vector3 torque;
+	Vector3 angularAcceleration;
 
     public float Mass
     {
@@ -110,15 +123,6 @@ public class RigidBaby : MonoBehaviour
         transform.rotation = Rotation.ToUnityQuaternion();
     }
 
-    // Lab06 Steps
-    //  Pre: Implement operators for multiplying quaternion by scalar.
-    //  Pre: Implement function for multiplying 3d vector by quaternion.
-    //    1. Implement Euler for velocity and position.
-    //    2. Implement Euler for rotation and angular velocity.
-    //    3. Implement Kinematic for velocity and position.
-    //Bonus: Implement Kinematic for rotation and angular velocity.
-    //Bonus: Implement our own quaternion class.
-
     /// <summary> Integrates the particles position using the euler explicit formula. </summary>
     /// <param name="dt"> Delta time. </param>
     private void UpdatePositionEulerExplicit(float dt)
@@ -165,11 +169,15 @@ public class RigidBaby : MonoBehaviour
     }
     #endregion
 
-    /// <summary> Enum for Integration Type. </summary>
-    public enum IntegrationType
-    {
-        Kinematic,
-        EulerExplicit
-    }
+	private void UpdateAngularAcceleration()
+	{
+		//angularAcceleration = Inertia^-1 * Torque
+
+		////Apply torque to angular accel using inverse of inertia
+		//angularAccel = momentOfInertiaInv * torque;
+
+		////reset torque
+		//torque = 0;
+	}
 }
 
