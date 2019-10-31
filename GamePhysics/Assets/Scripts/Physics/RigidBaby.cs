@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class RigidBaby : MonoBehaviour
 {
+	public enum ParticleShape
+	{
+		disk,
+		ring,
+		rectangle,
+		thinRod,
+		other
+	}
+	public ParticleShape particleShape = ParticleShape.ring;
+
 	/// <summary> Enum for Integration Type. </summary>
 	public enum IntegrationType
 	{
@@ -26,11 +36,11 @@ public class RigidBaby : MonoBehaviour
     [SerializeField] private float startingMass = 1.0f;
 
 	//lab 07
-	Matrix4x4 worldTransform, inverseWorldTransform;
-	Vector3 localCenterOfMass, worldCenterofMass;
-	Matrix4x4 localInertiaTensor, worldInertiaTensor; //these are actually 3x3 matricies
-	Vector3 torque;
-	Vector3 angularAcceleration;
+	[SerializeField] private Matrix4x4 worldTransform, inverseWorldTransform;
+	[SerializeField] private Vector3 localCenterOfMass, worldCenterofMass;
+	[SerializeField] private Vector3 torque;
+	private Matrix4x4 localInertiaTensor, worldInertiaTensor; //these are actually 3x3 matricies
+	private Vector3 angularAcceleration;
 
     public float Mass
     {
@@ -95,7 +105,34 @@ public class RigidBaby : MonoBehaviour
         Mass = startingMass;
         Position = transform.position;
         Rotation = QuatBaby.QuaternionToQuatBaby(transform.rotation);
-    }
+
+		//lab7
+		switch (particleShape)
+		{
+			case ParticleShape.ring:
+				//inertia = 0.5 * mass * (radiusOuter^2 + radiusInner^2)
+				localInertiaTensor = new Matrix4x4(
+					new Vector4((0.4f * mass * 4), 0, 0, 0),
+					new Vector4(0, (0.4f * mass * 4), 0, 0),
+					new Vector4(0, 0, (0.4f * mass * 4), 0),
+					new Vector4(0, 0, 0, 1)
+					);
+				break;
+			case ParticleShape.rectangle:
+				//inertia = (0.083) * mass * (xLength^2 + yLength^2)
+				//momentOfInertia = 0.083f * Mass * (xLength * xLength + yLength * yLength);
+				break;
+			case ParticleShape.thinRod:
+				//inertia = (0.083) * mass * length^2
+				//momentOfInertia = 0.083f * Mass * (rodLength * rodLength);
+				break;
+			default:
+			case ParticleShape.disk:
+				//inertia = 0.5 * mass * (radius^2)
+				//momentOfInertia = 0.5f * Mass * radius * radius;
+				break;
+		}
+	}
 
     void Update()
     {
@@ -172,8 +209,31 @@ public class RigidBaby : MonoBehaviour
 		////Apply torque to angular accel using inverse of inertia
 		//angularAccel = momentOfInertiaInv * torque;
 
+		Vector4 torqueT = torque;
+
+		//TODO: use our own local to whatever matricies, and don't call .inverse
+		angularAcceleration = transform.localToWorldMatrix * localInertiaTensor.inverse * transform.worldToLocalMatrix * torqueT;
+
 		////reset torque
-		//torque = 0;
+		torque = Vector3.zero;
+	}
+
+	/// <summary>
+	/// Adds torque to the aggrgate torque
+	/// </summary>
+	/// <param name="pointAppliedWorld"> The point the force is applied at world space </param>
+	/// <param name="forceApplied"> Strength and direction of force applied. </param>
+	public void ApplyTorque(Vector2 pointAppliedWorld, Vector2 forceApplied)
+	{
+		////Transform world space coord to local space
+		//Vector2 pointAppliedLocal = pointAppliedWorld - centerOfMass;
+		//
+		////Torque = pointOfForceRelativeToCenterMass X forceApplied
+		//float miniTorque = pointAppliedLocal.x * forceApplied.x - pointAppliedLocal.y * forceApplied.y;
+		//
+		////Add it to the aggregate torque
+		//torque += miniTorque;
 	}
 }
+
 
