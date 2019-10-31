@@ -139,12 +139,8 @@ public class RigidBaby : MonoBehaviour
     /// <param name="dt"> Delta Time. </param>
     private void UpdateRotationEulerExplicit(float dt)
     {
-        //Turn the angular velocity into a quaternion with w = 0
-        QuatBaby angularVelAsQuat = new QuatBaby();
-        angularVelAsQuat.v = RotVelocity;
-
         //multiply the current Rot by the velocity to get half the derivative
-        QuatBaby rotDeriv = angularVelAsQuat * Rotation;
+        QuatBaby rotDeriv = Rotation.MultiplyByVec(RotVelocity);
         //complete the derivative by multiplying it by 1/2 delta time
         rotDeriv = rotDeriv.Scale(dt * 0.5f);
 

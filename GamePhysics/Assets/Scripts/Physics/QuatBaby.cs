@@ -69,16 +69,35 @@ public class QuatBaby
         float w2 = q2.w;
 
         //2. calculate real part
-        //-2.1 Get dot product of vectors
+        //2.1 Get dot product of vectors
         float vDot = Vector3.Dot(v1, v2);
 
         float wFinal = w1 * w2 - vDot;
 
         //3. calculate vector component
-        //-3.1 Get cross of vectors
+        //3.1 Get cross of vectors
         Vector3 vCross = Vector3.Cross(v1, v2);
 
         Vector3 vFinal = w1 * v2 + w2 * v1 + vCross;
+
+        QuatBaby qFinal = new QuatBaby();
+        qFinal.v = vFinal;
+        qFinal.w = wFinal;
+
+        return qFinal;
+    }
+
+    public QuatBaby MultiplyByVec(Vector3 rot)
+    {
+        //1. calculate real part
+        //1.1 Get dot product of vectors
+        float vDot = Vector3.Dot(v, rot);
+        float wFinal = -vDot;
+
+        //2. calculate vector component
+        //2.1 Get cross of vectors
+        Vector3 vCross = Vector3.Cross(v, rot);
+        Vector3 vFinal = w * rot + vCross;
 
         QuatBaby qFinal = new QuatBaby();
         qFinal.v = vFinal;
