@@ -191,6 +191,18 @@ public class QuatBaby
         angle *= 360.0f / Mathf.PI * 2.0f;
     }
 
+    public void ToMatrix(ref Matrix4x4 mat)
+    {
+        mat = new Matrix4x4(
+            new Vector4(
+                w * w + v.x * v.x -v.y * v.y - v.z * v.z,
+                2 * v.x * v.y + 2 * w * v.z, 0, 0), 
+            new Vector4(), new Vector4(), new Vector4()
+        );
+
+        //https://wikimedia.org/api/rest_v1/media/math/render/svg/b2b8eb5ce0c4bfe919d8f113aefbc09ab1a0b296
+    }
+
     /// <summary> Calculates the true magnitude of the quaternion. Caution: uses square root. </summary>
     /// <returns> The magnitude of the QuatBaby. </returns>
     public float GetMagnitude()
