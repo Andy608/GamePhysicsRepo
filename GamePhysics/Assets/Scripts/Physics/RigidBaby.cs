@@ -39,6 +39,7 @@ public class RigidBaby : MonoBehaviour
 	[SerializeField] private Matrix4x4 worldTransform, inverseWorldTransform;
 	[SerializeField] private Vector3 localCenterOfMass, worldCenterofMass;
 	[SerializeField] private Vector3 torque;
+	[SerializeField] private Vector3 momentArm = Vector3.zero, forceApply = Vector3.zero;
 	private Matrix4x4 localInertiaTensor, worldInertiaTensor; //these are actually 3x3 matricies
 	private Vector3 angularAcceleration;
 
@@ -121,6 +122,12 @@ public class RigidBaby : MonoBehaviour
 			case ParticleShape.rectangle:
 				//inertia = (0.083) * mass * (xLength^2 + yLength^2)
 				//momentOfInertia = 0.083f * Mass * (xLength * xLength + yLength * yLength);
+				localInertiaTensor = new Matrix4x4(
+					new Vector4(0.083f * mass * 2, 0, 0,0),
+					new Vector4(0, 0.083f * mass * 2, 0, 0),
+					new Vector4(0, 0, 0.083f * mass * 2, 0),
+					new Vector4(0, 0, 0, 1)
+					);
 				break;
 			case ParticleShape.thinRod:
 				//inertia = (0.083) * mass * length^2
@@ -136,6 +143,17 @@ public class RigidBaby : MonoBehaviour
 
     void Update()
     {
+		//TODO: convert position and rotation into 3D homogeneous matricies, what I have is wrong
+		Vector3 position = transform.position;
+		worldTransform = new Matrix4x4(
+			new Vector4(position.x, 0, 0, 0),
+			new Vector4(0, position.y, 0, 0),
+			new Vector4(0, 0, position.z, 0),
+			new Vector4(0, 0, 0, 1)
+			);
+		//TODO: invert that bitch
+
+
         switch (positionType)
         {
             case IntegrationType.EulerExplicit:
@@ -156,6 +174,9 @@ public class RigidBaby : MonoBehaviour
                 break;
         }
 
+		ApplyTorque(momentArm, forceApply);
+		UpdateAngularAcceleration();
+		RotAcceleration = angularAcceleration;
         transform.position = Position;
         transform.rotation = Rotation.ToUnityQuaternion();
     }
@@ -223,16 +244,19 @@ public class RigidBaby : MonoBehaviour
 	/// </summary>
 	/// <param name="pointAppliedWorld"> The point the force is applied at world space </param>
 	/// <param name="forceApplied"> Strength and direction of force applied. </param>
-	public void ApplyTorque(Vector2 pointAppliedWorld, Vector2 forceApplied)
+	public void ApplyTorque(Vector3 momentArm, Vector3 forceApplied)
 	{
-		////Transform world space coord to local space
-		//Vector2 pointAppliedLocal = pointAppliedWorld - centerOfMass;
-		//
-		////Torque = pointOfForceRelativeToCenterMass X forceApplied
-		//float miniTorque = pointAppliedLocal.x * forceApplied.x - pointAppliedLocal.y * forceApplied.y;
-		//
-		////Add it to the aggregate torque
-		//torque += miniTorque;
+		//Transform world space coord to local space
+		Vector3 pointAppliedLocal = momentArm - localCenterOfMass;
+
+		//Torque = pointOfForceRelativeToCenterMass X forceApplied
+		//Vector3 miniTorque = pointAppliedLocal * forceApplied - pointAppliedLocal * forceApplied;
+		
+		//is torque equal to moment arm vector cross force vector?
+		Vector3 newMiniTorque = Vector3.Cross(momentArm, forceApplied);
+
+		//Add it to the aggregate torque
+		torque += newMiniTorque;
 	}
 }
 
