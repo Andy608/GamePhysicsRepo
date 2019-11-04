@@ -18,6 +18,9 @@ public class RigidBaby : MonoBehaviour
     [SerializeField] private IntegrationType rotationType = IntegrationType.EulerExplicit;
 
     [SerializeField] private Vector3 Position = Vector3.zero;
+    public Vector3 PrevPosition { get; private set; }
+    private Vector3 PosDiff = Vector3.zero;
+
     [SerializeField] private Vector3 Velocity = Vector3.zero;
     [SerializeField] private Vector3 Acceleration = Vector3.zero;
 
@@ -105,31 +108,11 @@ public class RigidBaby : MonoBehaviour
     {
         Mass = startingMass;
         Position = transform.position;
+        PrevPosition = transform.position;
         Rotation = QuatBaby.QuaternionToQuatBaby(transform.rotation);
         shape = GetComponent<IShapeBaby>();
 
         //lab7
-        //switch (particleShape)
-        //{
-        //case ParticleShape.ring:
-        //    inertia = 0.4f * mass * 4.0f; //inertia = 0.5 * mass * (radiusOuter^2 + radiusInner^2)
-        //	break;
-        //case ParticleShape.rectangle:
-        //    inertia = 0.083f * mass * 2.0f; //inertia = (0.083) * mass * (xLength^2 + yLength^2)
-        //	break;
-        //default:
-        //case ParticleShape.disk:
-        //    inertia = 0.5f * mass * 4.0f; //inertia = 0.5 * mass * (radius^2)
-        //	break;
-        //}
-
-        //localInertiaTensor = new Matrix4x4(
-        //    new Vector4(inertia,    0.0f,    0.0f,    0.0f),
-        //    new Vector4(   0.0f, inertia,    0.0f,    0.0f),
-        //    new Vector4(   0.0f,    0.0f, inertia,    0.0f),
-        //    new Vector4(   0.0f,    0.0f,    0.0f,    1.0f)
-        //);
-
         localInertiaTensor = shape.Inertia;
 
         worldInertiaTensor = localInertiaTensor;
@@ -181,10 +164,15 @@ public class RigidBaby : MonoBehaviour
                 break;
         }
 
-		ApplyTorque(momentArm, forceApply);
+        PosDiff.x = Position.x - PrevPosition.x;
+        PosDiff.y = Position.y - PrevPosition.y;
+        PrevPosition = Position;
+
+        ApplyTorque(momentArm, forceApply);
 		UpdateAngularAcceleration();
+
 		RotAcceleration = angularAcceleration;
-        transform.position = Position;
+        transform.position += PosDiff;
         transform.rotation = Rotation.ToUnityQuaternion();
     }
 
