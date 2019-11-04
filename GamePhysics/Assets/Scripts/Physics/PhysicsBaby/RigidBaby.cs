@@ -140,7 +140,6 @@ public class RigidBaby : MonoBehaviour
 
     void Update()
     {
-		//TODO: convert position and rotation into 3D homogeneous matricies, what I have is wrong
 		Vector3 position = transform.position;
         translationMat = new Matrix4x4(
             new Vector4(1.0f, 0.0f, 0.0f, 0.0f),
@@ -150,7 +149,6 @@ public class RigidBaby : MonoBehaviour
         );
 
         Rotation.ToMatrix(ref rotationMat);
-        //Debug.Log(Rotation + " | " + rotationMat);
 
         Vector3 scale = transform.lossyScale;
         scaleMat = new Matrix4x4(
@@ -162,8 +160,6 @@ public class RigidBaby : MonoBehaviour
 
         transformationMat = translationMat * rotationMat * scaleMat;
         worldCenterofMass = transformationMat * localCenterOfMass;
-
-        //TODO: invert that bitch
 
         switch (positionType)
         {
