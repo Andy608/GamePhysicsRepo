@@ -17,18 +17,18 @@ public class RigidBaby : MonoBehaviour
 	[SerializeField] private IntegrationType positionType = IntegrationType.EulerExplicit;
     [SerializeField] private IntegrationType rotationType = IntegrationType.EulerExplicit;
 
-    [SerializeField] private Vector3 Position = Vector3.zero;
+    [SerializeField] private Vector3 position = Vector3.zero;
     public Vector3 PrevPosition { get; private set; }
-    private Vector3 PosDiff = Vector3.zero;
+    private Vector3 posDiff = Vector3.zero;
 
-    [SerializeField] private Vector3 Velocity = Vector3.zero;
-    [SerializeField] private Vector3 Acceleration = Vector3.zero;
+    [SerializeField] private Vector3 velocity = Vector3.zero;
+    [SerializeField] private Vector3 acceleration = Vector3.zero;
 
-    [SerializeField] private Vector3 RotVelocity = Vector3.zero;
-    [SerializeField] private Vector3 RotAcceleration = Vector3.zero;
+    [SerializeField] private Vector3 rotVelocity = Vector3.zero;
+    [SerializeField] private Vector3 rotAcceleration = Vector3.zero;
     private QuatBaby Rotation;
 
-    [SerializeField] private Vector3 TotalForce = Vector3.zero;
+    [SerializeField] private Vector3 totalForce = Vector3.zero;
 
     [SerializeField] private float startingMass = 1.0f;
 
@@ -85,29 +85,56 @@ public class RigidBaby : MonoBehaviour
 
     /// <summary> Quick direct changes to Velocity. </summary>
     /// <param name="v"> The velocity vector. </param>
-    public void SetVelocity(Vector2 v)
+    public void SetVelocity(Vector3 v)
     {
-        Velocity = v;
+        velocity = v;
+    }
+
+    /// <summary>
+    /// Gets the velocity of the rigidbaby.
+    /// </summary>
+    /// <returns>The velocity.</returns>
+    public Vector3 GetVelocity()
+    {
+        return velocity;
+    }
+
+    /// <summary>
+    /// Gets the acceleration of the rigidbaby.
+    /// </summary>
+    /// <returns>The acceleration.</returns>
+    public Vector3 GetAcceleration()
+    {
+        return acceleration;
+    }
+
+    /// <summary>
+    /// Gets the position of the rigidbaby.
+    /// </summary>
+    /// <returns>The position.</returns>
+    public Vector3 GetPosition()
+    {
+        return position;
     }
 
     /// <summary> Quick direct changes to Position. </summary>
     /// <param name="p"> The position vector. </param>
-    public void SetPosition(Vector2 p)
+    public void SetPosition(Vector3 p)
     {
-        Position = p;
+        position = p;
     }
 
     /// <summary> Add force to total force. D'Alembert principle. </summary>
     /// <param name="newForce"> Additional force to keep track of. </param>
     public void AddForce(Vector3 newForce)
     {
-        TotalForce += newForce;
+        totalForce += newForce;
     }
 
     void Start()
     {
         Mass = startingMass;
-        Position = transform.position;
+        position = transform.position;
         PrevPosition = transform.position;
         Rotation = QuatBaby.QuaternionToQuatBaby(transform.rotation);
         shape = GetComponent<IShapeBaby>();
@@ -164,15 +191,15 @@ public class RigidBaby : MonoBehaviour
                 break;
         }
 
-        PosDiff.x = Position.x - PrevPosition.x;
-        PosDiff.y = Position.y - PrevPosition.y;
-        PrevPosition = Position;
+        posDiff.x = position.x - PrevPosition.x;
+        posDiff.y = position.y - PrevPosition.y;
+        PrevPosition = position;
 
         ApplyTorque(momentArm, forceApply);
 		UpdateAngularAcceleration();
 
-		RotAcceleration = angularAcceleration;
-        transform.position += PosDiff;
+		rotAcceleration = angularAcceleration;
+        transform.position += posDiff;
         transform.rotation = Rotation.ToUnityQuaternion();
     }
 
@@ -180,16 +207,16 @@ public class RigidBaby : MonoBehaviour
     /// <param name="dt"> Delta time. </param>
     private void UpdatePositionEulerExplicit(float dt)
     {
-        Position += Velocity * dt;
-        Velocity += Acceleration * dt;
+        position += velocity * dt;
+        velocity += acceleration * dt;
     }
 
     /// <summary> Integrates the particles position using the kinematic formula. </summary>
     /// <param name="dt"> Delta time. </param>
     private void UpdatePositionKinematic(float dt)
     {
-        Position += Velocity * dt + 0.5f * Acceleration * dt * dt;
-        Velocity += Acceleration * dt;
+        position += velocity * dt + 0.5f * acceleration * dt * dt;
+        velocity += acceleration * dt;
     }
 
     /// <summary> Integrates the particles rotation using the euler explicit formula. </summary>
@@ -197,7 +224,7 @@ public class RigidBaby : MonoBehaviour
     private void UpdateRotationEulerExplicit(float dt)
     {
         //multiply the current Rot by the velocity to get half the derivative
-        QuatBaby rotDeriv = Rotation.MultiplyByVec(RotVelocity);
+        QuatBaby rotDeriv = Rotation.MultiplyByVec(rotVelocity);
         //complete the derivative by multiplying it by 1/2 delta time
         rotDeriv = rotDeriv.Scale(dt * 0.5f);
 
@@ -207,7 +234,7 @@ public class RigidBaby : MonoBehaviour
         Rotation.normalize();
 
         //update the velocity
-        RotVelocity += RotAcceleration * dt;
+        rotVelocity += rotAcceleration * dt;
     }
 
     #region UpdateRotationKinematic extra credit not implemented

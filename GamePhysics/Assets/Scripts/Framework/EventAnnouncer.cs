@@ -33,6 +33,9 @@ public class EventAnnouncer : ManagerBase<EventAnnouncer>
     public delegate void CollisionOccurred(Particle2D a, Particle2D b);
     public static CollisionOccurred OnCollisionOccurred;
 
+    public delegate void CollisionOccurredBaby(RigidBaby a, RigidBaby b);
+    public static CollisionOccurredBaby OnCollisionOccurredBaby;
+
     #endregion
 
     #region Game Events
@@ -65,8 +68,8 @@ public class EventAnnouncer : ManagerBase<EventAnnouncer>
     public delegate void SoundVolumeChanged(float volume);
     public static SoundVolumeChanged OnSoundVolumeChanged;
 
-    public delegate AudioSource ButtonPressed(EnumSound soundID);
-    public static ButtonPressed OnButtonPressed;
+    public delegate AudioSource PlaySound(EnumSound soundID);
+    public static PlaySound OnPlaySound;
 
     #endregion
 }

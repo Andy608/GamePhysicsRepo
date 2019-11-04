@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ParticleContact
+public class RigidBabyContact : MonoBehaviour
 {
-    //Holds the particles that are involved in this isolated contact.
+    //Holds the rigidbabys that are involved in this isolated contact.
     //If we are dealing with a contact between an object and scenery,
-    //the second partice in this array will be null.
-    public Particle2D[] Particles = new Particle2D[2];
+    //the second rigidbaby in this array will be null.
+    public RigidBaby[] Particles = new RigidBaby[2];
 
     //The restitution value of the contact.
     private float restitution;
 
     //The contact normal, from the first objects perspective, in world coordinates.
-    public Vector2 ContactNormal;
+    public Vector3 ContactNormal;
 
     //Holds the depth of penetration
     //Negative = no interpenetration, Positive = interpenetration
@@ -22,9 +22,9 @@ public class ParticleContact
     public float Penetration;
 
     //Holds the amount each particle is moved during interpenetration.
-    public Vector2[] ParticleMovement = new Vector2[2];
+    public Vector3[] ParticleMovement = new Vector3[2];
 
-    public ParticleContact(Particle2D a, Particle2D b, float r, Vector2 n, float p)
+    public RigidBabyContact(RigidBaby a, RigidBaby b, float r, Vector3 n, float p)
     {
         Particles[0] = a;
         Particles[1] = b;
@@ -33,28 +33,37 @@ public class ParticleContact
         Penetration = p;
     }
 
-    //Resolves the contact for both velocity and interpenetration.
+    /// <summary>
+    /// Resolves the contact for both velocity and interpenetration.
+    /// </summary>
+    /// <param name="deltaTime"> Delta Time. </param>
     public void Resolve(float deltaTime)
     {
         ResolveVelocity(deltaTime);
         ResolveInterpenetration(deltaTime);
     }
 
-    //Calcuates the separating velocity at this contact.
+    /// <summary>
+    /// Calcuates the separating velocity at this contact.
+    /// </summary>
+    /// <returns> The separating velocity of the two rigidbabys. </returns>
     public float CalculateSeparatingVelocity()
     {
-        Vector2 relativeVelocity = Particles[0].Velocity;
+        Vector3 relativeVelocity = Particles[0].GetVelocity();
 
         //If we have another particle
         if (Particles[1])
         {
-            relativeVelocity -= Particles[1].Velocity;
+            relativeVelocity -= Particles[1].GetVelocity();
         }
 
-        return Vector2.Dot(relativeVelocity, ContactNormal);
+        return Vector3.Dot(relativeVelocity, ContactNormal);
     }
 
-    //Handles the impulse calculations for this collision.
+    /// <summary>
+    /// Handles the impulse calculations for this collision.
+    /// </summary>
+    /// <param name="deltaTime"> Delta Time. </param>
     private void ResolveVelocity(float deltaTime)
     {
         //Find the velocity in the direction of the contact.
@@ -72,11 +81,11 @@ public class ParticleContact
         float newSeparatingVelocity = -separatingVelocity * restitution;
 
         //Check the velocity buildup due to acceleration only.
-        Vector2 accelerationCausedVelocity = Particles[0].Acceleration;
+        Vector3 accelerationCausedVelocity = Particles[0].GetAcceleration();
 
         if (Particles[1])
         {
-            accelerationCausedVelocity -= Particles[1].Acceleration;
+            accelerationCausedVelocity -= Particles[1].GetAcceleration();
         }
 
         float accelerationCausedSeperationVelocity = Vector2.Dot(accelerationCausedVelocity, ContactNormal) * deltaTime;
@@ -98,11 +107,11 @@ public class ParticleContact
 
         //Apply the change in velocity to each object in proportion to
         //their inverse mass. (Higher mass gets less change in velocity)
-        float totalInverseMass = Particles[0].MassInv;
+        float totalInverseMass = Particles[0].MassInverse;
 
         if (Particles[1])
         {
-            totalInverseMass += Particles[1].MassInv;
+            totalInverseMass += Particles[1].MassInverse;
         }
 
         //If all particles have infinite mass, then impules have no effect.
@@ -115,21 +124,25 @@ public class ParticleContact
         float impulse = deltaVelocity / totalInverseMass;
 
         //Find the amount of impulse per unit of inverse mass.
-        Vector2 impulsePerIMass = ContactNormal * impulse;
+        Vector3 impulsePerIMass = ContactNormal * impulse;
 
         //Apply impulses in the direction of the contact normal,
         //and are proportional to the inverse mass.
-        Particles[0].Velocity = Particles[0].Velocity + impulsePerIMass * Particles[0].MassInv;
+        Particles[0].SetVelocity(Particles[0].GetVelocity() + impulsePerIMass * Particles[0].MassInverse);
 
         if (Particles[1])
         {
-            Particles[1].Velocity = Particles[1].Velocity + impulsePerIMass * -Particles[1].MassInv;
+            Particles[1].SetVelocity(Particles[1].GetVelocity() + impulsePerIMass * -Particles[1].MassInverse);
         }
 
-        EventAnnouncer.OnCollisionOccurred?.Invoke(Particles[0], Particles[1]);
-        AudioSource collisionSound = EventAnnouncer.OnPlaySound?.Invoke(EnumSound.COLLISION);
+        EventAnnouncer.OnCollisionOccurredBaby?.Invoke(Particles[0], Particles[1]);
+        EventAnnouncer.OnPlaySound?.Invoke(EnumSound.COLLISION);
     }
 
+    /// <summary>
+    /// Moves a rigidbaby's intersecting collider outside of the other rigidbaby's collider.
+    /// </summary>
+    /// <param name="deltaTime"> Delta Time. </param>
     private void ResolveInterpenetration(float deltaTime)
     {
         //If we don't have any penetration, skip this step.
@@ -139,11 +152,11 @@ public class ParticleContact
         }
 
         //The movement of each object is based on their inverse mass.
-        float totalInverseMass = Particles[0].MassInv;
+        float totalInverseMass = Particles[0].MassInverse;
 
         if (Particles[1])
         {
-            totalInverseMass += Particles[1].MassInv;
+            totalInverseMass += Particles[1].MassInverse;
         }
 
         //If all particles have infinite mass, then we do nothing.
@@ -153,26 +166,26 @@ public class ParticleContact
         }
 
         //Find the amount of penetration resoluion per unit of inverse mass.
-        Vector2 movePerIMass = ContactNormal * (Penetration / totalInverseMass);
+        Vector3 movePerIMass = ContactNormal * (Penetration / totalInverseMass);
 
         //Calculate the movement amounts.
-        ParticleMovement[0] = movePerIMass * Particles[0].MassInv;
+        ParticleMovement[0] = movePerIMass * Particles[0].MassInverse;
 
         if (Particles[1])
         {
-            ParticleMovement[1] = movePerIMass * -Particles[1].MassInv;
+            ParticleMovement[1] = movePerIMass * -Particles[1].MassInverse;
         }
         else
         {
-            ParticleMovement[1] = Vector2.zero;
+            ParticleMovement[1] = Vector3.zero;
         }
 
         //Apply the penetration resolution.
-        Particles[0].Position = Particles[0].Position + ParticleMovement[0];
+        Particles[0].SetPosition(Particles[0].GetPosition() + ParticleMovement[0]);
 
         if (Particles[1])
         {
-            Particles[1].Position = Particles[1].Position + ParticleMovement[1];
+            Particles[1].SetPosition(Particles[1].GetPosition() + ParticleMovement[1]);
         }
     }
 }
