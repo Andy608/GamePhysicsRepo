@@ -9,7 +9,7 @@ public class RigidBaby : MonoBehaviour
 		disk,
 		ring,
 		rectangle,
-		thinRod,
+		//thinRod,
 		other
 	}
 	public ParticleShape particleShape = ParticleShape.ring;
@@ -106,40 +106,35 @@ public class RigidBaby : MonoBehaviour
         Mass = startingMass;
         Position = transform.position;
         Rotation = QuatBaby.QuaternionToQuatBaby(transform.rotation);
+        float inertia;
 
-		//lab7
-		switch (particleShape)
+        //lab7
+        switch (particleShape)
 		{
 			case ParticleShape.ring:
-				//inertia = 0.5 * mass * (radiusOuter^2 + radiusInner^2)
-				localInertiaTensor = new Matrix4x4(
-					new Vector4((0.4f * mass * 4), 0, 0, 0),
-					new Vector4(0, (0.4f * mass * 4), 0, 0),
-					new Vector4(0, 0, (0.4f * mass * 4), 0),
-					new Vector4(0, 0, 0, 1)
-					);
+                inertia = 0.4f * mass * 4.0f; //inertia = 0.5 * mass * (radiusOuter^2 + radiusInner^2)
 				break;
 			case ParticleShape.rectangle:
-				//inertia = (0.083) * mass * (xLength^2 + yLength^2)
-				//momentOfInertia = 0.083f * Mass * (xLength * xLength + yLength * yLength);
-				localInertiaTensor = new Matrix4x4(
-					new Vector4(0.083f * mass * 2, 0, 0,0),
-					new Vector4(0, 0.083f * mass * 2, 0, 0),
-					new Vector4(0, 0, 0.083f * mass * 2, 0),
-					new Vector4(0, 0, 0, 1)
-					);
+                inertia = 0.083f * mass * 2.0f; //inertia = (0.083) * mass * (xLength^2 + yLength^2)
 				break;
-			case ParticleShape.thinRod:
+            //Lab 07 doesn't require a rod, which is nice because the matrix for a rod is different than all the rest.
+			//case ParticleShape.thinRod:
 				//inertia = (0.083) * mass * length^2
-				//momentOfInertia = 0.083f * Mass * (rodLength * rodLength);
-				break;
+				//break;
 			default:
 			case ParticleShape.disk:
-				//inertia = 0.5 * mass * (radius^2)
-				//momentOfInertia = 0.5f * Mass * radius * radius;
+                inertia = 0.5f * mass * 4.0f; //inertia = 0.5 * mass * (radius^2)
 				break;
 		}
-	}
+
+        //REMEMBER THAT EACH VECTOR IS A COLUMN NOT A ROW
+        localInertiaTensor = new Matrix4x4(
+            new Vector4(inertia,    0.0f,    0.0f,    0.0f),
+            new Vector4(   0.0f, inertia,    0.0f,    0.0f),
+            new Vector4(   0.0f,    0.0f, inertia,    0.0f),
+            new Vector4(   0.0f,    0.0f,    0.0f,    1.0f)
+        );
+    }
 
     void Update()
     {
