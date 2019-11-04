@@ -2,17 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(IShapeBaby))]
 public class RigidBaby : MonoBehaviour
 {
-	public enum ParticleShape
-	{
-		disk,
-		ring,
-		rectangle,
-		//thinRod,
-		other
-	}
-	public ParticleShape particleShape = ParticleShape.ring;
+    private IShapeBaby shape;
 
 	/// <summary> Enum for Integration Type. </summary>
 	public enum IntegrationType
@@ -20,6 +13,7 @@ public class RigidBaby : MonoBehaviour
 		Kinematic,
 		EulerExplicit
 	}
+
 	[SerializeField] private IntegrationType positionType = IntegrationType.EulerExplicit;
     [SerializeField] private IntegrationType rotationType = IntegrationType.EulerExplicit;
 
@@ -35,10 +29,16 @@ public class RigidBaby : MonoBehaviour
 
     [SerializeField] private float startingMass = 1.0f;
 
-	//lab 07
-	[SerializeField] private Matrix4x4 worldTransform, inverseWorldTransform;
-	[SerializeField] private Vector3 localCenterOfMass, worldCenterofMass;
-	[SerializeField] private Vector3 torque;
+    //lab 07
+    [SerializeField] private Matrix4x4 translationMat;
+    [SerializeField] private Matrix4x4 rotationMat;
+    [SerializeField] private Matrix4x4 scaleMat;
+    
+    [SerializeField] private Matrix4x4 transformationMat; //transformationMat = transform.localToWorldMatrix
+
+
+    [SerializeField] private Vector3 localCenterOfMass, worldCenterofMass;
+	[SerializeField] private Vector3 worldTorque;
 	[SerializeField] private Vector3 momentArm = Vector3.zero, forceApply = Vector3.zero;
 	private Matrix4x4 localInertiaTensor, worldInertiaTensor; //these are actually 3x3 matricies
 	private Vector3 angularAcceleration;
@@ -106,48 +106,64 @@ public class RigidBaby : MonoBehaviour
         Mass = startingMass;
         Position = transform.position;
         Rotation = QuatBaby.QuaternionToQuatBaby(transform.rotation);
-        float inertia;
+        shape = GetComponent<IShapeBaby>();
 
         //lab7
-        switch (particleShape)
-		{
-			case ParticleShape.ring:
-                inertia = 0.4f * mass * 4.0f; //inertia = 0.5 * mass * (radiusOuter^2 + radiusInner^2)
-				break;
-			case ParticleShape.rectangle:
-                inertia = 0.083f * mass * 2.0f; //inertia = (0.083) * mass * (xLength^2 + yLength^2)
-				break;
-            //Lab 07 doesn't require a rod, which is nice because the matrix for a rod is different than all the rest.
-			//case ParticleShape.thinRod:
-				//inertia = (0.083) * mass * length^2
-				//break;
-			default:
-			case ParticleShape.disk:
-                inertia = 0.5f * mass * 4.0f; //inertia = 0.5 * mass * (radius^2)
-				break;
-		}
+        //switch (particleShape)
+        //{
+        //case ParticleShape.ring:
+        //    inertia = 0.4f * mass * 4.0f; //inertia = 0.5 * mass * (radiusOuter^2 + radiusInner^2)
+        //	break;
+        //case ParticleShape.rectangle:
+        //    inertia = 0.083f * mass * 2.0f; //inertia = (0.083) * mass * (xLength^2 + yLength^2)
+        //	break;
+        //default:
+        //case ParticleShape.disk:
+        //    inertia = 0.5f * mass * 4.0f; //inertia = 0.5 * mass * (radius^2)
+        //	break;
+        //}
 
-        //REMEMBER THAT EACH VECTOR IS A COLUMN NOT A ROW
-        localInertiaTensor = new Matrix4x4(
-            new Vector4(inertia,    0.0f,    0.0f,    0.0f),
-            new Vector4(   0.0f, inertia,    0.0f,    0.0f),
-            new Vector4(   0.0f,    0.0f, inertia,    0.0f),
-            new Vector4(   0.0f,    0.0f,    0.0f,    1.0f)
-        );
+        //localInertiaTensor = new Matrix4x4(
+        //    new Vector4(inertia,    0.0f,    0.0f,    0.0f),
+        //    new Vector4(   0.0f, inertia,    0.0f,    0.0f),
+        //    new Vector4(   0.0f,    0.0f, inertia,    0.0f),
+        //    new Vector4(   0.0f,    0.0f,    0.0f,    1.0f)
+        //);
+
+        localInertiaTensor = shape.Inertia;
+
+        worldInertiaTensor = localInertiaTensor;
+        worldInertiaTensor[0] = 1.0f / worldInertiaTensor[0];
+        worldInertiaTensor[5] = 1.0f / worldInertiaTensor[5];
+        worldInertiaTensor[10] = 1.0f / worldInertiaTensor[10];
     }
 
     void Update()
     {
 		//TODO: convert position and rotation into 3D homogeneous matricies, what I have is wrong
 		Vector3 position = transform.position;
-		worldTransform = new Matrix4x4(
-			new Vector4(position.x, 0, 0, 0),
-			new Vector4(0, position.y, 0, 0),
-			new Vector4(0, 0, position.z, 0),
-			new Vector4(0, 0, 0, 1)
-			);
-		//TODO: invert that bitch
+        translationMat = new Matrix4x4(
+            new Vector4(1.0f, 0.0f, 0.0f, 0.0f),
+            new Vector4(0.0f, 1.0f, 0.0f, 0.0f),
+            new Vector4(0.0f, 0.0f, 1.0f, 0.0f),
+            new Vector4(position.x, position.y, position.z, 1.0f)
+        );
 
+        Rotation.ToMatrix(ref rotationMat);
+        //Debug.Log(Rotation + " | " + rotationMat);
+
+        Vector3 scale = transform.lossyScale;
+        scaleMat = new Matrix4x4(
+            new Vector4(scale.x,    0.0f,    0.0f,    0.0f),
+            new Vector4(   0.0f, scale.y,    0.0f,    0.0f),
+            new Vector4(   0.0f,    0.0f, scale.z,    0.0f),
+            new Vector4(   0.0f,    0.0f,    0.0f,    1.0f)
+        );
+
+        transformationMat = translationMat * rotationMat * scaleMat;
+        worldCenterofMass = transformationMat * localCenterOfMass;
+
+        //TODO: invert that bitch
 
         switch (positionType)
         {
@@ -220,18 +236,18 @@ public class RigidBaby : MonoBehaviour
 
 	private void UpdateAngularAcceleration()
 	{
-		//angularAcceleration = Inertia^-1 * Torque
+        //Unity version
+        //angularAcceleration = transform.localToWorldMatrix * localInertiaTensor.inverse * transform.worldToLocalMatrix * torque4;
+        
+        //Our version v1.0
+        angularAcceleration = transformationMat * worldInertiaTensor * worldToLocal(worldTorque, transformationMat);
 
-		////Apply torque to angular accel using inverse of inertia
-		//angularAccel = momentOfInertiaInv * torque;
+        /* !! BUT if inertia tensor is uniform scale, the change of basis can cancel out. (Provides the same results as line above) !! */
+        //Optimized v2.0
+        //angularAcceleration = worldInertiaTensor * worldTorque;
 
-		Vector4 torqueT = torque;
-
-		//TODO: use our own local to whatever matricies, and don't call .inverse
-		angularAcceleration = transform.localToWorldMatrix * localInertiaTensor.inverse * transform.worldToLocalMatrix * torqueT;
-
-		////reset torque
-		torque = Vector3.zero;
+        //Reset torque
+        worldTorque = Vector3.zero;
 	}
 
 	/// <summary>
@@ -244,15 +260,34 @@ public class RigidBaby : MonoBehaviour
 		//Transform world space coord to local space
 		Vector3 pointAppliedLocal = momentArm - localCenterOfMass;
 
-		//Torque = pointOfForceRelativeToCenterMass X forceApplied
-		//Vector3 miniTorque = pointAppliedLocal * forceApplied - pointAppliedLocal * forceApplied;
-		
-		//is torque equal to moment arm vector cross force vector?
-		Vector3 newMiniTorque = Vector3.Cross(momentArm, forceApplied);
-
 		//Add it to the aggregate torque
-		torque += newMiniTorque;
+		worldTorque += Vector3.Cross(pointAppliedLocal, forceApplied);
 	}
+
+    //Multiplies a vector by the inverse of a matrix -> when that matrix only comprises of translation and rotation.
+    private Vector3 transformInverse(Vector3 vec, Matrix4x4 mat)
+    {
+        Vector3 temp = vec;
+        temp.x -= mat[3];
+        temp.y -= mat[7];
+        temp.z -= mat[11];
+
+        return new Vector3(
+            temp.x * mat[0] + temp.y * mat[4] + temp.z * mat[8],
+            temp.x * mat[1] + temp.y * mat[5] + temp.z * mat[9],
+            temp.x * mat[2] + temp.y * mat[6] + temp.z * mat[10]
+        );
+    }
+
+    private Vector3 worldToLocal(Vector3 world, Matrix4x4 transform)
+    {
+        return transformInverse(world, transform);
+    }
+
+    private Vector3 localToWorld(Vector3 local, Matrix4x4 transform)
+    {
+        return transform * local;
+    }
 }
 
 

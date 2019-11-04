@@ -193,14 +193,28 @@ public class QuatBaby
 
     public void ToMatrix(ref Matrix4x4 mat)
     {
-        mat = new Matrix4x4(
-            new Vector4(
-                w * w + v.x * v.x -v.y * v.y - v.z * v.z,
-                2 * v.x * v.y + 2 * w * v.z, 0, 0), 
-            new Vector4(), new Vector4(), new Vector4()
-        );
+        //float aa = w * w, bb = v.x * v.x, cc = v.y * v.y, dd = v.z * v.z;
+        //float ab = w * v.x, ac = w * v.y, ad = w * v.z;
+        //float bc = v.x * v.y, bd = v.x * v.z;
+        //float cd = v.y * v.z;
+        //
+        ////https://wikimedia.org/api/rest_v1/media/math/render/svg/b2b8eb5ce0c4bfe919d8f113aefbc09ab1a0b296
+        //mat = new Matrix4x4(
+        //    new Vector4(aa + bb - cc - dd, 2.0f * bc + 2.0f * ad, 2.0f * bd - 2.0f * ac, 0.0f),
+        //    new Vector4(2.0f * bc - 2.0f * ad, aa - bb + cc - dd, 2.0f * cd + 2.0f * ab, 0.0f),
+        //    new Vector4(2.0f * bd + 2.0f * ac, 2.0f * cd - 2.0f * ab, aa - bb - cc + dd, 0.0f),
+        //    new Vector4(0.0f, 0.0f, 0.0f, 1.0f)
+        //);
 
-        //https://wikimedia.org/api/rest_v1/media/math/render/svg/b2b8eb5ce0c4bfe919d8f113aefbc09ab1a0b296
+        float qw = w, qx = v.x, qy = v.y, qz = v.z;
+
+        //https://stackoverflow.com/questions/1556260/convert-quaternion-rotation-to-rotation-matrix
+        mat = new Matrix4x4(
+            new Vector4( 1.0f - 2.0f * qy * qy - 2.0f * qz * qz,        2.0f * qx * qy + 2.0f * qz * qw,        2.0f * qx * qz - 2.0f * qy * qw,      0.0f), 
+            new Vector4(        2.0f * qx * qy - 2.0f * qz * qw, 1.0f - 2.0f * qx * qx - 2.0f * qz * qz,        2.0f * qy * qz + 2.0f * qx * qw,      0.0f), 
+            new Vector4(        2.0f * qx * qz + 2.0f * qy * qw,        2.0f * qy * qz - 2.0f * qx * qw, 1.0f - 2.0f * qx * qx - 2.0f * qy * qy,      0.0f),
+            new Vector4(                                   0.0f,                                   0.0f,                                   0.0f,      1.0f)
+        );
     }
 
     /// <summary> Calculates the true magnitude of the quaternion. Caution: uses square root. </summary>
