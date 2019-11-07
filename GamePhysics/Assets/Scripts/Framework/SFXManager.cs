@@ -102,14 +102,14 @@ public class SFXManager : ManagerBase<SFXManager>
     {
         CurrentSFXState = EnumSFXState.ON;
 
-        EventAnnouncer.OnButtonPressed += PlaySound;
+        EventAnnouncer.OnPlaySound += PlaySound;
     }
 
     private void StopListeningForSounds()
     {
         CurrentSFXState = EnumSFXState.OFF;
 
-        EventAnnouncer.OnButtonPressed -= PlaySound;
+        EventAnnouncer.OnPlaySound -= PlaySound;
     }
 
     private AudioSource PlaySound(EnumSound soundID)

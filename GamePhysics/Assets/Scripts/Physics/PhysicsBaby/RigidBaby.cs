@@ -43,7 +43,7 @@ public class RigidBaby : MonoBehaviour
     [SerializeField] private Vector3 localCenterOfMass, worldCenterofMass;
 	[SerializeField] private Vector3 worldTorque;
 	[SerializeField] private Vector3 momentArm = Vector3.zero, forceApply = Vector3.zero;
-	private Matrix4x4 localInertiaTensor, worldInertiaTensor; //these are actually 3x3 matricies
+	private Matrix4x4 localInertiaTensor, inverseInertiaTensor; //these are actually 3x3 matricies
 	private Vector3 angularAcceleration;
 
     public float Mass
@@ -142,10 +142,10 @@ public class RigidBaby : MonoBehaviour
         //lab7
         localInertiaTensor = shape.Inertia;
 
-        worldInertiaTensor = localInertiaTensor;
-        worldInertiaTensor[0] = 1.0f / worldInertiaTensor[0];
-        worldInertiaTensor[5] = 1.0f / worldInertiaTensor[5];
-        worldInertiaTensor[10] = 1.0f / worldInertiaTensor[10];
+        inverseInertiaTensor = localInertiaTensor;
+        inverseInertiaTensor[0]  = 1.0f / inverseInertiaTensor[0];
+        inverseInertiaTensor[5]  = 1.0f / inverseInertiaTensor[5];
+        inverseInertiaTensor[10] = 1.0f / inverseInertiaTensor[10];
     }
 
     void Update()
@@ -160,15 +160,7 @@ public class RigidBaby : MonoBehaviour
 
         Rotation.ToMatrix(ref rotationMat);
 
-        Vector3 scale = transform.lossyScale;
-        scaleMat = new Matrix4x4(
-            new Vector4(scale.x,    0.0f,    0.0f,    0.0f),
-            new Vector4(   0.0f, scale.y,    0.0f,    0.0f),
-            new Vector4(   0.0f,    0.0f, scale.z,    0.0f),
-            new Vector4(   0.0f,    0.0f,    0.0f,    1.0f)
-        );
-
-        transformationMat = translationMat * rotationMat * scaleMat;
+        transformationMat = translationMat * rotationMat;
         worldCenterofMass = transformationMat * localCenterOfMass;
 
         switch (positionType)
@@ -251,7 +243,7 @@ public class RigidBaby : MonoBehaviour
         //angularAcceleration = transform.localToWorldMatrix * localInertiaTensor.inverse * transform.worldToLocalMatrix * torque4;
         
         //Our version v1.0
-        angularAcceleration = transformationMat * worldInertiaTensor * worldToLocal(worldTorque, transformationMat);
+        angularAcceleration = transformationMat * inverseInertiaTensor * worldToLocal(worldTorque, transformationMat);
 
         /* !! BUT if inertia tensor is uniform scale, the change of basis can cancel out. (Provides the same results as line above) !! */
         //Optimized v2.0

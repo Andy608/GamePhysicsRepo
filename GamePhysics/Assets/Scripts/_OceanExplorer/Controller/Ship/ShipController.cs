@@ -119,7 +119,7 @@ public class ShipController : MonoBehaviour
 
     private void OnTorpedoFired()
     {
-        EventAnnouncer.OnButtonPressed?.Invoke(EnumSound.BUBBLE_FIRE);
+        EventAnnouncer.OnPlaySound?.Invoke(EnumSound.BUBBLE_FIRE);
         torpedoSpawner.FireTorpedo(isSpriteFlipped);
     }
 

@@ -47,7 +47,7 @@ public class HoverColor : MonoBehaviour
     public void OnClick()
     {
         text.color = clickColor;
-        EventAnnouncer.OnButtonPressed?.Invoke(EnumSound.BUTTON_PRESS);
+        EventAnnouncer.OnPlaySound?.Invoke(EnumSound.BUTTON_PRESS);
     }
 
     //private IEnumerator FadeColors(Color start, Color end)
