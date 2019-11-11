@@ -85,7 +85,7 @@ public class CollisionHullBabyOBB : CollisionHullBaby
 
     public override bool TestCollisionVsAABB(CollisionHullBabyAABB other, ref List<RigidBabyContact> c)
     {
-        return false;
+        return CollisionTestAABBVsOBB(other, this, ref c);
     }
 
     public override bool TestCollisionVsObject(CollisionHullBabyOBB other, ref List<RigidBabyContact> c)
