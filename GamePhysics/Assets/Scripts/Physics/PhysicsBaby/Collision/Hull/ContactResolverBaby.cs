@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ContactResolverBaby : MonoBehaviour
+public class ContactResolverBaby
 {
     //Holds the number of iterations allowed.
     private int iterations;

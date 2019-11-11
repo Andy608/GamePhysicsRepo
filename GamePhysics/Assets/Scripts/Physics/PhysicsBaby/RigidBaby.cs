@@ -150,7 +150,7 @@ public class RigidBaby : MonoBehaviour
 
     void Update()
     {
-		Vector3 position = transform.position;
+		position = transform.position;
         translationMat = new Matrix4x4(
             new Vector4(1.0f, 0.0f, 0.0f, 0.0f),
             new Vector4(0.0f, 1.0f, 0.0f, 0.0f),
@@ -187,7 +187,7 @@ public class RigidBaby : MonoBehaviour
         posDiff.y = position.y - PrevPosition.y;
         PrevPosition = position;
 
-        ApplyTorque(momentArm, forceApply);
+		ApplyTorque(momentArm, forceApply);
 		UpdateAngularAcceleration();
 
 		rotAcceleration = angularAcceleration;

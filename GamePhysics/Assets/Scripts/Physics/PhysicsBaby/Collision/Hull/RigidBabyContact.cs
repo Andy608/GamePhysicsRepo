@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RigidBabyContact : MonoBehaviour
+public class RigidBabyContact
 {
     //Holds the rigidbabys that are involved in this isolated contact.
     //If we are dealing with a contact between an object and scenery,

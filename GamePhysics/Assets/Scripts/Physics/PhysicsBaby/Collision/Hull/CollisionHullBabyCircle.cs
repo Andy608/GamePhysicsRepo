@@ -37,7 +37,7 @@ public class CollisionHullBabyCircle : CollisionHullBaby
             RigidBabyContact contact = new RigidBabyContact(
                 aParticle, bParticle, restitution, normal, penetration);
             c.Add(contact);
-
+			Debug.Log("It's touching ME!");
             return true;
         }
 
