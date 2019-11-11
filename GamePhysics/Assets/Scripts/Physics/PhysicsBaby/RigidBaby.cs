@@ -37,7 +37,7 @@ public class RigidBaby : MonoBehaviour
     [SerializeField] private Matrix4x4 rotationMat;
     [SerializeField] private Matrix4x4 scaleMat;
     
-    [SerializeField] private Matrix4x4 transformationMat; //transformationMat = transform.localToWorldMatrix
+    public Matrix4x4 TransformationMat { get; private set; } //transformationMat = transform.localToWorldMatrix
 
 
     [SerializeField] private Vector3 localCenterOfMass, worldCenterofMass;
@@ -195,8 +195,8 @@ public class RigidBaby : MonoBehaviour
         transform.position += posDiff;
         PrevPosition = position;
 
-        transformationMat = translationMat * rotationMat;
-        worldCenterofMass = transformationMat * localCenterOfMass;
+        TransformationMat = translationMat * rotationMat;
+        worldCenterofMass = TransformationMat * localCenterOfMass;
 
         ApplyTorque(momentArm, forceApply);
 
@@ -253,7 +253,7 @@ public class RigidBaby : MonoBehaviour
         //angularAcceleration = transform.localToWorldMatrix * localInertiaTensor.inverse * transform.worldToLocalMatrix * torque4;
         
         //Our version v1.0
-        angularAcceleration = transformationMat * inverseInertiaTensor * worldToLocal(worldTorque, transformationMat);
+        angularAcceleration = TransformationMat * inverseInertiaTensor * worldToLocal(worldTorque, TransformationMat);
 
         /* !! BUT if inertia tensor is uniform scale, the change of basis can cancel out. (Provides the same results as line above) !! */
         //Optimized v2.0
@@ -278,7 +278,7 @@ public class RigidBaby : MonoBehaviour
 	}
 
     //Multiplies a vector by the inverse of a matrix -> when that matrix only comprises of translation and rotation.
-    private Vector3 transformInverse(Vector3 vec, Matrix4x4 mat)
+    public static Vector3 transformInverse(Vector3 vec, Matrix4x4 mat)
     {
         Vector3 temp = vec;
         temp.x -= mat[3];
@@ -292,12 +292,12 @@ public class RigidBaby : MonoBehaviour
         );
     }
 
-    private Vector3 worldToLocal(Vector3 world, Matrix4x4 transform)
+    public static Vector3 worldToLocal(Vector3 world, Matrix4x4 transform)
     {
         return transformInverse(world, transform);
     }
 
-    private Vector3 localToWorld(Vector3 local, Matrix4x4 transform)
+    public static Vector3 localToWorld(Vector3 local, Matrix4x4 transform)
     {
         return transform * local;
     }
