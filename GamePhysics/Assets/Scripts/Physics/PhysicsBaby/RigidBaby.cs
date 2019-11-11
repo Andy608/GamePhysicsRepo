@@ -83,38 +83,21 @@ public class RigidBaby : MonoBehaviour
         private set;
     }
 
+    private void OnEnable()
+    {
+        RigidBabyIntegrator.Instance?.RegisterRigidBaby(this);
+    }
+
+    private void OnDisable()
+    {
+        RigidBabyIntegrator.Instance?.UnRegisterRigidBaby(this);
+    }
+
     /// <summary> Quick direct changes to Velocity. </summary>
     /// <param name="v"> The velocity vector. </param>
     public void SetVelocity(Vector3 v)
     {
         velocity = v;
-    }
-
-    /// <summary>
-    /// Gets the velocity of the rigidbaby.
-    /// </summary>
-    /// <returns>The velocity.</returns>
-    public Vector3 GetVelocity()
-    {
-        return velocity;
-    }
-
-    /// <summary>
-    /// Gets the acceleration of the rigidbaby.
-    /// </summary>
-    /// <returns>The acceleration.</returns>
-    public Vector3 GetAcceleration()
-    {
-        return acceleration;
-    }
-
-    /// <summary>
-    /// Gets the position of the rigidbaby.
-    /// </summary>
-    /// <returns>The position.</returns>
-    public Vector3 GetPosition()
-    {
-        return position;
     }
 
     /// <summary> Quick direct changes to Position. </summary>
@@ -129,6 +112,33 @@ public class RigidBaby : MonoBehaviour
     public void AddForce(Vector3 newForce)
     {
         totalForce += newForce;
+    }
+
+    /// <summary>
+    /// Gets the velocity of the rigidbaby.
+    /// </summary>
+    /// <returns>The velocity.</returns>
+    public Vector3 GetVelocity()
+    {
+        return velocity;
+    }
+
+    /// <summary>
+    /// Gets the position of the rigidbaby.
+    /// </summary>
+    /// <returns>The position.</returns>
+    public Vector3 GetPosition()
+    {
+        return position;
+    }
+
+    /// <summary>
+    /// Gets the acceleration of the rigidbaby.
+    /// </summary>
+    /// <returns>The acceleration.</returns>
+    public Vector3 GetAcceleration()
+    {
+        return acceleration;
     }
 
     void Start()
@@ -148,9 +158,28 @@ public class RigidBaby : MonoBehaviour
         inverseInertiaTensor[10] = 1.0f / inverseInertiaTensor[10];
     }
 
-    void Update()
+    public void Integrate()
     {
-		position = transform.position;
+        switch (positionType)
+        {
+            case IntegrationType.EulerExplicit:
+                UpdatePositionEulerExplicit(Time.fixedDeltaTime);
+                break;
+            default:
+                UpdatePositionKinematic(Time.fixedDeltaTime);
+                break;
+        }
+
+        switch (rotationType)
+        {
+            case IntegrationType.EulerExplicit:
+                UpdateRotationEulerExplicit(Time.fixedDeltaTime);
+                break;
+            default:
+                UpdateRotationKinematic(Time.fixedDeltaTime);
+                break;
+        }
+
         translationMat = new Matrix4x4(
             new Vector4(1.0f, 0.0f, 0.0f, 0.0f),
             new Vector4(0.0f, 1.0f, 0.0f, 0.0f),
@@ -158,40 +187,21 @@ public class RigidBaby : MonoBehaviour
             new Vector4(position.x, position.y, position.z, 1.0f)
         );
 
-        Rotation.ToMatrix(ref rotationMat);
+        UpdateAngularAcceleration();
+
+        posDiff.x = position.x - PrevPosition.x;
+        posDiff.y = position.y - PrevPosition.y;
+        posDiff.z = position.z - PrevPosition.z;
+        transform.position += posDiff;
+        PrevPosition = position;
 
         transformationMat = translationMat * rotationMat;
         worldCenterofMass = transformationMat * localCenterOfMass;
 
-        switch (positionType)
-        {
-            case IntegrationType.EulerExplicit:
-                UpdatePositionEulerExplicit(Time.deltaTime);
-                break;
-            default:
-                UpdatePositionKinematic(Time.deltaTime);
-                break;
-        }
+        ApplyTorque(momentArm, forceApply);
 
-        switch (rotationType)
-        {
-            case IntegrationType.EulerExplicit:
-                UpdateRotationEulerExplicit(Time.deltaTime);
-                break;
-            default:
-                UpdateRotationKinematic(Time.deltaTime);
-                break;
-        }
-
-        posDiff.x = position.x - PrevPosition.x;
-        posDiff.y = position.y - PrevPosition.y;
-        PrevPosition = position;
-
-		ApplyTorque(momentArm, forceApply);
-		UpdateAngularAcceleration();
-
-		rotAcceleration = angularAcceleration;
-        transform.position += posDiff;
+        Rotation.ToMatrix(ref rotationMat);
+        rotAcceleration = angularAcceleration;
         transform.rotation = Rotation.ToUnityQuaternion();
     }
 
