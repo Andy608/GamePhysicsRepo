@@ -185,7 +185,7 @@ public class CollisionHullBabyCircle : CollisionHullBaby
 		// 7. use clamped point as closest point of box
 		Vector3 closestPoint = new Vector3(circleOnX, circleOnY, circleOnz);
 
-		Vector3 distance = closestPoint - new Vector3(circleCenter.x, circleCenter.y);
+		Vector3 distance = closestPoint - new Vector3(circleCenter.x, circleCenter.y, circleCenter.z);
 		float distSqr = Vector3.Dot(distance, distance);
 
 		// 8. check if closest point of box is within the circle
