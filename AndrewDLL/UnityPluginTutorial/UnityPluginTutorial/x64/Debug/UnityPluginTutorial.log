@@ -1,0 +1,7 @@
+﻿  pch.cpp
+  dllmain.cpp
+  foo.cpp
+  unity_plugin_tutorial.cpp
+  Generating Code...
+     Creating library C:\Users\andrew.rimpici\Desktop\GamePhysics\AndrewDLL\UnityPluginTutorial\x64\Debug\UnityPluginTutorial.lib and object C:\Users\andrew.rimpici\Desktop\GamePhysics\AndrewDLL\UnityPluginTutorial\x64\Debug\UnityPluginTutorial.exp
+  UnityPluginTutorial.vcxproj -> C:\Users\andrew.rimpici\Desktop\GamePhysics\AndrewDLL\UnityPluginTutorial\x64\Debug\UnityPluginTutorial.dll
