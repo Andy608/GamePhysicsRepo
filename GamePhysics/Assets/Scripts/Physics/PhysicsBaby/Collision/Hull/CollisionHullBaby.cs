@@ -5,6 +5,17 @@ using UnityEngine;
 [RequireComponent(typeof(RigidBaby))]
 public abstract class CollisionHullBaby : MonoBehaviour
 {
+    public Color worldSpaceColor, localSpaceColor, otherSpaceColor, worldSpaceMegaBoxColor, otherSpaceMegaBoxColor;
+
+    GameObject vertex;
+    GameObject[] localSpaceVertices = new GameObject[8];
+    GameObject[] worldSpaceVertices = new GameObject[8];
+    GameObject[] otherSpaceVertices = new GameObject[8];
+    GameObject[] otherSpaceMegaBoxVertices = new GameObject[8];
+    GameObject[] worldSpaceMegaBoxVertices = new GameObject[8];
+
+    public bool showLocal = false, showWorld = false, showOther = false, showOtherMegaBox = false, showWorldMegaBox = false;
+
     public enum CollisionHullBabyType
     {
         Circle,
@@ -24,6 +35,47 @@ public abstract class CollisionHullBaby : MonoBehaviour
     private void Awake()
     {
         rigidbaby = GetComponent<RigidBaby>();
+        vertex = Resources.Load<GameObject>("Prefabs/Rigidbaby/Vertex");
+
+        for (int i = 0; i < 8; ++i)
+        {
+            worldSpaceVertices[i] = Instantiate(vertex, transform);
+            worldSpaceVertices[i].GetComponent<MeshRenderer>().material.color = worldSpaceColor;
+            worldSpaceVertices[i].name = "World Space Vertex";
+            worldSpaceVertices[i].tag = "World";
+
+            localSpaceVertices[i] = Instantiate(vertex, transform);
+            localSpaceVertices[i].GetComponent<MeshRenderer>().material.color = localSpaceColor;
+            localSpaceVertices[i].name = "Local Space Vertex";
+            localSpaceVertices[i].tag = "Local";
+
+            otherSpaceVertices[i] = Instantiate(vertex, transform);
+            otherSpaceVertices[i].GetComponent<MeshRenderer>().material.color = otherSpaceColor;
+            otherSpaceVertices[i].name = "Other Space Vertex";
+            otherSpaceVertices[i].tag = "Other";
+
+            worldSpaceMegaBoxVertices[i] = Instantiate(vertex, transform);
+            worldSpaceMegaBoxVertices[i].GetComponent<MeshRenderer>().material.color = worldSpaceMegaBoxColor;
+            worldSpaceMegaBoxVertices[i].name = "World Space Mega Box Vertex";
+            worldSpaceMegaBoxVertices[i].tag = "World MegaBox";
+
+            otherSpaceMegaBoxVertices[i] = Instantiate(vertex, transform);
+            otherSpaceMegaBoxVertices[i].GetComponent<MeshRenderer>().material.color = otherSpaceMegaBoxColor;
+            otherSpaceMegaBoxVertices[i].name = "Other Space Mega Box Vertex";
+            otherSpaceMegaBoxVertices[i].tag = "Other MegaBox";
+        }
+    }
+
+    private void Update()
+    {
+        for (int i = 0; i < 8; ++i)
+        {
+            worldSpaceVertices[i].SetActive(showWorld);
+            localSpaceVertices[i].SetActive(showLocal);
+            otherSpaceVertices[i].SetActive(showOther);
+            otherSpaceMegaBoxVertices[i].SetActive(showOtherMegaBox);
+            worldSpaceMegaBoxVertices[i].SetActive(showWorldMegaBox);
+        }
     }
 
     private void OnEnable()
@@ -221,72 +273,171 @@ public abstract class CollisionHullBaby : MonoBehaviour
         Vector2 yBoundsOBB = new Vector2(-dimOBB.y, dimOBB.y);
         Vector2 zBoundsOBB = new Vector2(-dimOBB.z, dimOBB.z);
 
+        AABB.localSpaceVertices[0].transform.position = new Vector3(dimAABB.x, dimAABB.y, dimAABB.z);
+        AABB.localSpaceVertices[1].transform.position = new Vector3(-dimAABB.x, dimAABB.y, dimAABB.z);
+        AABB.localSpaceVertices[2].transform.position = new Vector3(dimAABB.x, dimAABB.y, -dimAABB.z);
+        AABB.localSpaceVertices[3].transform.position = new Vector3(-dimAABB.x, dimAABB.y, -dimAABB.z);
+        AABB.localSpaceVertices[4].transform.position = new Vector3(dimAABB.x, -dimAABB.y, dimAABB.z);
+        AABB.localSpaceVertices[5].transform.position = new Vector3(-dimAABB.x, -dimAABB.y, dimAABB.z);
+        AABB.localSpaceVertices[6].transform.position = new Vector3(dimAABB.x, -dimAABB.y, -dimAABB.z);
+        AABB.localSpaceVertices[7].transform.position = new Vector3(-dimAABB.x, -dimAABB.y, -dimAABB.z);
+
+        OBB.localSpaceVertices[0].transform.position = new Vector3(dimOBB.x, dimOBB.y, dimOBB.z);
+        OBB.localSpaceVertices[1].transform.position = new Vector3(-dimOBB.x, dimOBB.y, dimOBB.z);
+        OBB.localSpaceVertices[2].transform.position = new Vector3(dimOBB.x, dimOBB.y, -dimOBB.z);
+        OBB.localSpaceVertices[3].transform.position = new Vector3(-dimOBB.x, dimOBB.y, -dimOBB.z);
+        OBB.localSpaceVertices[4].transform.position = new Vector3(dimOBB.x, -dimOBB.y, dimOBB.z);
+        OBB.localSpaceVertices[5].transform.position = new Vector3(-dimOBB.x, -dimOBB.y, dimOBB.z);
+        OBB.localSpaceVertices[6].transform.position = new Vector3(dimOBB.x, -dimOBB.y, -dimOBB.z);
+        OBB.localSpaceVertices[7].transform.position = new Vector3(-dimOBB.x, -dimOBB.y, -dimOBB.z);
+
         // 2. Find corner points for both boxes.
         Vector3 WorldSpace_rightTopFront_AABB = AABB.transform.TransformPoint(new Vector3(dimAABB.x, dimAABB.y, dimAABB.z));
+        AABB.worldSpaceVertices[0].transform.position = WorldSpace_rightTopFront_AABB;
         Vector3 WorldSpace_leftTopFront_AABB = AABB.transform.TransformPoint(new Vector3(-dimAABB.x, dimAABB.y, dimAABB.z));
+        AABB.worldSpaceVertices[1].transform.position = WorldSpace_leftTopFront_AABB;
         Vector3 WorldSpace_rightTopBack_AABB = AABB.transform.TransformPoint(new Vector3(dimAABB.x, dimAABB.y, -dimAABB.z));
+        AABB.worldSpaceVertices[2].transform.position = WorldSpace_rightTopBack_AABB;
         Vector3 WorldSpace_leftTopBack_AABB = AABB.transform.TransformPoint(new Vector3(-dimAABB.x, dimAABB.y, -dimAABB.z));
+        AABB.worldSpaceVertices[3].transform.position = WorldSpace_leftTopBack_AABB;
         Vector3 WorldSpace_rightBottomFront_AABB = AABB.transform.TransformPoint(new Vector3(dimAABB.x, -dimAABB.y, dimAABB.z));
+        AABB.worldSpaceVertices[4].transform.position = WorldSpace_rightBottomFront_AABB;
         Vector3 WorldSpace_leftBottomFront_AABB = AABB.transform.TransformPoint(new Vector3(-dimAABB.x, -dimAABB.y, dimAABB.z));
+        AABB.worldSpaceVertices[5].transform.position = WorldSpace_leftBottomFront_AABB;
         Vector3 WorldSpace_rightBottomBack_AABB = AABB.transform.TransformPoint(new Vector3(dimAABB.x, -dimAABB.y, -dimAABB.z));
+        AABB.worldSpaceVertices[6].transform.position = WorldSpace_rightBottomBack_AABB;
         Vector3 WorldSpace_leftBottomBack_AABB = AABB.transform.TransformPoint(new Vector3(-dimAABB.x, -dimAABB.y, -dimAABB.z));
+        AABB.worldSpaceVertices[7].transform.position = WorldSpace_leftBottomBack_AABB;
 
         Vector3 WorldSpace_rightTopFront_OBB = OBB.transform.TransformPoint(new Vector3(dimOBB.x, dimOBB.y, dimOBB.z));
+        OBB.worldSpaceVertices[0].transform.position = WorldSpace_rightTopFront_OBB;
         Vector3 WorldSpace_leftTopFront_OBB = OBB.transform.TransformPoint(new Vector3(-dimOBB.x, dimOBB.y, dimOBB.z));
+        OBB.worldSpaceVertices[1].transform.position = WorldSpace_leftTopFront_OBB;
         Vector3 WorldSpace_rightTopBack_OBB = OBB.transform.TransformPoint(new Vector3(dimOBB.x, dimOBB.y, -dimOBB.z));
+        OBB.worldSpaceVertices[2].transform.position = WorldSpace_rightTopBack_OBB;
         Vector3 WorldSpace_leftTopBack_OBB = OBB.transform.TransformPoint(new Vector3(-dimOBB.x, dimOBB.y, -dimOBB.z));
+        OBB.worldSpaceVertices[3].transform.position = WorldSpace_leftTopBack_OBB;
         Vector3 WorldSpace_rightBottomFront_OBB = OBB.transform.TransformPoint(new Vector3(dimOBB.x, -dimOBB.y, dimOBB.z));
+        OBB.worldSpaceVertices[4].transform.position = WorldSpace_rightBottomFront_OBB;
         Vector3 WorldSpace_leftBottomFront_OBB = OBB.transform.TransformPoint(new Vector3(-dimOBB.x, -dimOBB.y, dimOBB.z));
+        OBB.worldSpaceVertices[5].transform.position = WorldSpace_leftBottomFront_OBB;
         Vector3 WorldSpace_rightBottomBack_OBB = OBB.transform.TransformPoint(new Vector3(dimOBB.x, -dimOBB.y, -dimOBB.z));
+        OBB.worldSpaceVertices[6].transform.position = WorldSpace_rightBottomBack_OBB;
         Vector3 WorldSpace_leftBottomBack_OBB = OBB.transform.TransformPoint(new Vector3(-dimOBB.x, -dimOBB.y, -dimOBB.z));
+        OBB.worldSpaceVertices[7].transform.position = WorldSpace_leftBottomBack_OBB;
 
         //3. Find AABBSpace points for OBB
         Vector3 AABBSpace_rightTopFront_OBB = AABB.transform.InverseTransformPoint(WorldSpace_rightTopFront_OBB);
+        AABB.otherSpaceVertices[0].transform.position = AABBSpace_rightTopFront_OBB;
         Vector3 AABBSpace_leftTopFront_OBB = AABB.transform.InverseTransformPoint(WorldSpace_leftTopFront_OBB);
+        AABB.otherSpaceVertices[1].transform.position = AABBSpace_leftTopFront_OBB;
         Vector3 AABBSpace_rightTopBack_OBB = AABB.transform.InverseTransformPoint(WorldSpace_rightTopBack_OBB);
+        AABB.otherSpaceVertices[2].transform.position = AABBSpace_rightTopBack_OBB;
         Vector3 AABBSpace_leftTopBack_OBB = AABB.transform.InverseTransformPoint(WorldSpace_leftTopBack_OBB);
+        AABB.otherSpaceVertices[3].transform.position = AABBSpace_leftTopBack_OBB;
         Vector3 AABBSpace_rightBottomFront_OBB = AABB.transform.InverseTransformPoint(WorldSpace_rightBottomFront_OBB);
+        AABB.otherSpaceVertices[4].transform.position = AABBSpace_rightBottomFront_OBB;
         Vector3 AABBSpace_leftBottomFront_OBB = AABB.transform.InverseTransformPoint(WorldSpace_leftBottomFront_OBB);
+        AABB.otherSpaceVertices[5].transform.position = AABBSpace_leftBottomFront_OBB;
         Vector3 AABBSpace_rightBottomBack_OBB = AABB.transform.InverseTransformPoint(WorldSpace_rightBottomBack_OBB);
+        AABB.otherSpaceVertices[6].transform.position = AABBSpace_rightBottomBack_OBB;
         Vector3 AABBSpace_leftBottomBack_OBB = AABB.transform.InverseTransformPoint(WorldSpace_leftBottomBack_OBB);
+        AABB.otherSpaceVertices[7].transform.position = AABBSpace_leftBottomBack_OBB;
+
+        // 7. Convert AABB into local OBB space.
+        Vector3 OBBSpace_rightTopFront_AABB = OBB.transform.InverseTransformPoint(WorldSpace_rightTopFront_AABB);
+        OBB.otherSpaceVertices[0].transform.position = OBBSpace_rightTopFront_AABB;
+        Vector3 OBBSpace_leftTopFront_AABB = OBB.transform.InverseTransformPoint(WorldSpace_leftTopFront_AABB);
+        OBB.otherSpaceVertices[1].transform.position = OBBSpace_leftTopFront_AABB;
+        Vector3 OBBSpace_rightTopBack_AABB = OBB.transform.InverseTransformPoint(WorldSpace_rightTopBack_AABB);
+        OBB.otherSpaceVertices[2].transform.position = OBBSpace_rightTopBack_AABB;
+        Vector3 OBBSpace_leftTopBack_AABB = OBB.transform.InverseTransformPoint(WorldSpace_leftTopBack_AABB);
+        OBB.otherSpaceVertices[3].transform.position = OBBSpace_leftTopBack_AABB;
+        Vector3 OBBSpace_rightBottomFront_AABB = OBB.transform.InverseTransformPoint(WorldSpace_rightBottomFront_AABB);
+        OBB.otherSpaceVertices[4].transform.position = OBBSpace_rightBottomFront_AABB;
+        Vector3 OBBSpace_leftBottomFront_AABB = OBB.transform.InverseTransformPoint(WorldSpace_leftBottomFront_AABB);
+        OBB.otherSpaceVertices[5].transform.position = OBBSpace_leftBottomFront_AABB;
+        Vector3 OBBSpace_rightBottomBack_AABB = OBB.transform.InverseTransformPoint(WorldSpace_rightBottomBack_AABB);
+        OBB.otherSpaceVertices[6].transform.position = OBBSpace_rightBottomBack_AABB;
+        Vector3 OBBSpace_leftBottomBack_AABB = OBB.transform.InverseTransformPoint(WorldSpace_leftBottomBack_AABB);
+        OBB.otherSpaceVertices[7].transform.position = OBBSpace_leftBottomBack_AABB;
+
 
         // 4. Calculate transformed OBB's AABB
         Vector2 AABBSpace_xBound_OBBs_AABB;
         Vector2 AABBSpace_yBound_OBBs_AABB;
         Vector2 AABBSpace_zBound_OBBs_AABB;
 
+        //I USE THIS AS TEMP TO CALCULATE THE WORLD SPACE MEGA BOX. VAR NAMES DONT MATCH. IGNORE THIS
+        CalculateAABB(WorldSpace_rightTopFront_OBB, WorldSpace_leftTopFront_OBB, WorldSpace_rightTopBack_OBB, WorldSpace_leftTopBack_OBB,
+            WorldSpace_rightBottomFront_OBB, WorldSpace_leftBottomFront_OBB, WorldSpace_rightBottomBack_OBB, WorldSpace_leftBottomBack_OBB,
+            out AABBSpace_xBound_OBBs_AABB, out AABBSpace_yBound_OBBs_AABB, out AABBSpace_zBound_OBBs_AABB);
+
+        OBB.worldSpaceMegaBoxVertices[0].transform.position = new Vector3(AABBSpace_xBound_OBBs_AABB.x, AABBSpace_yBound_OBBs_AABB.x, AABBSpace_zBound_OBBs_AABB.x);
+        OBB.worldSpaceMegaBoxVertices[1].transform.position = new Vector3(AABBSpace_xBound_OBBs_AABB.x, AABBSpace_yBound_OBBs_AABB.x, AABBSpace_zBound_OBBs_AABB.y);
+        OBB.worldSpaceMegaBoxVertices[2].transform.position = new Vector3(AABBSpace_xBound_OBBs_AABB.x, AABBSpace_yBound_OBBs_AABB.y, AABBSpace_zBound_OBBs_AABB.x);
+        OBB.worldSpaceMegaBoxVertices[3].transform.position = new Vector3(AABBSpace_xBound_OBBs_AABB.x, AABBSpace_yBound_OBBs_AABB.y, AABBSpace_zBound_OBBs_AABB.y);
+        OBB.worldSpaceMegaBoxVertices[4].transform.position = new Vector3(AABBSpace_xBound_OBBs_AABB.y, AABBSpace_yBound_OBBs_AABB.x, AABBSpace_zBound_OBBs_AABB.x);
+        OBB.worldSpaceMegaBoxVertices[5].transform.position = new Vector3(AABBSpace_xBound_OBBs_AABB.y, AABBSpace_yBound_OBBs_AABB.x, AABBSpace_zBound_OBBs_AABB.y);
+        OBB.worldSpaceMegaBoxVertices[6].transform.position = new Vector3(AABBSpace_xBound_OBBs_AABB.y, AABBSpace_yBound_OBBs_AABB.y, AABBSpace_zBound_OBBs_AABB.x);
+        OBB.worldSpaceMegaBoxVertices[7].transform.position = new Vector3(AABBSpace_xBound_OBBs_AABB.y, AABBSpace_yBound_OBBs_AABB.y, AABBSpace_zBound_OBBs_AABB.y);
+        ///////////////////////////
+
         CalculateAABB(AABBSpace_rightTopFront_OBB, AABBSpace_leftTopFront_OBB, AABBSpace_rightTopBack_OBB, AABBSpace_leftTopBack_OBB,
             AABBSpace_rightBottomFront_OBB, AABBSpace_leftBottomFront_OBB, AABBSpace_rightBottomBack_OBB, AABBSpace_leftBottomBack_OBB,
             out AABBSpace_xBound_OBBs_AABB, out AABBSpace_yBound_OBBs_AABB, out AABBSpace_zBound_OBBs_AABB);
+
+        OBB.otherSpaceMegaBoxVertices[0].transform.position = new Vector3(AABBSpace_xBound_OBBs_AABB.x, AABBSpace_yBound_OBBs_AABB.x, AABBSpace_zBound_OBBs_AABB.x);
+        OBB.otherSpaceMegaBoxVertices[1].transform.position = new Vector3(AABBSpace_xBound_OBBs_AABB.x, AABBSpace_yBound_OBBs_AABB.x, AABBSpace_zBound_OBBs_AABB.y);
+        OBB.otherSpaceMegaBoxVertices[2].transform.position = new Vector3(AABBSpace_xBound_OBBs_AABB.x, AABBSpace_yBound_OBBs_AABB.y, AABBSpace_zBound_OBBs_AABB.x);
+        OBB.otherSpaceMegaBoxVertices[3].transform.position = new Vector3(AABBSpace_xBound_OBBs_AABB.x, AABBSpace_yBound_OBBs_AABB.y, AABBSpace_zBound_OBBs_AABB.y);
+        OBB.otherSpaceMegaBoxVertices[4].transform.position = new Vector3(AABBSpace_xBound_OBBs_AABB.y, AABBSpace_yBound_OBBs_AABB.x, AABBSpace_zBound_OBBs_AABB.x);
+        OBB.otherSpaceMegaBoxVertices[5].transform.position = new Vector3(AABBSpace_xBound_OBBs_AABB.y, AABBSpace_yBound_OBBs_AABB.x, AABBSpace_zBound_OBBs_AABB.y);
+        OBB.otherSpaceMegaBoxVertices[6].transform.position = new Vector3(AABBSpace_xBound_OBBs_AABB.y, AABBSpace_yBound_OBBs_AABB.y, AABBSpace_zBound_OBBs_AABB.x);
+        OBB.otherSpaceMegaBoxVertices[7].transform.position = new Vector3(AABBSpace_xBound_OBBs_AABB.y, AABBSpace_yBound_OBBs_AABB.y, AABBSpace_zBound_OBBs_AABB.y);
 
         // 5. Do AABB collision test of AABB vs transformed OBB's ABB
         bool isTransformedOBBinAABB = DOAABBCollisionTest(xBoundsAABB, yBoundsAABB, zBoundsAABB, 
             AABBSpace_xBound_OBBs_AABB, AABBSpace_yBound_OBBs_AABB, AABBSpace_zBound_OBBs_AABB);
 
         // 6. If the test comes back neg, then return false because there is no way the boxes are colliding
-        if (!isTransformedOBBinAABB)
-        {
-            return false;
-        }
-
-        // 7. Convert AABB into local OBB space.
-        Vector3 OBBSpace_rightTopFront_AABB = OBB.transform.InverseTransformPoint(WorldSpace_rightTopFront_AABB);
-        Vector3 OBBSpace_leftTopFront_AABB = OBB.transform.InverseTransformPoint(WorldSpace_leftTopFront_AABB);
-        Vector3 OBBSpace_rightTopBack_AABB = OBB.transform.InverseTransformPoint(WorldSpace_rightTopBack_AABB);
-        Vector3 OBBSpace_leftTopBack_AABB = OBB.transform.InverseTransformPoint(WorldSpace_leftTopBack_AABB);
-        Vector3 OBBSpace_rightBottomFront_AABB = OBB.transform.InverseTransformPoint(WorldSpace_rightBottomFront_AABB);
-        Vector3 OBBSpace_leftBottomFront_AABB = OBB.transform.InverseTransformPoint(WorldSpace_leftBottomFront_AABB);
-        Vector3 OBBSpace_rightBottomBack_AABB = OBB.transform.InverseTransformPoint(WorldSpace_rightBottomBack_AABB);
-        Vector3 OBBSpace_leftBottomBack_AABB = OBB.transform.InverseTransformPoint(WorldSpace_leftBottomBack_AABB);
+        //if (!isTransformedOBBinAABB)
+        //{
+        //    return false;
+        //}
 
         // 8. Calculate transformed AABB's AABB
         Vector2 OBBSpace_xBound_AABBs_AABB;
         Vector2 OBBSpace_yBound_AABBs_AABB;
         Vector2 OBBSpace_zBound_AABBs_AABB;
 
+        //I USE THIS AS TEMP TO CALCULATE THE WORLD SPACE MEGA BOX. VAR NAMES DONT MATCH. IGNORE THIS
+        CalculateAABB(WorldSpace_rightTopFront_AABB, WorldSpace_leftTopFront_AABB, WorldSpace_rightTopBack_AABB, WorldSpace_leftTopBack_AABB,
+            WorldSpace_rightBottomFront_AABB, WorldSpace_leftBottomFront_AABB, WorldSpace_rightBottomBack_AABB, WorldSpace_leftBottomBack_AABB,
+            out OBBSpace_xBound_AABBs_AABB, out OBBSpace_yBound_AABBs_AABB, out OBBSpace_zBound_AABBs_AABB);
+
+        AABB.worldSpaceMegaBoxVertices[0].transform.position = new Vector3(OBBSpace_xBound_AABBs_AABB.x, OBBSpace_yBound_AABBs_AABB.x, OBBSpace_zBound_AABBs_AABB.x);
+        AABB.worldSpaceMegaBoxVertices[1].transform.position = new Vector3(OBBSpace_xBound_AABBs_AABB.x, OBBSpace_yBound_AABBs_AABB.x, OBBSpace_zBound_AABBs_AABB.y);
+        AABB.worldSpaceMegaBoxVertices[2].transform.position = new Vector3(OBBSpace_xBound_AABBs_AABB.x, OBBSpace_yBound_AABBs_AABB.y, OBBSpace_zBound_AABBs_AABB.x);
+        AABB.worldSpaceMegaBoxVertices[3].transform.position = new Vector3(OBBSpace_xBound_AABBs_AABB.x, OBBSpace_yBound_AABBs_AABB.y, OBBSpace_zBound_AABBs_AABB.y);
+        AABB.worldSpaceMegaBoxVertices[4].transform.position = new Vector3(OBBSpace_xBound_AABBs_AABB.y, OBBSpace_yBound_AABBs_AABB.x, OBBSpace_zBound_AABBs_AABB.x);
+        AABB.worldSpaceMegaBoxVertices[5].transform.position = new Vector3(OBBSpace_xBound_AABBs_AABB.y, OBBSpace_yBound_AABBs_AABB.x, OBBSpace_zBound_AABBs_AABB.y);
+        AABB.worldSpaceMegaBoxVertices[6].transform.position = new Vector3(OBBSpace_xBound_AABBs_AABB.y, OBBSpace_yBound_AABBs_AABB.y, OBBSpace_zBound_AABBs_AABB.x);
+        AABB.worldSpaceMegaBoxVertices[7].transform.position = new Vector3(OBBSpace_xBound_AABBs_AABB.y, OBBSpace_yBound_AABBs_AABB.y, OBBSpace_zBound_AABBs_AABB.y);
+        ///////////////////////////
+
         CalculateAABB(OBBSpace_rightTopFront_AABB, OBBSpace_leftTopFront_AABB, OBBSpace_rightTopBack_AABB, OBBSpace_leftTopBack_AABB,
             OBBSpace_rightBottomFront_AABB, OBBSpace_leftBottomFront_AABB, OBBSpace_rightBottomBack_AABB, OBBSpace_leftBottomBack_AABB,
             out OBBSpace_xBound_AABBs_AABB, out OBBSpace_yBound_AABBs_AABB, out OBBSpace_zBound_AABBs_AABB);
+
+        AABB.otherSpaceMegaBoxVertices[0].transform.position = new Vector3(OBBSpace_xBound_AABBs_AABB.x, OBBSpace_yBound_AABBs_AABB.x, OBBSpace_zBound_AABBs_AABB.x);
+        AABB.otherSpaceMegaBoxVertices[1].transform.position = new Vector3(OBBSpace_xBound_AABBs_AABB.x, OBBSpace_yBound_AABBs_AABB.x, OBBSpace_zBound_AABBs_AABB.y);
+        AABB.otherSpaceMegaBoxVertices[2].transform.position = new Vector3(OBBSpace_xBound_AABBs_AABB.x, OBBSpace_yBound_AABBs_AABB.y, OBBSpace_zBound_AABBs_AABB.x);
+        AABB.otherSpaceMegaBoxVertices[3].transform.position = new Vector3(OBBSpace_xBound_AABBs_AABB.x, OBBSpace_yBound_AABBs_AABB.y, OBBSpace_zBound_AABBs_AABB.y);
+        AABB.otherSpaceMegaBoxVertices[4].transform.position = new Vector3(OBBSpace_xBound_AABBs_AABB.y, OBBSpace_yBound_AABBs_AABB.x, OBBSpace_zBound_AABBs_AABB.x);
+        AABB.otherSpaceMegaBoxVertices[5].transform.position = new Vector3(OBBSpace_xBound_AABBs_AABB.y, OBBSpace_yBound_AABBs_AABB.x, OBBSpace_zBound_AABBs_AABB.y);
+        AABB.otherSpaceMegaBoxVertices[6].transform.position = new Vector3(OBBSpace_xBound_AABBs_AABB.y, OBBSpace_yBound_AABBs_AABB.y, OBBSpace_zBound_AABBs_AABB.x);
+        AABB.otherSpaceMegaBoxVertices[7].transform.position = new Vector3(OBBSpace_xBound_AABBs_AABB.y, OBBSpace_yBound_AABBs_AABB.y, OBBSpace_zBound_AABBs_AABB.y);
 
         // 9. Do AABB collision test of OBB's local AABB vs transformed AABB's AABB
         bool isTransformedAABBinOBB = DOAABBCollisionTest(xBoundsOBB, yBoundsOBB, zBoundsOBB,

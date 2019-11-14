@@ -7,6 +7,11 @@ TagManager:
   - Fishy
   - Bubble
   - Coral
+  - Local
+  - Other
+  - World
+  - Other MegaBox
+  - World MegaBox
   layers:
   - Default
   - TransparentFX
