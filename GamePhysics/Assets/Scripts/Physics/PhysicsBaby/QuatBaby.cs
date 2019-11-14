@@ -191,7 +191,7 @@ public class QuatBaby
         angle *= 360.0f / Mathf.PI * 2.0f;
     }
 
-    public void ToMatrix(ref Matrix4x4 mat)
+    public Matrix4x4 ToMatrix()
     {
         //float aa = w * w, bb = v.x * v.x, cc = v.y * v.y, dd = v.z * v.z;
         //float ab = w * v.x, ac = w * v.y, ad = w * v.z;
@@ -207,9 +207,10 @@ public class QuatBaby
         //);
 
         float qw = w, qx = v.x, qy = v.y, qz = v.z;
+        normalize();
 
         //https://stackoverflow.com/questions/1556260/convert-quaternion-rotation-to-rotation-matrix
-        mat = new Matrix4x4(
+        return new Matrix4x4(
             new Vector4( 1.0f - 2.0f * qy * qy - 2.0f * qz * qz,        2.0f * qx * qy + 2.0f * qz * qw,        2.0f * qx * qz - 2.0f * qy * qw,      0.0f), 
             new Vector4(        2.0f * qx * qy - 2.0f * qz * qw, 1.0f - 2.0f * qx * qx - 2.0f * qz * qz,        2.0f * qy * qz + 2.0f * qx * qw,      0.0f), 
             new Vector4(        2.0f * qx * qz + 2.0f * qy * qw,        2.0f * qy * qz - 2.0f * qx * qw, 1.0f - 2.0f * qx * qx - 2.0f * qy * qy,      0.0f),
@@ -249,6 +250,50 @@ public class QuatBaby
         qBaby.v.z = q.z;
         qBaby.w = q.w;
         return qBaby;
+    }
+
+    //https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/
+    public static QuatBaby MatrixToQuatBaby(Matrix4x4 m)
+    {
+        QuatBaby q = new QuatBaby();
+        float trace = m[0] + m[5] + m[10];
+        if (trace > 0.0f)
+        {
+            float s = 0.5f / Mathf.Sqrt(trace + 1.0f);
+            q.w = 0.25f / s;
+            q.v.x = (m[6] - m[9]) * s;
+            q.v.y = (m[8] - m[2]) * s;
+            q.v.z = (m[1] - m[4]) * s;
+        }
+        else
+        {
+            if (m[0] > m[5] && m[0] > m[10])
+            {
+                float s = 2.0f * Mathf.Sqrt(1.0f + m[0] - m[5] - m[10]);
+                q.w = (m[6] - m[9]) / s;
+                q.v.x = 0.25f * s;
+                q.v.y = (m[4] + m[1]) / s;
+                q.v.z = (m[8] + m[2]) / s;
+            }
+            else if (m[5] > m[10])
+            {
+                float s = 2.0f * Mathf.Sqrt(1.0f + m[5] - m[0] - m[10]);
+                q.w = (m[8] - m[2]) / s;
+                q.v.x = (m[4] + m[1]) / s;
+                q.v.y = 0.25f * s;
+                q.v.z = (m[9] + m[6]) / s;
+            }
+            else
+            {
+                float s = 2.0f * Mathf.Sqrt(1.0f + m[10] - m[0] - m[5]);
+                q.w = (m[1] - m[4]) / s;
+                q.v.x = (m[8] + m[2]) / s;
+                q.v.y = (m[9] + m[6]) / s;
+                q.v.z = 0.25f * s;
+            }
+        }
+
+        return q;
     }
 
     /// <summary> Returns a string with the axis, angle, and magnitude. </summary>
