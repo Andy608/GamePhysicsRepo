@@ -153,6 +153,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73903f140a916194ebc33777c98852e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  worldSpaceColor: {r: 0.9433962, g: 0.68204063, b: 0.0533998, a: 1}
+  localSpaceColor: {r: 1, g: 0, b: 0.59559155, a: 1}
+  otherSpaceColor: {r: 0.3540741, g: 0, b: 0.9433962, a: 1}
+  worldSpaceMegaBoxColor: {r: 0, g: 0, b: 0, a: 0}
+  otherSpaceMegaBoxColor: {r: 0.5221449, g: 0.9843137, b: 0, a: 1}
+  showLocal: 0
+  showWorld: 0
+  showOther: 0
+  showOtherMegaBox: 0
+  showWorldMegaBox: 0
 --- !u!114 &201868124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -297,13 +307,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201868122}
-  m_LocalRotation: {x: -0.18845849, y: -0.19435103, z: 0.17477998, w: 0.9466589}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.238, y: 0.454, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: -16.791, y: -26.947, z: 24.971}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &302623398
 GameObject:
   m_ObjectHideFlags: 0
@@ -565,6 +575,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f6eccc8186f10a48b03b4d392a5abe7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  worldSpaceColor: {r: 0, g: 0, b: 0, a: 0}
+  localSpaceColor: {r: 0, g: 0, b: 0, a: 0}
+  otherSpaceColor: {r: 0, g: 0, b: 0, a: 0}
+  worldSpaceMegaBoxColor: {r: 0, g: 0, b: 0, a: 0}
+  otherSpaceMegaBoxColor: {r: 0, g: 0, b: 0, a: 0}
+  showLocal: 1
+  showWorld: 1
+  showOther: 1
+  showOtherMegaBox: 1
+  showWorldMegaBox: 0
 --- !u!114 &316023845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -613,6 +633,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cc289634ec11e041a879a2d42712b2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  worldSpaceColor: {r: 0, g: 0, b: 0, a: 0}
+  localSpaceColor: {r: 0, g: 0, b: 0, a: 0}
+  otherSpaceColor: {r: 0, g: 0, b: 0, a: 0}
+  worldSpaceMegaBoxColor: {r: 0, g: 0, b: 0, a: 0}
+  otherSpaceMegaBoxColor: {r: 0, g: 0, b: 0, a: 0}
+  showLocal: 1
+  showWorld: 1
+  showOther: 1
+  showOtherMegaBox: 1
+  showWorldMegaBox: 0
   radius: 0.5
   restitution: 0
 --- !u!114 &357391547
@@ -794,7 +824,7 @@ GameObject:
   - component: {fileID: 405278838}
   - component: {fileID: 405278843}
   m_Layer: 0
-  m_Name: KarimsSquareLookinAss
+  m_Name: AABB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -963,6 +993,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f6eccc8186f10a48b03b4d392a5abe7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  worldSpaceColor: {r: 0.10234961, g: 0.9433962, b: 0.1432872, a: 1}
+  localSpaceColor: {r: 1, g: 0.009847156, b: 0, a: 1}
+  otherSpaceColor: {r: 0.9811321, g: 0.842197, b: 0.018511912, a: 1}
+  worldSpaceMegaBoxColor: {r: 0.8535934, g: 0.21568626, b: 1, a: 1}
+  otherSpaceMegaBoxColor: {r: 0, g: 0.94815207, b: 1, a: 1}
+  showLocal: 1
+  showWorld: 0
+  showOther: 0
+  showOtherMegaBox: 1
+  showWorldMegaBox: 1
 --- !u!1 &1843506476
 GameObject:
   m_ObjectHideFlags: 0
@@ -997,6 +1037,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cc289634ec11e041a879a2d42712b2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  worldSpaceColor: {r: 0, g: 0, b: 0, a: 0}
+  localSpaceColor: {r: 0, g: 0, b: 0, a: 0}
+  otherSpaceColor: {r: 0, g: 0, b: 0, a: 0}
+  worldSpaceMegaBoxColor: {r: 0, g: 0, b: 0, a: 0}
+  otherSpaceMegaBoxColor: {r: 0, g: 0, b: 0, a: 0}
+  showLocal: 1
+  showWorld: 1
+  showOther: 1
+  showOtherMegaBox: 1
+  showWorldMegaBox: 0
   radius: 0.5
   restitution: 0
 --- !u!114 &1843506478
