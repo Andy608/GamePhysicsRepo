@@ -21,6 +21,6 @@ public class CollisionHullBabyCircle : CollisionHullBaby
 
     public override bool TestCollisionVsObject(CollisionHullBabyOBB other, ref List<RigidBabyContact> c)
     {
-        return false;
+        return TestCollisionCircleVsOBB(this, other, ref c);
     }
 }

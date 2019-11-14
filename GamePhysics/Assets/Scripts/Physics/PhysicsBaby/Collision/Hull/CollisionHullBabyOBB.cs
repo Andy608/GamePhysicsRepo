@@ -8,16 +8,16 @@ public class CollisionHullBabyOBB : CollisionHullBaby
 
     public override bool TestCollisionVsCircle(CollisionHullBabyCircle other, ref List<RigidBabyContact> c)
     {
-        return false;
+        return TestCollisionCircleVsOBB(other, this, ref c);
     }
 
     public override bool TestCollisionVsAABB(CollisionHullBabyAABB other, ref List<RigidBabyContact> c)
     {
-        return CollisionTestAABBVsOBB(other, this, ref c);
+        return TestCollisionAABBVsOBB(other, this, ref c);
     }
 
     public override bool TestCollisionVsObject(CollisionHullBabyOBB other, ref List<RigidBabyContact> c)
     {
-        return false;
+        return TestCollisionOBBVsOBB(other, this, ref c); ;
     }
 }

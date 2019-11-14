@@ -26,7 +26,7 @@ public class RigidBaby : MonoBehaviour
 
     [SerializeField] private Vector3 rotVelocity = Vector3.zero;
     [SerializeField] private Vector3 rotAcceleration = Vector3.zero;
-    private QuatBaby Rotation;
+    public QuatBaby Rotation;
 
     [SerializeField] private Vector3 totalForce = Vector3.zero;
 
@@ -35,7 +35,7 @@ public class RigidBaby : MonoBehaviour
     //lab 07
     [SerializeField] private Matrix4x4 translationMat;
     [SerializeField] private Matrix4x4 rotationMat;
-    [SerializeField] private Matrix4x4 scaleMat;
+    [SerializeField] private Matrix4x4 scaleMat = Matrix4x4.identity;
     
     public Matrix4x4 TransformationMat { get; private set; } //transformationMat = transform.localToWorldMatrix
 
@@ -187,22 +187,24 @@ public class RigidBaby : MonoBehaviour
             new Vector4(position.x, position.y, position.z, 1.0f)
         );
 
+        scaleMat = Matrix4x4.identity;
+
         UpdateAngularAcceleration();
 
-        posDiff.x = position.x - PrevPosition.x;
-        posDiff.y = position.y - PrevPosition.y;
-        posDiff.z = position.z - PrevPosition.z;
-        transform.position += posDiff;
+        posDiff = transform.position - PrevPosition;
+        position += posDiff;
         PrevPosition = position;
-
-        TransformationMat = translationMat * rotationMat;
-        worldCenterofMass = TransformationMat * localCenterOfMass;
+        transform.position = position;
 
         ApplyTorque(momentArm, forceApply);
 
-        Rotation.ToMatrix(ref rotationMat);
+        rotationMat = Rotation.ToMatrix();
         rotAcceleration = angularAcceleration;
         transform.rotation = Rotation.ToUnityQuaternion();
+
+        TransformationMat = translationMat * rotationMat * scaleMat;
+        worldCenterofMass = TransformationMat * localCenterOfMass;
+        //Debug.Log("1 " + TransformationMat);
     }
 
     /// <summary> Integrates the particles position using the euler explicit formula. </summary>
@@ -278,26 +280,26 @@ public class RigidBaby : MonoBehaviour
 	}
 
     //Multiplies a vector by the inverse of a matrix -> when that matrix only comprises of translation and rotation.
-    public static Vector3 transformInverse(Vector3 vec, Matrix4x4 mat)
+    private static Vector3 transformInverse(Vector3 vec, Matrix4x4 mat)
     {
-        Vector3 temp = vec;
+        Vector4 temp = vec;
         temp.x -= mat[3];
         temp.y -= mat[7];
         temp.z -= mat[11];
 
         return new Vector3(
-            temp.x * mat[0] + temp.y * mat[4] + temp.z * mat[8],
+            temp.x * mat[0] + temp.y * mat[4] + temp.z * mat[8], 
             temp.x * mat[1] + temp.y * mat[5] + temp.z * mat[9],
             temp.x * mat[2] + temp.y * mat[6] + temp.z * mat[10]
         );
     }
 
-    public static Vector3 worldToLocal(Vector3 world, Matrix4x4 transform)
+    private Vector3 worldToLocal(Vector3 world, Matrix4x4 transform)
     {
         return transformInverse(world, transform);
     }
 
-    public static Vector3 localToWorld(Vector3 local, Matrix4x4 transform)
+    private Vector3 localToWorld(Vector3 local, Matrix4x4 transform)
     {
         return transform * local;
     }

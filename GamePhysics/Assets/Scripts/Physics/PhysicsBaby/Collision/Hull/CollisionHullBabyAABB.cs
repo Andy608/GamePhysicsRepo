@@ -20,11 +20,11 @@ public class CollisionHullBabyAABB : CollisionHullBaby
 
     public override bool TestCollisionVsAABB(CollisionHullBabyAABB other, ref List<RigidBabyContact> c)
     {
-        return TestCollisionAABBvsAABB(this, other, ref c);
+        return TestCollisionAABBVsAABB(this, other, ref c);
     }
 
     public override bool TestCollisionVsObject(CollisionHullBabyOBB other, ref List<RigidBabyContact> c)
     {
-        return CollisionTestAABBVsOBB(this, other, ref c);
+        return TestCollisionAABBVsOBB(this, other, ref c);
     }
 }
