@@ -7,37 +7,50 @@ namespace ap
 		x(x), y(y), z(z)
 	{ };
 
-	Vector3 Vector3::cross(Vector3 lhs, Vector3 rhs)
+	Vector3 Vector3::cross(const Vector3& lhs, const Vector3& rhs)
 	{
-		Vector3 vec(0.0f, 0.0f, 0.0f);
+		Vector3 vec;
 
+		// a x b = <a2*b3 - a3*b2, a3*b1 - a1*b3, a1*b2 - a2*b1>
 
+		vec.x = (lhs.y * rhs.z) - (lhs.z * rhs.y);
+		vec.y = (lhs.z * rhs.x) - (lhs.x * rhs.z);
+		vec.z = (lhs.x * rhs.y) - (lhs.y * rhs.x);
 
 		return vec;
 	}
 
-	Vector3 Vector3::dot(Vector3 lhs, Vector3 rhs)
+	float Vector3::dot(const Vector3& lhs, const Vector3& rhs)
 	{
-		Vector3 vec(0.0f, 0.0f, 0.0f);
+		//dot = v1x * v2x + v1y * v2y + etc..
+		float dot = lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
 
-
-
-		return vec;
+		return dot;
 	}
 
-	Vector3 Vector3::normalize()
+	const Vector3& Vector3::normalize()
+	{
+		Vector3 vecNorm = *this / dot(*this, *this);
+
+		x = vecNorm.x;
+		y = vecNorm.y;
+		z = vecNorm.z;
+
+		return *this;
+	}
+
+	Vector3 Vector3::normalized(const Vector3& vec)
 	{
 		// normV = v / |v|
 		// |v| = pyfagorean
 
-		Vector3 vec = *this;
-		float x = vec.x, y = vec.y, z = vec.z;
+		Vector3 v = vec;
 
-		x = x * x;
-		y = y * y;
-		z = z * z;
+		v.x = v.x * v.x;
+		v.y = v.y * v.y;
+		v.z = v.z * v.z;
 
-		float vecMag = x + y + z;
+		float vecMag = v.x + v.y + v.z;
 		vecMag = sqrt(vecMag);
 		Vector3 vecNorm = vec / vecMag;
 
