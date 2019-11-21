@@ -1,7 +1,2 @@
 ﻿  quaternion.cpp
-  vector3.cpp
-C:\Users\andrew.rimpici\Desktop\GamePhysics\AndrickDLL\AndrickPlugin\AndrickPlugin\math\quaternion.cpp(24,1): error C1010:  unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
-  vector4.cpp
-C:\Users\andrew.rimpici\Desktop\GamePhysics\AndrickDLL\AndrickPlugin\AndrickPlugin\math\vector3.cpp(1,1): error C1010:  unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
-  Generating Code...
-C:\Users\andrew.rimpici\Desktop\GamePhysics\AndrickDLL\AndrickPlugin\AndrickPlugin\math\vector4.cpp(1,1): error C1010:  unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+  AndrickPlugin.vcxproj -> C:\Users\Owner\Desktop\Files\School\Semester 7\GamePhysics\GamePhysicsRepo\AndrickDLL\AndrickPlugin\AndrickPlugin\x64\Debug\AndrickPlugin.dll

@@ -18,13 +18,7 @@
     <ClInclude Include="main\andrick_plugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="main\framework.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="main\lib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="main\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="math\vector3.h">
@@ -39,12 +33,12 @@
     <ClInclude Include="math\math_util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main\dllmain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="main\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="math\vector3.cpp">
