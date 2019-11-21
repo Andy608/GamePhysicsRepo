@@ -17,14 +17,21 @@ namespace ap
 
 		const Quaternion& normalize();
 
-		float getMagnitude();
+		float getMagnitude() const;
 		float getSquaredMagnitude() const;
-		float dot() const;
+
+		Vector3 rotate(const Vector3& vec);
 
 		static Quaternion normalized(const Quaternion& quat);
 		static Quaternion inverted(const Quaternion& quat);
 
+		Quaternion operator-() const;
+
 		friend Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs);
+		friend Quaternion operator*(const Quaternion& lhs, const Vector3& rhs);
+		friend Quaternion operator*(const float& scalar, const Quaternion& rhs);
+		friend Quaternion operator*(const Quaternion& lhs, const float& scalar);
+		friend Quaternion operator+(const Quaternion& lhs, const Quaternion& rhs);
 
 	private:
 		static Quaternion identity;

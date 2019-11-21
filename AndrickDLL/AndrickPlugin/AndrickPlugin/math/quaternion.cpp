@@ -57,22 +57,29 @@ namespace ap
 
 	Quaternion Quaternion::inverted(const Quaternion& quat)
 	{
-		Quaternion newQuat = quat;
+		return -quat;
+	}
+
+	Quaternion Quaternion::operator-() const
+	{
+		Quaternion newQuat = this;
 		newQuat.v = -newQuat.v;
 		return newQuat;
 	}
 
-	float Quaternion::getMagnitude()
+	Vector3 Quaternion::rotate(const Vector3& vec)
+	{
+		Quaternion p = &vec;
+		Vector3 crossed = Vector3::cross(v, vec);
+		return vec + crossed * (2.0f * w) + Vector3::cross(v, crossed) * 2.0f;
+	}
+
+	float Quaternion::getMagnitude() const
 	{
 		return sqrt(getSquaredMagnitude());
 	}
 
 	float Quaternion::getSquaredMagnitude() const
-	{
-		return dot();
-	}
-
-	float Quaternion::dot() const
 	{
 		return v.x * v.x + v.y * v.y + v.z * v.z + w * w;
 	}
@@ -92,5 +99,38 @@ namespace ap
 
 		Quaternion qFinal = Quaternion(vFinal, wFinal);
 		return qFinal;
+	}
+
+	Quaternion operator*(const Quaternion& lhs, const Vector3& rhs)
+	{
+		float vDot = Vector3::dot(lhs.v, rhs);
+		float wFinal = -vDot;
+
+		Vector3 vCross = Vector3::cross(lhs.v, rhs);
+		Vector3 vFinal = lhs.w * rhs + vCross;
+
+		Quaternion qFinal = Quaternion(vFinal, wFinal);
+		return qFinal;
+	}
+
+	Quaternion operator*(const float& scalar, const Quaternion& rhs)
+	{
+		Vector3 vFinal = scalar * rhs.v;
+		float wFinal = scalar * rhs.w;
+		return Quaternion(vFinal, wFinal);
+	}
+
+	Quaternion operator*(const Quaternion& lhs, const float& scalar)
+	{
+		Vector3 vFinal = scalar * lhs.v;
+		float wFinal = scalar * lhs.w;
+		return Quaternion(vFinal, wFinal);
+	}
+
+	Quaternion operator+(const Quaternion& lhs, const Quaternion& rhs)
+	{
+		Vector3 vFinal = lhs.v + rhs.v;
+		float wFinal = lhs.w + rhs.w;
+		return Quaternion(vFinal, wFinal);
 	}
 }
