@@ -57,6 +57,15 @@ namespace ap
 		return vecNorm;
 	}
 
+	Vector3 Vector3::operator-()
+	{
+		Vector3 result;
+		result.x = -x;
+		result.y = -y;
+		result.z = -z;
+		return result;
+	}
+
 	Vector3 operator+(const Vector3& lhs, const Vector3& rhs)
 	{
 		Vector3 result;
@@ -81,6 +90,15 @@ namespace ap
 		result.x = scalar * rhs.x;
 		result.y = scalar * rhs.y;
 		result.z = scalar * rhs.z;
+		return result;
+	}
+
+	Vector3 operator*(const Vector3& lhs, const float& scalar)
+	{
+		Vector3 result;
+		result.x = scalar * lhs.x;
+		result.y = scalar * lhs.y;
+		result.z = scalar * lhs.z;
 		return result;
 	}
 
