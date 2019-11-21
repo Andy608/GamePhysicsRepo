@@ -30,6 +30,7 @@ namespace ap
 	{
 		w = other.w;
 		v = other.v;
+		return this;
 	}
 
 	const Quaternion& Quaternion::normalize()
@@ -39,14 +40,14 @@ namespace ap
 		if (d < EPSILON)
 		{
 			w = 1.0f;
-			return;
+			return *this;
 		}
 
 		d = 1.0f / sqrt(d);
 		w *= d;
 		v = d * v;
 
-		return this;
+		return *this;
 	}
 
 	Quaternion Quaternion::normalized(const Quaternion& quat)
