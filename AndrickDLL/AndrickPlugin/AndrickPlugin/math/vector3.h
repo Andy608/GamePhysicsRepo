@@ -8,6 +8,9 @@ namespace ap
 	public:
 		Vector3(const float& x = 0.0f, const float& y = 0.0f, const float& z = 0.0f);
 
+		float getMagnitude() const { sqrt(getMagnitudeSquared()); };
+		float getMagnitudeSquared() const { return dot(*this, *this); };
+
 		//cross
 		static Vector3 cross(const Vector3& lhs, const Vector3& rhs);
 		//normalize
