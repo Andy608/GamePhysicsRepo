@@ -1,4 +1,5 @@
 #include "vector3.h"
+#include "math_util.h"
 
 namespace ap
 {
@@ -26,11 +27,21 @@ namespace ap
 
 	Vector3 Vector3::normalize()
 	{
+		// normV = v / |v|
+		// |v| = pyfagorean
+
 		Vector3 vec = *this;
+		float x = vec.x, y = vec.y, z = vec.z;
 
+		x = x * x;
+		y = y * y;
+		z = z * z;
 
+		float vecMag = x + y + z;
+		vecMag = sqrt(vecMag);
+		Vector3 vecNorm = vec / vecMag;
 
-		return vec;
+		return vecNorm;
 	}
 
 	Vector3 operator+(const Vector3& lhs, const Vector3& rhs)
