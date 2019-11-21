@@ -5,6 +5,7 @@ namespace ap
 {
 	class Vector3
 	{
+		friend class Quaternion;
 	public:
 		Vector3(const float& x = 0.0f, const float& y = 0.0f, const float& z = 0.0f);
 
@@ -16,10 +17,14 @@ namespace ap
 		//dot
 		static float dot(const Vector3& lhs, const Vector3& rhs);
 
+		//Local operators: negate.
+		Vector3 operator-();
+
 		//overload addition, subtraction, scalar mult,
 		friend Vector3 operator+(const Vector3& lhs, const Vector3& rhs);
 		friend Vector3 operator-(const Vector3& lhs, const Vector3& rhs);
 		friend Vector3 operator*(const float& scalar, const Vector3& rhs);
+		friend Vector3 operator*(const Vector3& lhs, const float& scalar);
 		friend Vector3 operator/(const Vector3& lhs, const float& scalar);
 
 	private:
