@@ -10,6 +10,7 @@ namespace ap
 	public:
 		Quaternion(bool identity = false);
 		Quaternion(Vector3& axis, float& angle, bool isDegrees = false);
+		Quaternion(float values[]);
 		Quaternion(const Quaternion& other);
 		Quaternion operator=(const Quaternion& other);
 
@@ -25,9 +26,7 @@ namespace ap
 		static Quaternion normalized(const Quaternion& quat);
 		static Quaternion inverted(const Quaternion& quat);
 		
-		Quaternion operator-() const;
 		void toFloatArray(float f[]) const;
-		static Quaternion toQuaternion(float f[]);
 
 		friend Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs);
 		friend Quaternion operator*(const Quaternion& lhs, const Vector3& rhs);
@@ -35,7 +34,7 @@ namespace ap
 		friend Quaternion operator*(const Quaternion& lhs, const float& scalar);
 		friend Quaternion operator+(const Quaternion& lhs, const Quaternion& rhs);
 
-	//private:
+	private:
 		static Quaternion identity;
 
 		float w;

@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ExternalQuatBaby
 {
-    public float w;
-    public Vector3 v;
-    private float[] quat;
+    public float w = 0.0f;
+    public Vector3 v = new Vector3();
+    private float[] quat = new float[4];
 
     private void Sync(float[] quaternion)
     {
@@ -146,7 +146,11 @@ public class ExternalQuatBaby
     /// <returns> A ExternalQuatBaby. </returns>
     public static ExternalQuatBaby QuaternionToExternalQuatBaby(Quaternion q)
     {
-        return new ExternalQuatBaby(new Vector3(q.x, q.y, q.z), q.w, false);
+        ExternalQuatBaby b = new ExternalQuatBaby();
+        b.v = new Vector3(q.x, q.y, q.z);
+        b.w = q.w;
+
+        return b;
     }
 
     //https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/

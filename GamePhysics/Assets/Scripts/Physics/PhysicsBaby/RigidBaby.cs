@@ -39,8 +39,8 @@ public class RigidBaby : MonoBehaviour
     
     public Matrix4x4 TransformationMat { get; private set; } //transformationMat = transform.localToWorldMatrix
 
-
-    [SerializeField] private Vector3 localCenterOfMass, worldCenterofMass;
+    private Vector3 localCenterOfMass = Vector3.zero;
+    [SerializeField] private Vector3 worldCenterofMass = Vector3.zero;
 	[SerializeField] private Vector3 worldTorque;
 	[SerializeField] private Vector3 momentArm = Vector3.zero, forceApply = Vector3.zero;
 	private Matrix4x4 localInertiaTensor, inverseInertiaTensor; //these are actually 3x3 matricies
@@ -160,13 +160,10 @@ public class RigidBaby : MonoBehaviour
 
     public void Integrate()
     {
-		AndrickPlugin.helloWorld(2);
 		float[] fuck = new float[3];
 		fuck[0] = 1;
 		fuck[1] = 1;
 		fuck[2] = 1;
-
-		AndrickPlugin.AndrewTest(fuck);
 
         switch (positionType)
         {

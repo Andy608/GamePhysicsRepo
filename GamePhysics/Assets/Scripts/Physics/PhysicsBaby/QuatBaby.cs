@@ -48,11 +48,11 @@ public class QuatBaby
 
     /// <summary> Invert the quaternion. </summary>
     /// <returns> The inverted quaternion. </returns>
-    public QuatBaby Inverted()
+    public static QuatBaby Inverted(QuatBaby q1)
     {
         QuatBaby q = new QuatBaby();
-        q.w = w;
-        q.v = -q.v;
+        q.w = q1.w;
+        q.v = -q1.v;
         return q;
     }
 
@@ -144,51 +144,6 @@ public class QuatBaby
 
         Vector3 crossed = Vector3.Cross(v, vec);
         return vec + crossed * (2.0f * w) + Vector3.Cross(v, crossed) * 2.0f;
-    }
-
-    /// <summary> Slerps between two quaternions by t (0 - 1). </summary>
-    /// <param name="other"> The target quaternion. </param>
-    /// <param name="t"> The percentage between the original and target quaternions. </param>
-    /// <returns> A slerped QuatBaby. </returns>
-    public QuatBaby Slerp(QuatBaby other, float t)
-    {
-        QuatBaby r = other;
-        return (r * Inverted() ^ t) * this;
-    }
-
-    /// <summary> ^ operator for quaterion. </summary>
-    /// <param name="q"> The quaternion to ^. </param>
-    /// <param name="t"> The time to scale by. </param>
-    /// <returns> A new QuatBaby. </returns>
-    public static QuatBaby operator^(QuatBaby q, float t)
-    {
-        float angle = 0.0f;
-        Vector3 axis = Vector3.zero;
-
-        q.ToAxisAngle(ref axis, ref angle);
-
-        float scaledAngle = angle * t;
-
-        return new QuatBaby(axis, angle);
-    }
-
-    /// <summary> ToAxisAngle function for quaternion. </summary>
-    /// <param name="axis"> The axis we want calculated. </param>
-    /// <param name="angle"> The angle we want calculated. </param>
-    public void ToAxisAngle(ref Vector3 axis, ref float angle)
-    {
-        if (v.sqrMagnitude < 0.0001f)
-        {
-            axis = new Vector3(1.0f, 0.0f, 0.0f);
-        }
-        else
-        {
-            axis = v.normalized;
-        }
-
-        angle = Mathf.Acos(w) * 2.0f;
-
-        angle *= 360.0f / Mathf.PI * 2.0f;
     }
 
     public Matrix4x4 ToMatrix()

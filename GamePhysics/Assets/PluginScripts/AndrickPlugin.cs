@@ -6,10 +6,10 @@ using UnityEngine;
 public class AndrickPlugin
 {
     [DllImport("AndrickPlugin")]
-    public static extern void CreateDefaultQuaternion(bool identity, float[] r);
+    public static extern void CreateDefaultQuaternion(bool identity, float[] quaternion);
 
     [DllImport("AndrickPlugin")]
-    public static extern void CreateQuaternion(float[] vec3, float angle, bool isDegrees, float[] r);
+    public static extern void CreateQuaternion(float[] vec3, float angle, bool isDegrees, float[] quaternion);
 
     [DllImport("AndrickPlugin")]
     public static extern void Normalize(float[] quaternion, float[] r);

@@ -6,18 +6,26 @@ namespace ap
 	Quaternion::Quaternion(bool identity)
 	{
 		w = identity ? 1.0f : 0.0f;
-		v = Vector3(0.0f, 0.0f, 0.0f);
+		v = Vector3();
 	}
 
 	Quaternion::Quaternion(Vector3& axis, float& angle, bool isDegrees)
 	{
 		if (isDegrees)
 		{
-			angle = (angle / 360.0f) * PI * 2.0f;
+			angle = (angle / 180.0f) * PI;
 		}
 	
 		w = cos(angle / 2.0f);
 		v = axis.normalize() * sin(angle / 2.0f);
+	}
+
+	Quaternion::Quaternion(float values[])
+	{
+		v.x = values[0];
+		v.y = values[1];
+		v.z = values[2];
+		w = values[3];
 	}
 
 	Quaternion::Quaternion(const Quaternion& other) :
@@ -45,32 +53,34 @@ namespace ap
 
 		d = 1.0f / sqrt(d);
 		w *= d;
-		v = d * v;
+		v.x *= d;
+		v.y *= d;
+		v.z *= d;
 
 		return *this;
 	}
 
 	Quaternion Quaternion::normalized(const Quaternion& quat)
 	{
-		Quaternion newQuat = quat;
+		Quaternion newQuat = Quaternion(quat);
 		return newQuat.normalize();
 	}
 
 	Quaternion Quaternion::inverted(const Quaternion& quat)
 	{
-		return -quat;
-	}
-
-	Quaternion Quaternion::operator-() const
-	{
-		Quaternion newQuat = this;
-		newQuat.v = -newQuat.v;
+		Quaternion newQuat = Quaternion();
+		Vector3 vec = quat.v;
+		newQuat.v = -vec;
+		newQuat.w = quat.w;
 		return newQuat;
 	}
 
 	Vector3 Quaternion::rotate(const Vector3& vec)
 	{
-		Quaternion p = &vec;
+		Quaternion p = new Quaternion();
+		p.w = 0.0f;
+		p.v = vec;
+
 		Vector3 crossed = Vector3::cross(v, vec);
 		return vec + crossed * (2.0f * w) + Vector3::cross(v, crossed) * 2.0f;
 	}
@@ -93,16 +103,10 @@ namespace ap
 		f[3] = w;
 	}
 
-	Quaternion Quaternion::toQuaternion(float f[])
-	{
-		Vector3 v = Vector3(f[0], f[1], f[2]);
-		return Quaternion(v, f[3]);
-	}
-
 	Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs)
 	{
-		Vector3 v1 = Vector3(lhs.v);
-		Vector3 v2 = Vector3(rhs.v);
+		Vector3 v1 = lhs.v;
+		Vector3 v2 = rhs.v;
 		float w1 = lhs.w;
 		float w2 = rhs.w;
 
@@ -136,20 +140,29 @@ namespace ap
 	{
 		Vector3 vFinal = scalar * rhs.v;
 		float wFinal = scalar * rhs.w;
-		return Quaternion(vFinal, wFinal);
+		Quaternion q = Quaternion();
+		q.v = vFinal;
+		q.w = wFinal;
+		return q;
 	}
 
 	Quaternion operator*(const Quaternion& lhs, const float& scalar)
 	{
 		Vector3 vFinal = scalar * lhs.v;
 		float wFinal = scalar * lhs.w;
-		return Quaternion(vFinal, wFinal);
+		Quaternion q = Quaternion();
+		q.v = vFinal;
+		q.w = wFinal;
+		return q;
 	}
 
 	Quaternion operator+(const Quaternion& lhs, const Quaternion& rhs)
 	{
 		Vector3 vFinal = lhs.v + rhs.v;
 		float wFinal = lhs.w + rhs.w;
-		return Quaternion(vFinal, wFinal);
+		Quaternion q = Quaternion();
+		q.v = vFinal;
+		q.w = wFinal;
+		return q;
 	}
 }

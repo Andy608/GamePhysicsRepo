@@ -8,6 +8,7 @@ namespace ap
 		friend class Quaternion;
 	public:
 		Vector3(const float& x = 0.0f, const float& y = 0.0f, const float& z = 0.0f);
+		Vector3(float vec[]);
 
 		float getMagnitude() const;
 		float getMagnitudeSquared() const;
@@ -25,8 +26,6 @@ namespace ap
 		//Local operators: negate.
 		Vector3 operator-();
 		void toFloatArray(float f[]) const;
-		static Vector3 toVector(float vec3[]);
-
 
 		//overload addition, subtraction, scalar mult,
 		friend Vector3 operator+(const Vector3& lhs, const Vector3& rhs);
@@ -35,7 +34,7 @@ namespace ap
 		friend Vector3 operator*(const Vector3& lhs, const float& scalar);
 		friend Vector3 operator/(const Vector3& lhs, const float& scalar);
 
-	//private:
+	private:
 		float x = 0, y = 0, z = 0;
 
 	};

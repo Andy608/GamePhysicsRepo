@@ -7,6 +7,12 @@ namespace ap
 		x(x), y(y), z(z)
 	{ };
 
+	Vector3::Vector3(float vec[]) :
+		x(vec[0]), y(vec[1]), z(vec[2])
+	{
+
+	}
+
 	float Vector3::getMagnitude() const 
 	{ 
 		return sqrt(getMagnitudeSquared()); 
@@ -48,43 +54,28 @@ namespace ap
 
 	const Vector3& Vector3::normalize()
 	{
-		Vector3 vecNorm = *this / dot(*this, *this);
-
-		x = vecNorm.x;
-		y = vecNorm.y;
-		z = vecNorm.z;
-
+		float mag = getMagnitude();
+		x /= mag;
+		y /= mag;
+		z /= mag;
 		return *this;
 	}
 
 	Vector3 Vector3::normalized(const Vector3& vec)
 	{
-		// normV = v / |v|
-		// |v| = pyfagorean
-
-		Vector3 v = vec;
-
-		v.x = v.x * v.x;
-		v.y = v.y * v.y;
-		v.z = v.z * v.z;
-
-		float vecMag = v.x + v.y + v.z;
-		vecMag = sqrt(vecMag);
-		Vector3 vecNorm = vec / vecMag;
-
-		return vecNorm;
+		Vector3 normalized = vec;
+		float mag = normalized.getMagnitude();
+		normalized.x /= mag;
+		normalized.y /= mag;
+		normalized.z /= mag;
+		return normalized;
 	}
 
-	void Vector3::toFloatArray(float f[]) const
+	void Vector3::toFloatArray(float* f) const
 	{
 		f[0] = x;
 		f[1] = y;
 		f[2] = z;
-	}
-
-	Vector3 Vector3::toVector(float vec3[])
-	{
-		return Vector3(vec3[0], vec3[1], vec3[2]);
 	}
 
 	Vector3 Vector3::operator-()
@@ -134,6 +125,8 @@ namespace ap
 
 	Vector3 operator/(const Vector3& lhs, const float& scalar)
 	{
+		if (scalar < EPSILON) return Vector3(-1, -1, -1);
+
 		Vector3 result;
 		result.x = lhs.x / scalar;
 		result.y = lhs.y / scalar;
