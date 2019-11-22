@@ -22,6 +22,9 @@ namespace ap
 
 		//Local operators: negate.
 		Vector3 operator-();
+		float* toFloatArray() const;
+		static Vector3 toVector(float* vec3);
+
 
 		//overload addition, subtraction, scalar mult,
 		friend Vector3 operator+(const Vector3& lhs, const Vector3& rhs);

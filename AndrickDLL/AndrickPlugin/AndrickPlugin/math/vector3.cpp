@@ -67,6 +67,17 @@ namespace ap
 		return vecNorm;
 	}
 
+	float* Vector3::toFloatArray() const
+	{
+		float f[3] = { x, y, z };
+		return f;
+	}
+
+	Vector3 Vector3::toVector(float* vec3)
+	{
+		return Vector3(vec3[0], vec3[1], vec3[2]);
+	}
+
 	Vector3 Vector3::operator-()
 	{
 		Vector3 result;

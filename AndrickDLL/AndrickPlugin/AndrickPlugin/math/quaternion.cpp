@@ -1,5 +1,6 @@
 #include "quaternion.h"
 #include "math_util.h"
+#include <string>
 
 namespace ap
 {
@@ -83,6 +84,23 @@ namespace ap
 	float Quaternion::getSquaredMagnitude() const
 	{
 		return v.x * v.x + v.y * v.y + v.z * v.z + w * w;
+	}
+
+	char* Quaternion::toString() const
+	{
+		return std::string("Axis: (" + std::to_string(v.x) + ", " + std::to_string(v.y) + ", " + std::to_string(v.z) + "), Angle: " + std::to_string(w) + " Mag: " + std::to_string(getMagnitude())).c_str();
+	}
+
+	float* Quaternion::toFloatArray() const
+	{
+		float f[4] = { v.x, v.y, v.z, w };
+		return f;
+	}
+
+	Quaternion Quaternion::toQuaternion(float* f)
+	{
+		Vector3 v = Vector3(f[0], f[1], f[2]);
+		return Quaternion(v, f[3]);
 	}
 
 	Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs)

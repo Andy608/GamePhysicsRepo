@@ -24,8 +24,12 @@ namespace ap
 
 		static Quaternion normalized(const Quaternion& quat);
 		static Quaternion inverted(const Quaternion& quat);
+		
+		char* toString() const;
 
 		Quaternion operator-() const;
+		float* toFloatArray() const;
+		static Quaternion toQuaternion(float* f);
 
 		friend Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs);
 		friend Quaternion operator*(const Quaternion& lhs, const Vector3& rhs);
