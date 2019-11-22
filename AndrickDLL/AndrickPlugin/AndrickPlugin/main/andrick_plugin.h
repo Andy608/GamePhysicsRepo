@@ -14,7 +14,7 @@ extern "C"
 #endif // End __cplusplus
 
 // C++ code exposed to user program.
-
+ANDRICK_PLUGIN_SYMBOL bool helloWorld();
 
 #ifdef __cplusplus // Start __cplusplus
 }

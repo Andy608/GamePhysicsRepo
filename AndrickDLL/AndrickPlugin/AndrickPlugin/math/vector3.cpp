@@ -7,8 +7,15 @@ namespace ap
 		x(x), y(y), z(z)
 	{ };
 
-	float Vector3::getMagnitude() const { return sqrt(getMagnitudeSquared()); };
-	float Vector3::getMagnitudeSquared() const { return dot(*this, *this); };
+	float Vector3::getMagnitude() const 
+	{ 
+		return sqrt(getMagnitudeSquared()); 
+	}
+
+	float Vector3::getMagnitudeSquared() const 
+	{ 
+		return dot(*this, *this); 
+	}
 
 	Vector3 Vector3::cross(const Vector3& lhs, const Vector3& rhs)
 	{

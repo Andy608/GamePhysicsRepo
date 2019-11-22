@@ -163,6 +163,7 @@
     <ClInclude Include="math\quaternion.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="main\andrick_plugin.cpp" />
     <ClCompile Include="main\dllmain.cpp" />
     <ClCompile Include="math\quaternion.cpp" />
     <ClCompile Include="math\vector3.cpp" />
