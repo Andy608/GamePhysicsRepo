@@ -85,6 +85,20 @@ namespace ap
 		return v.x * v.x + v.y * v.y + v.z * v.z + w * w;
 	}
 
+	void Quaternion::toFloatArray(float* f) const
+	{
+		f[0] = v.x;
+		f[1] = v.y;
+		f[2] = v.z;
+		f[3] = w;
+	}
+
+	Quaternion Quaternion::toQuaternion(float* f)
+	{
+		Vector3 v = Vector3(f[0], f[1], f[2]);
+		return Quaternion(v, f[3]);
+	}
+
 	Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs)
 	{
 		Vector3 v1 = lhs.v;
