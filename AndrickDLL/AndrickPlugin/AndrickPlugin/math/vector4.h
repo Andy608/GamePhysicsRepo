@@ -9,8 +9,8 @@ namespace ap
 	public:
 		Vector4(const float& x = 0.0f, const float& y = 0.0f, const float& z = 0.0f, const float& w = 0.0f);
 
-		float getMagnitude() const { sqrt(getMagnitudeSquared()); };
-		float getMagnitudeSquared() const { return dot(*this, *this); };
+		float getMagnitude() const;
+		float getMagnitudeSquared() const;
 
 		//cross
 		static Vector4 cross(const Vector4& lhs, const Vector4& rhs);

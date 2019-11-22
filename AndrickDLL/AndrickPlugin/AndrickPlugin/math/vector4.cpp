@@ -7,6 +7,9 @@ namespace ap
 		x(x), y(y), z(z), w(w)
 	{ };
 
+	float Vector4::getMagnitude() const { return sqrt(getMagnitudeSquared()); };
+	float Vector4::getMagnitudeSquared() const { return dot(*this, *this); };
+
 	//TODO: stil needs implementation
 	Vector4 Vector4::cross(const Vector4& lhs, const Vector4& rhs)
 	{
