@@ -26,7 +26,7 @@ public class RigidBaby : MonoBehaviour
 
     [SerializeField] private Vector3 rotVelocity = Vector3.zero;
     [SerializeField] private Vector3 rotAcceleration = Vector3.zero;
-    public QuatBaby Rotation;
+    public ExternalQuatBaby Rotation;
 
     [SerializeField] private Vector3 totalForce = Vector3.zero;
 
@@ -146,7 +146,7 @@ public class RigidBaby : MonoBehaviour
         Mass = startingMass;
         position = transform.position;
         PrevPosition = transform.position;
-        Rotation = QuatBaby.QuaternionToQuatBaby(transform.rotation);
+        Rotation = ExternalQuatBaby.QuaternionToExternalQuatBaby(transform.rotation);
         shape = GetComponent<IShapeBaby>();
 
         //lab7
@@ -228,14 +228,14 @@ public class RigidBaby : MonoBehaviour
     private void UpdateRotationEulerExplicit(float dt)
     {
         //multiply the current Rot by the velocity to get half the derivative
-        QuatBaby rotDeriv = Rotation.MultiplyByVec(rotVelocity);
+        ExternalQuatBaby rotDeriv = Rotation.MultiplyByVec(rotVelocity);
         //complete the derivative by multiplying it by 1/2 delta time
         rotDeriv = rotDeriv.Scale(dt * 0.5f);
 
         //add the new derivative to the current rotation
         Rotation = Rotation + rotDeriv;
         //normalize to remove scaling
-        Rotation.normalize();
+        Rotation.Normalize();
 
         //update the velocity
         rotVelocity += rotAcceleration * dt;

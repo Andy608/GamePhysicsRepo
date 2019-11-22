@@ -4,32 +4,26 @@ using UnityEngine;
 
 public class ExternalQuatBaby
 {
-    public static ExternalQuatBaby Identity = new ExternalQuatBaby(true);
-
     public float w;
     public Vector3 v;
-    private float[] quat
-    {
-        set
-        {
-            quat = value;
-            v.x = quat[0];
-            v.y = quat[1];
-            v.z = quat[2];
-            w = quat[3];
-        }
+    private float[] quat;
 
-        get
-        {
-            return quat;
-        }
+    private void Sync(float[] quaternion)
+    {
+        quat = quaternion;
+        v.x = quat[0];
+        v.y = quat[1];
+        v.z = quat[2];
+        w = quat[3];
     }
 
     /// <summary> ExternalQuatBaby constructor. </summary>
     /// <param name="identity"> True to return the identity. False (default) for true zero quaternion. </param>
     public ExternalQuatBaby(bool identity = false)
     {
-        quat = AndrickPlugin.CreateQuaternion(identity);
+        float[] r = new float[4] { 0, 0, 0, 0 };
+        AndrickPlugin.CreateDefaultQuaternion(identity, r);
+        Sync(r);
     }
 
     /// <summary> ExternalQuatBaby constructor. </summary>
@@ -37,25 +31,30 @@ public class ExternalQuatBaby
     /// <param name="angle"> In degrees </param>
     public ExternalQuatBaby(Vector3 axis, float angle, bool isDegrees)
     {
-        quat = AndrickPlugin.CreateQuaternion(new float[] { axis.x, axis.y, axis.z }, angle, isDegrees);
-        //AndrickPlugin.ToQuaternion(quat, out v, out w);
+        float[] r = new float[4] { 0, 0, 0, 0 };
+        AndrickPlugin.CreateQuaternion(new float[] { axis.x, axis.y, axis.z }, angle, isDegrees, r);
+        Sync(r);
     }
 
     private ExternalQuatBaby(float[] quaternion)
     {
-        quat = quaternion;
+        Sync(quaternion);
     }
 
     public void Normalize()
     {
-        quat = AndrickPlugin.Normalize(quat);
+        float[] r = new float[4] { 0, 0, 0, 0 };
+        AndrickPlugin.Normalize(quat, r);
+        Sync(r);
     }
 
     /// <summary> Invert the quaternion. </summary>
     /// <returns> The inverted quaternion. </returns>
     public ExternalQuatBaby Inverted()
     {
-        return new ExternalQuatBaby(AndrickPlugin.Inverted(quat));
+        float[] r = new float[4] { 0, 0, 0, 0 };
+        AndrickPlugin.Inverted(quat, r);
+        return new ExternalQuatBaby(r);
     }
 
     /// <summary> Create new rotation from two quaternion rotations. </summary>
@@ -64,12 +63,16 @@ public class ExternalQuatBaby
     /// <returns> A new ExternalQuatBaby object. </returns>
     public static ExternalQuatBaby operator *(ExternalQuatBaby q1, ExternalQuatBaby q2)
     {
-        return new ExternalQuatBaby(AndrickPlugin.Multiply(q1.quat, q2.quat));
+        float[] r = new float[4] { 0, 0, 0, 0 };
+        AndrickPlugin.Multiply(q1.quat, q2.quat, r);
+        return new ExternalQuatBaby(r);
     }
 
     public ExternalQuatBaby MultiplyByVec(Vector3 rot)
     {
-        return new ExternalQuatBaby(AndrickPlugin.MultiplyWithVec(quat, new float[] { rot.x, rot.y, rot.z }));
+        float[] r = new float[4] { 0, 0, 0, 0 };
+        AndrickPlugin.MultiplyWithVec(quat, new float[] { rot.x, rot.y, rot.z }, r);
+        return new ExternalQuatBaby(r);
     }
 
     /// <summary> Scale the quaternion. </summary>
@@ -77,7 +80,9 @@ public class ExternalQuatBaby
     /// <returns> A new Quatbaby. </returns>
     public ExternalQuatBaby Scale(float scalar)
     {
-        return new ExternalQuatBaby(AndrickPlugin.Scale(quat, scalar));
+        float[] r = new float[4] { 0, 0, 0, 0 };
+        AndrickPlugin.Scale(quat, scalar, r);
+        return new ExternalQuatBaby(r);
     }
 
     /// <summary> Addition overload for quaterions. </summary>
@@ -86,7 +91,9 @@ public class ExternalQuatBaby
     /// <returns> A new ExternalQuatBaby. </returns>
     public static ExternalQuatBaby operator +(ExternalQuatBaby lhs, ExternalQuatBaby rhs)
     {
-        return new ExternalQuatBaby(AndrickPlugin.Add(lhs.quat, rhs.quat));
+        float[] r = new float[4] { 0, 0, 0, 0 };
+        AndrickPlugin.Add(lhs.quat, rhs.quat, r);
+        return new ExternalQuatBaby(r);
     }
 
     /// <summary> Rotate a point around using the quaternion. </summary>
@@ -94,8 +101,9 @@ public class ExternalQuatBaby
     /// <returns> A new rotated vector. </returns>
     public Vector3 Rotate(Vector3 vec)
     {
-        float[] rot = AndrickPlugin.Rotate(quat, new float[] { vec.x, vec.y, vec.z });
-        return new Vector3(rot[0], rot[1], rot[2]);
+        float[] r = new float[3] { 0, 0, 0 };
+        AndrickPlugin.Rotate(quat, new float[] { vec.x, vec.y, vec.z }, r);
+        return new Vector3(r[0], r[1], r[2]);
     }
 
     public Matrix4x4 ToMatrix()

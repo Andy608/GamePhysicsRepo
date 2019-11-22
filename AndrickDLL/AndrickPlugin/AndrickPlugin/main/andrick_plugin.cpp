@@ -3,72 +3,79 @@
 #include "../math/quaternion.h"
 using namespace ap;
 
-float* CreateDefaultQuaternion(bool identity)
+static float* helper = new float[4]();
+
+void CreateDefaultQuaternion(bool identity, float ref[])
 {
 	Quaternion q = Quaternion(identity);
-	return q.toFloatArray();
+	q.toFloatArray(ref);
 }
 
-float* CreateQuaternion(float* vec3, float angle, bool isDegrees)
+void CreateQuaternion(float vec3[], float angle, bool isDegrees, float ref[])
 {
 	Vector3 v = Vector3(vec3[0], vec3[1], vec3[2]);
 	Quaternion q = Quaternion(v, angle, isDegrees);
-	return q.toFloatArray();
+	q.toFloatArray(ref);
 }
 
-float* Normalize(float* quaternion)
+void Normalize(float quaternion[], float ref[])
 {
 	Quaternion q = Quaternion::toQuaternion(quaternion);
 	q.normalize();
-	return q.toFloatArray();
+
+	q.toFloatArray(ref);
 }
 
-float* Inverted(float* quaternion)
+void Inverted(float quaternion[], float ref[])
 {
 	Quaternion q = Quaternion::toQuaternion(quaternion);
 	q = -q;
-	return q.toFloatArray();
+
+	q.toFloatArray(ref);
 }
 
-float* Multiply(float* q1, float* q2)
+void Multiply(float q1[], float q2[], float ref[])
 {
 	Quaternion q = (Quaternion::toQuaternion(q1) * Quaternion::toQuaternion(q2));
-	return q.toFloatArray();
+	q.toFloatArray(ref);
 }
 
-float* MultiplyWithVec(float* q1, float* vec3)
+void MultiplyWithVec(float q1[], float vec3[], float ref[])
 {
 	Quaternion q = Quaternion::toQuaternion(q1);
 	Vector3 v = Vector3::toVector(vec3);
-	return (q * v).toFloatArray();
+	q = (q * v);
+	q.toFloatArray(ref);
 }
 
-float* Scale(float* q1, float scalar)
+void Scale(float q1[], float scalar, float ref[])
 {
 	Quaternion q = Quaternion::toQuaternion(q1);
-	return (q * scalar).toFloatArray();
+	q = q * scalar;
+	q.toFloatArray(ref);
 }
 
-float* Add(float* q1, float* q2)
+void Add(float q1[], float q2[], float ref[])
 {
 	Quaternion q = (Quaternion::toQuaternion(q1) + Quaternion::toQuaternion(q2));
-	return q.toFloatArray();
+	q.toFloatArray(ref);
 }
 
-float* Rotate(float* q1, float* vec3)
+void Rotate(float q1[], float vec3[], float ref[])
 {
 	Quaternion q = Quaternion::toQuaternion(q1);
 	Vector3 v = Vector3::toVector(vec3);
-	return q.rotate(v).toFloatArray();
+	v = q.rotate(v);
+	q.toFloatArray(ref);
 }
 
-float GetMagnitude(float* quaternion)
+float GetMagnitude(float quaternion[])
 {
 	Quaternion q = Quaternion::toQuaternion(quaternion);
 	return q.getMagnitude();
 }
 
-float GetMagnitudeSquared(float* quaternion)
+float GetMagnitudeSquared(float quaternion[])
 {
 	Quaternion q = Quaternion::toQuaternion(quaternion);
 	return q.getSquaredMagnitude();

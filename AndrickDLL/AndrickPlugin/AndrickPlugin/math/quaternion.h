@@ -26,7 +26,7 @@ namespace ap
 		static Quaternion inverted(const Quaternion& quat);
 		
 		Quaternion operator-() const;
-		float* toFloatArray() const;
+		void toFloatArray(float* f) const;
 		static Quaternion toQuaternion(float* f);
 
 		friend Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs);
