@@ -25,6 +25,7 @@ ANDRICK_PLUGIN_SYMBOL void Add(float q1[], float q2[], float ref[]);
 ANDRICK_PLUGIN_SYMBOL void Rotate(float q1[], float vec3[], float ref[]);
 ANDRICK_PLUGIN_SYMBOL float GetMagnitude(float quaternion[]);
 ANDRICK_PLUGIN_SYMBOL float GetMagnitudeSquared(float quaternion[]);
+ANDRICK_PLUGIN_SYMBOL void AndrewTest(float nums[]);
 
 #ifdef __cplusplus // Start __cplusplus
 }

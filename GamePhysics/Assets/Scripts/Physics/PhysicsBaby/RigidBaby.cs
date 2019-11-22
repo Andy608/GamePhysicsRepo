@@ -160,6 +160,14 @@ public class RigidBaby : MonoBehaviour
 
     public void Integrate()
     {
+		AndrickPlugin.helloWorld(2);
+		float[] fuck = new float[3];
+		fuck[0] = 1;
+		fuck[1] = 1;
+		fuck[2] = 1;
+
+		AndrickPlugin.AndrewTest(fuck);
+
         switch (positionType)
         {
             case IntegrationType.EulerExplicit:
