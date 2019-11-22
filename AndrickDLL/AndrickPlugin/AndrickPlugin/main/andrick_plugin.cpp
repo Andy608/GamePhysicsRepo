@@ -1,4 +1,5 @@
 #include "andrick_plugin.h"
+#include "../math/vector3.h"
 #include <iostream>
 #include "../math/quaternion.h"
 using namespace ap;
@@ -79,4 +80,10 @@ float GetMagnitudeSquared(float quaternion[])
 {
 	Quaternion q = Quaternion::toQuaternion(quaternion);
 	return q.getSquaredMagnitude();
+}
+
+void AndrewTest(float nums[])
+{
+	Vector3 vec;
+	vec.AndrewTest(nums);
 }
