@@ -6,7 +6,7 @@ namespace ap
 	Quaternion::Quaternion(bool identity)
 	{
 		w = identity ? 1.0f : 0.0f;
-		v = Vector3();
+		v = Vector3(0.0f, 0.0f, 0.0f);
 	}
 
 	Quaternion::Quaternion(Vector3& axis, float& angle, bool isDegrees)
@@ -16,8 +16,8 @@ namespace ap
 			angle = (angle / 360.0f) * PI * 2.0f;
 		}
 	
-		w = cos(0.5f * angle);
-		v = axis.normalize() * sin(0.5f * angle);
+		w = cos(angle / 2.0f);
+		v = axis.normalize() * sin(angle / 2.0f);
 	}
 
 	Quaternion::Quaternion(const Quaternion& other) :
@@ -85,7 +85,7 @@ namespace ap
 		return v.x * v.x + v.y * v.y + v.z * v.z + w * w;
 	}
 
-	void Quaternion::toFloatArray(float* f) const
+	void Quaternion::toFloatArray(float f[]) const
 	{
 		f[0] = v.x;
 		f[1] = v.y;
@@ -93,7 +93,7 @@ namespace ap
 		f[3] = w;
 	}
 
-	Quaternion Quaternion::toQuaternion(float* f)
+	Quaternion Quaternion::toQuaternion(float f[])
 	{
 		Vector3 v = Vector3(f[0], f[1], f[2]);
 		return Quaternion(v, f[3]);
@@ -101,8 +101,8 @@ namespace ap
 
 	Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs)
 	{
-		Vector3 v1 = lhs.v;
-		Vector3 v2 = rhs.v;
+		Vector3 v1 = Vector3(lhs.v);
+		Vector3 v2 = Vector3(rhs.v);
 		float w1 = lhs.w;
 		float w2 = rhs.w;
 
@@ -112,7 +112,9 @@ namespace ap
 		Vector3 vCross = Vector3::cross(v1, v2);
 		Vector3 vFinal = w1 * v2 + w2 * v1 + vCross;
 
-		Quaternion qFinal = Quaternion(vFinal, wFinal);
+		Quaternion qFinal = Quaternion();
+		qFinal.v = vFinal;
+		qFinal.w = wFinal;
 		return qFinal;
 	}
 
@@ -124,7 +126,9 @@ namespace ap
 		Vector3 vCross = Vector3::cross(lhs.v, rhs);
 		Vector3 vFinal = lhs.w * rhs + vCross;
 
-		Quaternion qFinal = Quaternion(vFinal, wFinal);
+		Quaternion qFinal = Quaternion();
+		qFinal.v = vFinal;
+		qFinal.w = wFinal;
 		return qFinal;
 	}
 

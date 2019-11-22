@@ -22,8 +22,8 @@ namespace ap
 
 		//Local operators: negate.
 		Vector3 operator-();
-		void toFloatArray(float* f) const;
-		static Vector3 toVector(float* vec3);
+		void toFloatArray(float f[]) const;
+		static Vector3 toVector(float vec3[]);
 
 
 		//overload addition, subtraction, scalar mult,
@@ -33,7 +33,7 @@ namespace ap
 		friend Vector3 operator*(const Vector3& lhs, const float& scalar);
 		friend Vector3 operator/(const Vector3& lhs, const float& scalar);
 
-	private:
+	//private:
 		float x = 0, y = 0, z = 0;
 
 	};
