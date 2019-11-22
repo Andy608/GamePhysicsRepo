@@ -20,6 +20,8 @@ namespace ap
 		//dot
 		static float dot(const Vector3& lhs, const Vector3& rhs);
 
+		void AndrewTest(float nums[]);
+
 		//Local operators: negate.
 		Vector3 operator-();
 

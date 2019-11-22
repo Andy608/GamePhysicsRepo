@@ -17,6 +17,14 @@ namespace ap
 		return dot(*this, *this); 
 	}
 
+	void Vector3::AndrewTest(float nums[])
+	{
+		//Vector3 vec(x, y, z);
+		nums[0] = 6;
+		nums[1] = 6;
+		nums[2] = 6;
+	}
+
 	Vector3 Vector3::cross(const Vector3& lhs, const Vector3& rhs)
 	{
 		Vector3 vec;
