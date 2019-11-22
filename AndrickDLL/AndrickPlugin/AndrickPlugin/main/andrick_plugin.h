@@ -14,7 +14,7 @@ extern "C"
 #endif // End __cplusplus
 
 // C++ code exposed to user program.
-ANDRICK_PLUGIN_SYMBOL float* CreateQuaternion(bool identity);
+ANDRICK_PLUGIN_SYMBOL float* CreateDefaultQuaternion(bool identity);
 ANDRICK_PLUGIN_SYMBOL float* CreateQuaternion(float* vec3, float angle, bool isDegrees);
 ANDRICK_PLUGIN_SYMBOL float* Normalize(float* quaternion);
 ANDRICK_PLUGIN_SYMBOL float* Inverted(float* quaternion);
@@ -25,7 +25,6 @@ ANDRICK_PLUGIN_SYMBOL float* Add(float* q1, float* q2);
 ANDRICK_PLUGIN_SYMBOL float* Rotate(float* q1, float* vec3);
 ANDRICK_PLUGIN_SYMBOL float GetMagnitude(float* quaternion);
 ANDRICK_PLUGIN_SYMBOL float GetMagnitudeSquared(float* quaternion);
-ANDRICK_PLUGIN_SYMBOL char* ToString(float* quaternion);
 
 #ifdef __cplusplus // Start __cplusplus
 }

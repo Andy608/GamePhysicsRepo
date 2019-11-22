@@ -37,7 +37,4 @@ public class AndrickPlugin
 
     [DllImport("AndrickPlugin")]
     public static extern float GetMagnitudeSquared(float[] quaternion);
-
-    [DllImport("AndrickPlugin")]
-    public static extern char[] ToString(float[] quaternion);
 }

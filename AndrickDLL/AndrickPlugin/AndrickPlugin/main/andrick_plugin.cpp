@@ -3,7 +3,7 @@
 #include "../math/quaternion.h"
 using namespace ap;
 
-float* CreateQuaternion(bool identity)
+float* CreateDefaultQuaternion(bool identity)
 {
 	Quaternion q = Quaternion(identity);
 	return q.toFloatArray();
@@ -72,10 +72,4 @@ float GetMagnitudeSquared(float* quaternion)
 {
 	Quaternion q = Quaternion::toQuaternion(quaternion);
 	return q.getSquaredMagnitude();
-}
-
-char* ToString(float* quaternion)
-{
-	Quaternion q = Quaternion::toQuaternion(quaternion);
-	return q.toString();
 }

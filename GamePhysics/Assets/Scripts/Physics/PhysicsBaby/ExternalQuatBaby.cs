@@ -189,7 +189,6 @@ public class ExternalQuatBaby
     /// <returns> A string with the axis, angle, and magnitude. </returns>
     public override string ToString()
     {
-        return AndrickPlugin.ToString(quat).ToString();
-        //return "Axis: (" + v.x + ", " + v.y + ", " + v.z + "), Angle: " + w + " Mag: " + GetMagnitude();
+        return "Axis: (" + v.x + ", " + v.y + ", " + v.z + "), Angle: " + w + " Mag: " + GetMagnitude();
     }
 }
