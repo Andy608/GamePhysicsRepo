@@ -5,7 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof(IShapeBaby))]
 public class RigidBaby : MonoBehaviour
 {
-    private IShapeBaby shape;
+    private IForceBaby[] attachedForces = null;
+    public List<IForceBaby> PersistentForces { get; private set; } = null;
+    private IShapeBaby shape = null;
 
 	/// <summary> Enum for Integration Type. </summary>
 	public enum IntegrationType
@@ -17,22 +19,20 @@ public class RigidBaby : MonoBehaviour
 	[SerializeField] private IntegrationType positionType = IntegrationType.EulerExplicit;
     [SerializeField] private IntegrationType rotationType = IntegrationType.EulerExplicit;
 
-    [SerializeField] private Vector3 position = Vector3.zero;
-    public Vector3 PrevPosition { get; private set; }
+    public Vector3 Position { get; private set; } = Vector3.zero;
+    public Vector3 PrevPosition { get; private set; } = Vector3.zero;
     private Vector3 posDiff = Vector3.zero;
 
-    [SerializeField] private Vector3 velocity = Vector3.zero;
-    [SerializeField] private Vector3 acceleration = Vector3.zero;
+    public Vector3 Velocity { get; private set; } = Vector3.zero;
+    public Vector3 Acceleration { get; private set; } = Vector3.zero;
 
-    [SerializeField] private Vector3 rotVelocity = Vector3.zero;
-    [SerializeField] private Vector3 rotAcceleration = Vector3.zero;
+    public Vector3 RotVelocity { get; private set; } = Vector3.zero;
+    public Vector3 RotAcceleration { get; private set; } = Vector3.zero;
     public ExternalQuatBaby Rotation;
 
     [SerializeField] private Vector3 totalForce = Vector3.zero;
-
     [SerializeField] private float startingMass = 1.0f;
 
-    //lab 07
     [SerializeField] private Matrix4x4 translationMat;
     [SerializeField] private Matrix4x4 rotationMat;
     [SerializeField] private Matrix4x4 scaleMat = Matrix4x4.identity;
@@ -83,6 +83,11 @@ public class RigidBaby : MonoBehaviour
         private set;
     }
 
+    public bool IsMassFinite()
+    {
+        return MassInverse >= 0.0f;
+    }
+
     private void OnEnable()
     {
         RigidBabyIntegrator.Instance?.RegisterRigidBaby(this);
@@ -97,14 +102,14 @@ public class RigidBaby : MonoBehaviour
     /// <param name="v"> The velocity vector. </param>
     public void SetVelocity(Vector3 v)
     {
-        velocity = v;
+        Velocity = v;
     }
 
     /// <summary> Quick direct changes to Position. </summary>
     /// <param name="p"> The position vector. </param>
     public void SetPosition(Vector3 p)
     {
-        position = p;
+        Position = p;
     }
 
     /// <summary> Add force to total force. D'Alembert principle. </summary>
@@ -120,7 +125,7 @@ public class RigidBaby : MonoBehaviour
     /// <returns>The velocity.</returns>
     public Vector3 GetVelocity()
     {
-        return velocity;
+        return Velocity;
     }
 
     /// <summary>
@@ -129,7 +134,7 @@ public class RigidBaby : MonoBehaviour
     /// <returns>The position.</returns>
     public Vector3 GetPosition()
     {
-        return position;
+        return Position;
     }
 
     /// <summary>
@@ -138,16 +143,17 @@ public class RigidBaby : MonoBehaviour
     /// <returns>The acceleration.</returns>
     public Vector3 GetAcceleration()
     {
-        return acceleration;
+        return Acceleration;
     }
 
     void Start()
     {
         Mass = startingMass;
-        position = transform.position;
+        Position = transform.position;
         PrevPosition = transform.position;
         Rotation = ExternalQuatBaby.QuaternionToExternalQuatBaby(transform.rotation);
         shape = GetComponent<IShapeBaby>();
+        InitAttachedForces();
 
         //lab7
         localInertiaTensor = shape.Inertia;
@@ -158,12 +164,34 @@ public class RigidBaby : MonoBehaviour
         inverseInertiaTensor[10] = 1.0f / inverseInertiaTensor[10];
     }
 
+    private void InitAttachedForces()
+    {
+        attachedForces = GetComponents<IForceBaby>();
+        PersistentForces = new List<IForceBaby>();
+
+        foreach (IForceBaby force in attachedForces)
+        {
+            if (force.IsPersistent)
+            {
+                InitPersistentForce(force);
+            }
+
+            force.UpdateForce(this, Time.fixedDeltaTime);
+        }
+    }
+
+    public void InitPersistentForce(IForceBaby force)
+    {
+        PersistentForces.Add(force);
+        ForceRegistry.Instance.Add(this, force);
+    }
+
     public void Integrate()
     {
-		float[] fuck = new float[3];
-		fuck[0] = 1;
-		fuck[1] = 1;
-		fuck[2] = 1;
+        foreach (IForceBaby force in PersistentForces)
+        {
+            ForceRegistry.Instance.Add(this, force);
+        }
 
         switch (positionType)
         {
@@ -185,47 +213,47 @@ public class RigidBaby : MonoBehaviour
                 break;
         }
 
+        scaleMat = Matrix4x4.identity;
+
+        UpdateAcceleration();
+        UpdateAngularAcceleration();
+
+        posDiff = transform.position - PrevPosition;
+        Position += posDiff;
+        PrevPosition = Position;
+        transform.position = Position;
+
+        ApplyTorque(momentArm, forceApply);
+
         translationMat = new Matrix4x4(
             new Vector4(1.0f, 0.0f, 0.0f, 0.0f),
             new Vector4(0.0f, 1.0f, 0.0f, 0.0f),
             new Vector4(0.0f, 0.0f, 1.0f, 0.0f),
-            new Vector4(position.x, position.y, position.z, 1.0f)
+            new Vector4(Position.x, Position.y, Position.z, 1.0f)
         );
 
-        scaleMat = Matrix4x4.identity;
-
-        UpdateAngularAcceleration();
-
-        posDiff = transform.position - PrevPosition;
-        position += posDiff;
-        PrevPosition = position;
-        transform.position = position;
-
-        ApplyTorque(momentArm, forceApply);
-
         rotationMat = Rotation.ToMatrix();
-        rotAcceleration = angularAcceleration;
+        RotAcceleration = angularAcceleration;
         transform.rotation = Rotation.ToUnityQuaternion();
 
         TransformationMat = translationMat * rotationMat * scaleMat;
         worldCenterofMass = TransformationMat * localCenterOfMass;
-        //Debug.Log("1 " + TransformationMat);
     }
 
     /// <summary> Integrates the particles position using the euler explicit formula. </summary>
     /// <param name="dt"> Delta time. </param>
     private void UpdatePositionEulerExplicit(float dt)
     {
-        position += velocity * dt;
-        velocity += acceleration * dt;
+        Position += Velocity * dt;
+        Velocity += Acceleration * dt;
     }
 
     /// <summary> Integrates the particles position using the kinematic formula. </summary>
     /// <param name="dt"> Delta time. </param>
     private void UpdatePositionKinematic(float dt)
     {
-        position += velocity * dt + 0.5f * acceleration * dt * dt;
-        velocity += acceleration * dt;
+        Position += Velocity * dt + 0.5f * Acceleration * dt * dt;
+        Velocity += Acceleration * dt;
     }
 
     /// <summary> Integrates the particles rotation using the euler explicit formula. </summary>
@@ -233,7 +261,7 @@ public class RigidBaby : MonoBehaviour
     private void UpdateRotationEulerExplicit(float dt)
     {
         //multiply the current Rot by the velocity to get half the derivative
-        ExternalQuatBaby rotDeriv = Rotation.MultiplyByVec(rotVelocity);
+        ExternalQuatBaby rotDeriv = Rotation.MultiplyByVec(RotVelocity);
         //complete the derivative by multiplying it by 1/2 delta time
         rotDeriv = rotDeriv.Scale(dt * 0.5f);
 
@@ -243,7 +271,7 @@ public class RigidBaby : MonoBehaviour
         Rotation.Normalize();
 
         //update the velocity
-        rotVelocity += rotAcceleration * dt;
+        RotVelocity += RotAcceleration * dt;
     }
 
     #region UpdateRotationKinematic extra credit not implemented
@@ -254,7 +282,13 @@ public class RigidBaby : MonoBehaviour
     }
     #endregion
 
-	private void UpdateAngularAcceleration()
+    private void UpdateAcceleration()
+    {
+        Acceleration = totalForce * MassInverse;
+        totalForce = Vector2.zero;
+    }
+
+    private void UpdateAngularAcceleration()
 	{
         //Unity version
         //angularAcceleration = transform.localToWorldMatrix * localInertiaTensor.inverse * transform.worldToLocalMatrix * torque4;

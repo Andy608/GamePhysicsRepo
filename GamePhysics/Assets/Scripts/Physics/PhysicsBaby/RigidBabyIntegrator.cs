@@ -4,21 +4,23 @@ using UnityEngine;
 
 public class RigidBabyIntegrator : ManagerBase<RigidBabyIntegrator>
 {
-    private List<RigidBaby> rigidBabies = new List<RigidBaby>();
+    public List<RigidBaby> RigidBabies { get; private set; } = new List<RigidBaby>();
 
     public void RegisterRigidBaby(RigidBaby rigidBaby)
     {
-        rigidBabies.Add(rigidBaby);
+        RigidBabies.Add(rigidBaby);
     }
 
     public void UnRegisterRigidBaby(RigidBaby rigidBaby)
     {
-        rigidBabies.Remove(rigidBaby);
+        RigidBabies.Remove(rigidBaby);
     }
 
     private void FixedUpdate()
     {
-        foreach (RigidBaby r in rigidBabies)
+        ForceRegistry.Instance.UpdateForces();
+
+        foreach (RigidBaby r in RigidBabies)
         {
             r.Integrate();
         }

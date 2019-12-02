@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -357,6 +357,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4536641206133785314, guid: 601c079c03304b1448eaf6a75f06970a,
+        type: 3}
+      propertyPath: startingMass
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 601c079c03304b1448eaf6a75f06970a, type: 3}
 --- !u!1001 &1373041615
@@ -442,9 +447,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1863445834}
-  - component: {fileID: 1863445833}
+  - component: {fileID: 1863445838}
   - component: {fileID: 1863445836}
   - component: {fileID: 1863445835}
+  - component: {fileID: 1863445837}
+  - component: {fileID: 1863445833}
+  - component: {fileID: 1863445840}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -459,11 +467,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1863445832}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6664e8b55e367dc438ba877369b5972d, type: 3}
+  m_Script: {fileID: 11500000, guid: 5201029813130364eb892f7da5627e65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPersistent: 1
+  gravity: {x: 0, y: -9.8, z: 0}
 --- !u!4 &1863445834
 Transform:
   m_ObjectHideFlags: 0
@@ -503,6 +513,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4b72c2218a92704c887321f821d996b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1863445837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1863445832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 099bb9623f7f62c439a000d2d3ca3a96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  worldForces: []
+--- !u!114 &1863445838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1863445832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 602e86338196d234083e55de103164ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1863445840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1863445832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a38da68b0e1fef847a470b329df8bed0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPersistent: 1
+  anchorPoint: {x: 0, y: 10, z: 0}
+  springConstant: 10
+  restLength: 1
+  damping: 0
 --- !u!1 &2091602469
 GameObject:
   m_ObjectHideFlags: 0
