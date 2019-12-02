@@ -473,6 +473,7 @@ GameObject:
   - component: {fileID: 1863445838}
   - component: {fileID: 1863445837}
   - component: {fileID: 1863445833}
+  - component: {fileID: 1863445839}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -558,6 +559,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldForces: []
+--- !u!114 &1863445839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1863445832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75343edbcee4d7b4788ff6b3fe15e9e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPersistent: 0
+  anchorPoint: {x: 0, y: 5, z: 0}
+  springConstant: 10
+  restLength: 2
+  damping: 1
 --- !u!1 &2091602469
 GameObject:
   m_ObjectHideFlags: 0
