@@ -175,8 +175,10 @@ public class RigidBaby : MonoBehaviour
             {
                 InitPersistentForce(force);
             }
-
-            force.UpdateForce(this, Time.fixedDeltaTime);
+            else
+            {
+                force.UpdateForce(this, Time.fixedDeltaTime);
+            }
         }
     }
 
