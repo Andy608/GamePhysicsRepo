@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -447,12 +447,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1863445834}
-  - component: {fileID: 1863445838}
   - component: {fileID: 1863445836}
   - component: {fileID: 1863445835}
+  - component: {fileID: 1863445838}
   - component: {fileID: 1863445837}
   - component: {fileID: 1863445833}
-  - component: {fileID: 1863445840}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -469,7 +468,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1863445832}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5201029813130364eb892f7da5627e65, type: 3}
+  m_Script: {fileID: 11500000, guid: 47b305adee2b378488d9c1cf794b5c8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isPersistent: 1
@@ -522,10 +521,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1863445832}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 099bb9623f7f62c439a000d2d3ca3a96, type: 3}
+  m_Script: {fileID: 11500000, guid: b36b8d22686624544a8dbdb17b48eb6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldForces: []
 --- !u!114 &1863445838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -535,26 +533,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1863445832}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 602e86338196d234083e55de103164ad, type: 3}
+  m_Script: {fileID: 11500000, guid: c00b4dde5243c1e4b92a408d44cef445, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1863445840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1863445832}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a38da68b0e1fef847a470b329df8bed0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isPersistent: 1
-  anchorPoint: {x: 0, y: 10, z: 0}
-  springConstant: 10
-  restLength: 1
-  damping: 0
+  worldForces: []
 --- !u!1 &2091602469
 GameObject:
   m_ObjectHideFlags: 0
