@@ -468,12 +468,49 @@ public abstract class CollisionHullBaby : MonoBehaviour
         if (isTransformedOBB1inOBB2)
         {
             Debug.Log("OBB1 and OBB2 Collision!");
+
+            RigidBaby rigidBabyA = OBB1.GetComponent<RigidBaby>();
+            RigidBaby rigidBabyB = OBB2.GetComponent<RigidBaby>();
+
+            Vector3 normal = (rigidBabyA.GetPosition() - rigidBabyB.GetPosition()).normalized;
+
+            //float penetration = circle2.radius + circle1.radius - distance.magnitude;
+            float toCenter = Vector3.Magnitude(rigidBabyA.GetPosition() - rigidBabyB.GetPosition());
+
+            //Vertex Face Penetration check first
+            float penetration = 0.0f;
+
+
+
+
+            float restitution = 0.0f; // In the future we can store this in RigidBaby and then add up the two values from 1 and 2.
+
+            RigidBabyContact contact = new RigidBabyContact(
+                rigidBabyA, rigidBabyB, restitution, normal, penetration);
+
+            c.Add(contact);
+
             return true;
         }
         else
         {
             return false;
         }
+    }
+
+    private float PenOnAxis(float halfLengthOfBox1, float halfLengthOfBox2, float distBetweenBoxes)
+    {
+        //1. Calculate Half length of each box along a specific axis
+        //2. Calculate the distance between the two boxes along said axis
+        //3. Return the overlap
+
+        float yDist1 = halfLengthOfBox1;
+        float yDist2 = halfLengthOfBox2;
+
+        float distance1 = Mathf.Abs(distBetweenBoxes * yDist1);
+        float distance2 = Mathf.Abs(distBetweenBoxes * yDist2);
+
+        return 0;
     }
     #endregion
 
