@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(RigidBaby))]
 public abstract class CollisionHullBaby : MonoBehaviour
 {
+    private Octree parentOctree = null;
+    public List<OctreeNode> OwnerOctants = new List<OctreeNode>();
     public Color worldSpaceColor, localSpaceColor, otherSpaceColor, worldSpaceMegaBoxColor, otherSpaceMegaBoxColor;
 
     GameObject vertex;
@@ -28,6 +30,35 @@ public abstract class CollisionHullBaby : MonoBehaviour
     public CollisionHullBabyType Type { get; private set; }
     protected RigidBaby rigidbaby;
 
+    public void RefreshOctantOwners()
+    {
+        parentOctree.RootNode.ProcessObject(this);
+
+        List<OctreeNode> currentParents = new List<OctreeNode>();
+        List<OctreeNode> oldParents = new List<OctreeNode>();
+
+        foreach (OctreeNode node in OwnerOctants)
+        {
+            if (!node.ContainsRigidBaby(this))
+            {
+                oldParents.Add(node);
+            }
+            else
+            {
+                currentParents.Add(node);
+            }
+        }
+
+        OwnerOctants = currentParents;
+
+        foreach (OctreeNode node in oldParents)
+        {
+            //This object has left this octant.
+            //If there are children octants, are there still enough objects in the octant for them to survive
+            node.TryRemoveChildrenNodes(this);
+        }
+    }
+
     protected CollisionHullBaby(CollisionHullBabyType type)
     {
         Type = type;
@@ -35,6 +66,8 @@ public abstract class CollisionHullBaby : MonoBehaviour
 
     private void Awake()
     {
+        parentOctree = RBTestWorld.Instance.WorldOctree;
+
         rigidbaby = GetComponent<RigidBaby>();
         vertex = Resources.Load<GameObject>("Prefabs/Rigidbaby/Vertex");
         boxInOtherSpace = Resources.Load<GameObject>("Prefabs/Rigidbaby/Cube");
@@ -80,7 +113,7 @@ public abstract class CollisionHullBaby : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         for (int i = 0; i < 8; ++i)
         {
