@@ -181,11 +181,11 @@ public class RigidBabyContact
         }
 
         //Apply the penetration resolution.
-        //Particles[0].SetPosition(Particles[0].GetPosition() + ParticleMovement[0]);
+        Particles[0].SetPosition(Particles[0].GetPosition() + ParticleMovement[0]);
 
         if (Particles[1])
         {
-            //Particles[1].SetPosition(Particles[1].GetPosition() + ParticleMovement[1]);
+            Particles[1].SetPosition(Particles[1].GetPosition() + ParticleMovement[1]);
         }
     }
 }

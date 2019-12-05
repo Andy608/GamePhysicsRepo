@@ -534,9 +534,23 @@ public abstract class CollisionHullBaby : MonoBehaviour
         {
             Debug.Log("AABB and Circle Collision!");
 
-            //Do contact stuff here.
+			//Do contact stuff here.
+			RigidBaby rigidBabyA = circle.GetComponent<RigidBaby>();
+			RigidBaby rigidBabyB = AABB.GetComponent<RigidBaby>();
 
-            return true;
+
+			Vector3 normal = (rigidBabyA.GetPosition() - rigidBabyB.GetPosition()).normalized;
+			float penetration = circle.radius - distance.magnitude;
+			float restitution = 0.0f; // In the future we can store this in RigidBaby and then add up the two values from 1 and 2.
+
+			RigidBabyContact contact = new RigidBabyContact(
+				rigidBabyA, rigidBabyB, restitution, normal, penetration);
+
+			c.Add(contact);
+
+			Debug.Log("Circle and AABB Collision!");
+
+			return true;
         }
 
         return false;
@@ -805,10 +819,11 @@ public abstract class CollisionHullBaby : MonoBehaviour
                 zAABB_MIN_MAX_BOUNDS_IN_OBB_SPACE
             );
 
-        if (isTransformedAABBinOBB)
-        {
-            Debug.Log("AABB and OBB Collision!");
-            return true;
+		if (isTransformedAABBinOBB)
+		{
+			Debug.Log("AABB and OBB Collision!");
+
+			return true;
         }
         else
         {
