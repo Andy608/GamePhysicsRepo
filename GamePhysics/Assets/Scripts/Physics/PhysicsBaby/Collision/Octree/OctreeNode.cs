@@ -11,8 +11,7 @@ public class OctreeNode
     public OctreeNode ParentNode { get; private set; }
 
     //The 8 child nodes of the current octant, if it has any.
-    public OctreeNode[] ChildrenNodes { get { return childrenNodes; } }
-    private OctreeNode[] childrenNodes = new OctreeNode[8];
+    public OctreeNode[] ChildrenNodes { get; private set; } = new OctreeNode[8];
 
     //The octant's center position.
     public Vector3 CenterPosition { get; private set; }
@@ -21,7 +20,7 @@ public class OctreeNode
     public float CubeRadius { get; private set; }
 
     //All of the game objects in the current octant.
-    public List<RigidBaby> ObjectsInOctant { get; private set; } = new List<RigidBaby>();
+    public List<CollisionHullBaby> ObjectsInOctant { get; private set; } = new List<CollisionHullBaby>();
 
     //Used to display the octant bounds in the game world.
     private GameObject octantVisualizer;
@@ -30,17 +29,17 @@ public class OctreeNode
     private Octree controller;
 
     //Only can be called by Octree class.
-    public OctreeNode(Octree reference, OctreeNode parentNode, Vector3 centerPosition, float cubeRadius, List<RigidBaby> potentialObjects)
+    public OctreeNode(Octree reference, OctreeNode parentNode, Vector3 centerPosition, float cubeRadius, List<CollisionHullBaby> potentialObjects)
     {
         controller = reference;
         ParentNode = parentNode;
         CenterPosition = centerPosition;
         CubeRadius = cubeRadius;
 
-        foreach (RigidBaby rigidbaby in potentialObjects)
+        foreach (CollisionHullBaby hull in potentialObjects)
         {
             //Checks to see if object is in this octant's bounds. If yes, then it belongs to this octant.
-            ProcessObject(rigidbaby);
+            ProcessObject(hull);
         }
 
         octantVisualizer = new GameObject();
@@ -60,24 +59,24 @@ public class OctreeNode
 
     public void RemoveChildrenNodes()
     {
-        childrenNodes = new OctreeNode[8];
+        ChildrenNodes = new OctreeNode[8];
     }
 
-    public bool ProcessObject(RigidBaby rigidbaby)
+    public bool ProcessObject(CollisionHullBaby hull)
     {
-        if (ContainsRigidBaby(rigidbaby))
+        if (ContainsRigidBaby(hull))
         {
             //Checks if memory address is the same so they literally have to be the same object.
             if (ReferenceEquals(ChildrenNodes[0], null))
             {
-                StoreObject(rigidbaby);
+                StoreObject(hull);
                 return true;
             }
             else
             {
                 foreach (OctreeNode childNode in ChildrenNodes)
                 {
-                    if (childNode.ProcessObject(rigidbaby))
+                    if (childNode.ProcessObject(hull))
                     {
                         return true;
                     }
@@ -88,12 +87,12 @@ public class OctreeNode
         return false;
     }
 
-    private void StoreObject(RigidBaby rigidbaby)
+    private void StoreObject(CollisionHullBaby hull)
     {
-        if (!ObjectsInOctant.Contains(rigidbaby))
+        if (!ObjectsInOctant.Contains(hull))
         {
-            ObjectsInOctant.Add(rigidbaby);
-            rigidbaby.OwnerOctants.Add(this);
+            ObjectsInOctant.Add(hull);
+            hull.OwnerOctants.Add(this);
         }
 
         if (ObjectsInOctant.Count > controller.MaxObjectsInOctant)
@@ -104,9 +103,9 @@ public class OctreeNode
 
     private void Split()
     {
-        foreach (RigidBaby rigidbaby in ObjectsInOctant)
+        foreach (CollisionHullBaby hull in ObjectsInOctant)
         {
-            rigidbaby.OwnerOctants.Remove(this);
+            hull.OwnerOctants.Remove(this);
         }
 
         float childRadius = CubeRadius / 2.0f;
@@ -114,7 +113,7 @@ public class OctreeNode
 
         for (int i = 0; i < 4; ++i)
         {
-            childrenNodes[i] = new OctreeNode(controller, this, CenterPosition + childCenterPosition, childRadius, ObjectsInOctant);
+            ChildrenNodes[i] = new OctreeNode(controller, this, CenterPosition + childCenterPosition, childRadius, ObjectsInOctant);
             childCenterPosition = Quaternion.Euler(0.0f, -90.0f, 0.0f) * childCenterPosition;
         }
 
@@ -122,7 +121,7 @@ public class OctreeNode
 
         for (int i = 4; i < 8; ++i)
         {
-            childrenNodes[i] = new OctreeNode(controller, this, CenterPosition + childCenterPosition, childRadius, ObjectsInOctant);
+            ChildrenNodes[i] = new OctreeNode(controller, this, CenterPosition + childCenterPosition, childRadius, ObjectsInOctant);
             childCenterPosition = Quaternion.Euler(0.0f, -90.0f, 0.0f) * childCenterPosition;
         }
 
@@ -131,13 +130,13 @@ public class OctreeNode
 
     private void Kill(OctreeNode[] siblingNodesToRemove)
     {
-        foreach (RigidBaby rigidBaby in ObjectsInOctant)
+        foreach (CollisionHullBaby hull in ObjectsInOctant)
         {
-            rigidBaby.OwnerOctants = rigidBaby.OwnerOctants.Except(siblingNodesToRemove).ToList();
-            rigidBaby.OwnerOctants.Remove(this);
+            hull.OwnerOctants = hull.OwnerOctants.Except(siblingNodesToRemove).ToList();
+            hull.OwnerOctants.Remove(this);
 
-            rigidBaby.OwnerOctants.Add(ParentNode);
-            ParentNode.ObjectsInOctant.Add(rigidBaby);
+            hull.OwnerOctants.Add(ParentNode);
+            ParentNode.ObjectsInOctant.Add(hull);
         }
 
         foreach (OctreeNode sibling in siblingNodesToRemove)
@@ -148,59 +147,56 @@ public class OctreeNode
         GameObject.Destroy(octantVisualizer);
     }
 
-    public void TryRemoveChildrenNodes(RigidBaby escapedObject)
+    public void TryRemoveChildrenNodes(CollisionHullBaby leavingObject)
     {
-        if (!ReferenceEquals(this, controller.RootNode) && !SiblingsHaveChildrenAndCanCollapse())
+        //If not the root node, and there 
+        if (!ReferenceEquals(this, controller.RootNode) && CanCollapse(leavingObject))
         {
-            foreach (OctreeNode node in ParentNode.ChildrenNodes)
+            foreach (OctreeNode childNodes in ParentNode.ChildrenNodes)
             {
                 //Pass the 7 siblings as we kill the current node.
-                node.Kill(ParentNode.ChildrenNodes.Where(i => !ReferenceEquals(i, this)).ToArray());
+                childNodes.Kill(ParentNode.ChildrenNodes.Where(i => !ReferenceEquals(i, this)).ToArray());
             }
 
             ParentNode.RemoveChildrenNodes();
         }
         else
         {
-            ObjectsInOctant.Remove(escapedObject);
-            escapedObject.OwnerOctants.Remove(this);
+            ObjectsInOctant.Remove(leavingObject);
+            leavingObject.OwnerOctants.Remove(this);
         }
     }
 
     //If we collapse the child will the parent's octant now be holding too many rigidbabies?
-    private bool SiblingsHaveChildrenAndCanCollapse()
+    private bool CanCollapse(CollisionHullBaby leavingObject)
     {
         //The objects in transition between octants.
-        List<RigidBaby> orphanObjects = new List<RigidBaby>();
+        List<CollisionHullBaby> allObjectsInOctant = new List<CollisionHullBaby>();
 
         foreach (OctreeNode sibling in ParentNode.ChildrenNodes)
         {
-            if (sibling == null)
-            {
-                Debug.Log("WHY?");
-            }
-
+            //There are no child octants so we can't collapse
             if (!ReferenceEquals(sibling.ChildrenNodes[0], null))
             {
-                return true;
+                return false;
             }
 
-            //Make sure not to add multiple objects to the list if a bounding box is in multiple octants at once.
-            orphanObjects.AddRange(sibling.ObjectsInOctant.Where(i => !orphanObjects.Contains(i)));
+            //Make sure not to add object multiples to the list if a bounding box is in multiple octants at once.
+            allObjectsInOctant.AddRange(sibling.ObjectsInOctant.Where(i => !allObjectsInOctant.Contains(i)));
         }
 
-        if (orphanObjects.Count > controller.MaxObjectsInOctant + 1)
+        if (allObjectsInOctant.Count > controller.MaxObjectsInOctant)
         {
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
-    public bool ContainsRigidBaby(RigidBaby rigidbaby)
+    public bool ContainsRigidBaby(CollisionHullBaby hull)
     {
         //CollisionHullBabyAABB maxBoundingBox = 
-        Vector3 p = rigidbaby.Position;
+        Vector3 p = hull.transform.position;
 
         if (p.x > CenterPosition.x + CubeRadius || p.x < CenterPosition.x - CubeRadius)
         {

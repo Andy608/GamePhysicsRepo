@@ -473,6 +473,7 @@ GameObject:
   - component: {fileID: 1863445838}
   - component: {fileID: 1863445837}
   - component: {fileID: 1863445833}
+  - component: {fileID: 1863445840}
   - component: {fileID: 1863445839}
   m_Layer: 0
   m_Name: Manager
@@ -571,11 +572,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 741c0b5b257d6a54786f417859bcc7d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  createOnStart: 1
   isGrowable: 0
-  cubeRadius: 10
+  cubeRadius: 20
   maxObjectsInOctant: 2
   centerPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &1863445840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1863445832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f36c32a4144b3ee4eac2625a5a7fb241, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  worldOctree: {fileID: 1863445839}
 --- !u!1 &2091602469
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class Octree : MonoBehaviour
 {
-    public static Octree GlobalDemoOctree = null;
-
-    [SerializeField] private bool createOnStart = true;
-
     [Header("Doesn't do anything right now.")]
     [SerializeField] private bool isGrowable = false;
     public bool IsGrowable { get; private set; }
@@ -26,11 +22,6 @@ public class Octree : MonoBehaviour
     private void Awake()
     {
         Init();
-
-        if (createOnStart)
-        {
-            GlobalDemoOctree = CreateOctree();
-        }
     }
 
     private void Init()
@@ -45,7 +36,7 @@ public class Octree : MonoBehaviour
     {
         if (RootNode == null)
         {
-            RootNode = new OctreeNode(this, null, CenterPosition, CubeRadius, new List<RigidBaby>());
+            RootNode = new OctreeNode(this, null, CenterPosition, CubeRadius, new List<CollisionHullBaby>());
         }
 
         return this;
