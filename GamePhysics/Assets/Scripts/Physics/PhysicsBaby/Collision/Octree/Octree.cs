@@ -8,10 +8,11 @@ public class Octree : MonoBehaviour
 
     [SerializeField] private bool createOnStart = true;
 
+    [Header("Doesn't do anything right now.")]
     [SerializeField] private bool isGrowable = false;
     public bool IsGrowable { get; private set; }
 
-    [SerializeField] private float cubeRadius = 10.0f;
+    [SerializeField] private float cubeRadius = 20.0f;
     public float CubeRadius { get; private set; }
 
     [SerializeField] private int maxObjectsInOctant = 2;

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class OctreeNode
 {
@@ -10,7 +11,8 @@ public class OctreeNode
     public OctreeNode ParentNode { get; private set; }
 
     //The 8 child nodes of the current octant, if it has any.
-    public OctreeNode[] ChildrenNodes { get; private set; } = new OctreeNode[8];
+    public OctreeNode[] ChildrenNodes { get { return childrenNodes; } }
+    private OctreeNode[] childrenNodes = new OctreeNode[8];
 
     //The octant's center position.
     public Vector3 CenterPosition { get; private set; }
@@ -47,13 +49,18 @@ public class OctreeNode
         outlineRenderer = octantVisualizer.AddComponent<LineRenderer>();
         outlineRenderer.useWorldSpace = true;
         outlineRenderer.positionCount = 16;
-        outlineRenderer.startWidth = 0.02f;
-        outlineRenderer.endWidth = 0.02f;
+        outlineRenderer.startWidth = 0.04f;
+        outlineRenderer.endWidth = 0.04f;
 
-        Color octantColor = new Color(Random.Range(0.4f, 1.0f), Random.Range(0.4f, 1.0f), Random.Range(0.4f, 1.0f));
+        Color octantColor = Color.white;//new Color(Random.Range(0.4f, 1.0f), Random.Range(0.4f, 1.0f), Random.Range(0.4f, 1.0f));
         outlineRenderer.material.SetColor("_Color", octantColor);
 
         UpdateVisualizer();
+    }
+
+    public void RemoveChildrenNodes()
+    {
+        childrenNodes = new OctreeNode[8];
     }
 
     public bool ProcessObject(RigidBaby rigidbaby)
@@ -107,7 +114,7 @@ public class OctreeNode
 
         for (int i = 0; i < 4; ++i)
         {
-            ChildrenNodes[i] = new OctreeNode(controller, this, CenterPosition + childCenterPosition, childRadius, ObjectsInOctant);
+            childrenNodes[i] = new OctreeNode(controller, this, CenterPosition + childCenterPosition, childRadius, ObjectsInOctant);
             childCenterPosition = Quaternion.Euler(0.0f, -90.0f, 0.0f) * childCenterPosition;
         }
 
@@ -115,11 +122,79 @@ public class OctreeNode
 
         for (int i = 4; i < 8; ++i)
         {
-            ChildrenNodes[i] = new OctreeNode(controller, this, CenterPosition + childCenterPosition, childRadius, ObjectsInOctant);
+            childrenNodes[i] = new OctreeNode(controller, this, CenterPosition + childCenterPosition, childRadius, ObjectsInOctant);
             childCenterPosition = Quaternion.Euler(0.0f, -90.0f, 0.0f) * childCenterPosition;
         }
 
         ObjectsInOctant.Clear();
+    }
+
+    private void Kill(OctreeNode[] siblingNodesToRemove)
+    {
+        foreach (RigidBaby rigidBaby in ObjectsInOctant)
+        {
+            rigidBaby.OwnerOctants = rigidBaby.OwnerOctants.Except(siblingNodesToRemove).ToList();
+            rigidBaby.OwnerOctants.Remove(this);
+
+            rigidBaby.OwnerOctants.Add(ParentNode);
+            ParentNode.ObjectsInOctant.Add(rigidBaby);
+        }
+
+        foreach (OctreeNode sibling in siblingNodesToRemove)
+        {
+            GameObject.Destroy(sibling.octantVisualizer);
+        }
+
+        GameObject.Destroy(octantVisualizer);
+    }
+
+    public void TryRemoveChildrenNodes(RigidBaby escapedObject)
+    {
+        if (!ReferenceEquals(this, controller.RootNode) && !SiblingsHaveChildrenAndCanCollapse())
+        {
+            foreach (OctreeNode node in ParentNode.ChildrenNodes)
+            {
+                //Pass the 7 siblings as we kill the current node.
+                node.Kill(ParentNode.ChildrenNodes.Where(i => !ReferenceEquals(i, this)).ToArray());
+            }
+
+            ParentNode.RemoveChildrenNodes();
+        }
+        else
+        {
+            ObjectsInOctant.Remove(escapedObject);
+            escapedObject.OwnerOctants.Remove(this);
+        }
+    }
+
+    //If we collapse the child will the parent's octant now be holding too many rigidbabies?
+    private bool SiblingsHaveChildrenAndCanCollapse()
+    {
+        //The objects in transition between octants.
+        List<RigidBaby> orphanObjects = new List<RigidBaby>();
+
+        foreach (OctreeNode sibling in ParentNode.ChildrenNodes)
+        {
+            if (sibling == null)
+            {
+                Debug.Log("WHY?");
+            }
+
+            if (!ReferenceEquals(sibling.ChildrenNodes[0], null))
+            {
+                return true;
+            }
+
+            //Make sure not to add multiple objects to the list if a bounding box is in multiple octants at once.
+            orphanObjects.AddRange(sibling.ObjectsInOctant.Where(i => !orphanObjects.Contains(i)));
+        }
+
+        if (orphanObjects.Count > controller.MaxObjectsInOctant + 1)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     public bool ContainsRigidBaby(RigidBaby rigidbaby)
