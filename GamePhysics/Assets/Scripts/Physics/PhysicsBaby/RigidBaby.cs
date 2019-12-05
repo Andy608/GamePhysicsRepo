@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(IShapeBaby))]
 public class RigidBaby : MonoBehaviour
 {
+    public List<OctreeNode> OwnerOctants = new List<OctreeNode>();
     private IForceBaby[] attachedForces = null;
     public List<IForceBaby> PersistentForces { get; private set; } = null;
     private IShapeBaby shape = null;
@@ -240,6 +241,8 @@ public class RigidBaby : MonoBehaviour
 
         TransformationMat = translationMat * rotationMat * scaleMat;
         worldCenterofMass = TransformationMat * localCenterOfMass;
+
+        Octree.GlobalDemoOctree.RootNode.ProcessObject(this);
     }
 
     /// <summary> Integrates the particles position using the euler explicit formula. </summary>
@@ -344,6 +347,33 @@ public class RigidBaby : MonoBehaviour
     {
         return transform * local;
     }
+
+    //private void RefreshOctantOwners()
+    //{
+    //    Octree.GlobalDemoOctree.RootNode.ProcessObject(this);
+
+    //    List<OctreeNode> survivedNodes = new List<OctreeNode>();
+    //    List<OctreeNode> deadNodes = new List<OctreeNode>();
+
+    //    foreach (OctreeNode node in OwnerOctants)
+    //    {
+    //        if (!node.ContainsRigidBaby(this))
+    //        {
+    //            deadNodes.Add(node);
+    //        }
+    //        else
+    //        {
+    //            survivedNodes.Add(node);
+    //        }
+    //    }
+
+    //    OwnerOctants = survivedNodes;
+
+    //    foreach (OctreeNode node in deadNodes)
+    //    {
+
+    //    }
+    //}
 }
 
 
