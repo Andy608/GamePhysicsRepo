@@ -30,7 +30,7 @@ public class CollisionTesterBaby : ManagerBase<CollisionTesterBaby>
 
         for (int i = 0; i < rigidBabyColliders.Count; i++)
         {
-            rigidBabyColliders[i].RefreshOctantOwners();
+            //rigidBabyColliders[i].RefreshOctantOwners();
 
             CollisionHullBaby currentObj = rigidBabyColliders[i];
 

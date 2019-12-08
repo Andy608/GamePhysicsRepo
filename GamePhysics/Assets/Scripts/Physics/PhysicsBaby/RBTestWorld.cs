@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RBTestWorld : ManagerBase<RBTestWorld>
 {
-    public Octree WorldOctree { get { return worldOctree; } }
+    //public OctreeOld WorldOctree { get { return worldOctree; } }
     [SerializeField] private Octree worldOctree = null;
 
     private void Awake()
@@ -14,6 +14,6 @@ public class RBTestWorld : ManagerBase<RBTestWorld>
             worldOctree = new Octree();
         }
 
-        worldOctree.CreateOctree();
+        //worldOctree.CreateOctree();
     }
 }

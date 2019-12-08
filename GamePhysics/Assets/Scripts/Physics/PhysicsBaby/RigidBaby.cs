@@ -215,6 +215,13 @@ public class RigidBaby : MonoBehaviour
                 break;
         }
 
+        //Vector3 s = transform.lossyScale;
+        //scaleMat = new Matrix4x4(
+        //    new Vector4(s.x, 0.0f, 0.0f, 0.0f),
+        //    new Vector4(0.0f, s.y, 0.0f, 0.0f),
+        //    new Vector4(0.0f, 0.0f, s.z, 0.0f),
+        //    new Vector4(0.0f, 0.0f, 0.0f, 1.0f)
+        //);
         scaleMat = Matrix4x4.identity;
 
         UpdateAcceleration();

@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class CollisionHullBabyOBB : CollisionHullBaby
 {
-    protected CollisionHullBabyOBB() : base(CollisionHullBabyType.OBB) {}
+    protected override void Awake()
+    {
+        Type = CollisionHullBabyType.OBB;
+        base.Awake();
+    }
 
     public override bool TestCollisionVsCircle(CollisionHullBabyCircle other, ref List<RigidBabyContact> c)
     {
@@ -18,6 +22,6 @@ public class CollisionHullBabyOBB : CollisionHullBaby
 
     public override bool TestCollisionVsObject(CollisionHullBabyOBB other, ref List<RigidBabyContact> c)
     {
-        return TestCollisionOBBVsOBB(other, this, ref c); ;
+        return TestCollisionOBBVsOBB(other, this, ref c);
     }
 }

@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class CollisionHullBabyCircle : CollisionHullBaby
 {
-    protected CollisionHullBabyCircle() : base(CollisionHullBabyType.Circle) {}
+    protected override void Awake()
+    {
+        Type = CollisionHullBabyType.Circle;
+        base.Awake();
+    }
 
     public float radius = 5.0f;
     public float restitution = 0.0f;

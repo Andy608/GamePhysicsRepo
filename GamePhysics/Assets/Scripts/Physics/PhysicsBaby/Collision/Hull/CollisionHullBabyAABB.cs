@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class CollisionHullBabyAABB : CollisionHullBaby
 {
-    protected CollisionHullBabyAABB() : base(CollisionHullBabyType.AABB) { }
-
     private Vector3 bounds;
 
-    private void Start()
+    protected override void Awake()
     {
+        Type = CollisionHullBabyType.AABB;
         bounds = transform.localScale;
+        base.Awake();
     }
 
     public override bool TestCollisionVsCircle(CollisionHullBabyCircle other, ref List<RigidBabyContact> c)

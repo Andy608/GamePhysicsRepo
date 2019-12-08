@@ -5,17 +5,23 @@ using UnityEngine;
 [RequireComponent(typeof(RigidBaby))]
 public abstract class CollisionHullBaby : MonoBehaviour
 {
-    private Octree parentOctree = null;
-    public List<OctreeNode> OwnerOctants = new List<OctreeNode>();
-    public Color worldSpaceColor, localSpaceColor, otherSpaceColor, worldSpaceMegaBoxColor, otherSpaceMegaBoxColor;
+    private OctreeOld parentOctree = null;
+    public List<OctreeNodeOld> OwnerOctants  = new List<OctreeNodeOld>();
+    public Color worldSpaceColor = new Color(0.9433962f, 0.6820406f, 0.0533998f, 1.0f);
+    public Color localSpaceColor = new Color(1.0f, 0.0f, 0.5955915f, 1.0f);
+    public Color otherSpaceColor = new Color(0.3540741f, 0.0f, 0.9433962f, 1.0f);
+    public Color worldSpaceMegaBoxColor = new Color(0.3948f, 0.9983f, 0.02f, 1.0f);
+    public Color otherSpaceMegaBoxColor = new Color(1.0f, 1.0f, 0.0533998f, 1.0f);
 
-    GameObject vertex;
-    GameObject[] localSpaceVertices = new GameObject[8];
-    GameObject[] worldSpaceVertices = new GameObject[8];
-    GameObject[] verticesInOtherSpace = new GameObject[8];
-    GameObject[] megaBoxInOtherSpace = new GameObject[8];
-    GameObject[] worldSpaceMegaBoxVertices = new GameObject[8];
-    GameObject boxInOtherSpace, boxInLocalSpace;
+    public bool IsTrigger = false;
+
+    private GameObject vertex;
+    private GameObject[] localSpaceVertices = new GameObject[8];
+    private GameObject[] worldSpaceVertices = new GameObject[8];
+    private GameObject[] verticesInOtherSpace = new GameObject[8];
+    private GameObject[] megaBoxInOtherSpace = new GameObject[8];
+    private GameObject[] worldSpaceMegaBoxVertices = new GameObject[8];
+    private GameObject boxInOtherSpace, boxInLocalSpace;
 
     public bool inLocalSpace = false, inWorldSpace = false, inOtherSpace = false, megaInOtherSpace = false, megaInWorldSpace = false;
 
@@ -27,17 +33,17 @@ public abstract class CollisionHullBaby : MonoBehaviour
         Nispe
     }
 
-    public CollisionHullBabyType Type { get; private set; }
+    public CollisionHullBabyType Type { get; protected set; }
     protected RigidBaby rigidbaby;
 
     public void RefreshOctantOwners()
     {
         parentOctree.RootNode.ProcessObject(this);
 
-        List<OctreeNode> currentParents = new List<OctreeNode>();
-        List<OctreeNode> oldParents = new List<OctreeNode>();
+        List<OctreeNodeOld> currentParents = new List<OctreeNodeOld>();
+        List<OctreeNodeOld> oldParents = new List<OctreeNodeOld>();
 
-        foreach (OctreeNode node in OwnerOctants)
+        foreach (OctreeNodeOld node in OwnerOctants)
         {
             if (!node.ContainsRigidBaby(this))
             {
@@ -51,7 +57,7 @@ public abstract class CollisionHullBaby : MonoBehaviour
 
         OwnerOctants = currentParents;
 
-        foreach (OctreeNode node in oldParents)
+        foreach (OctreeNodeOld node in oldParents)
         {
             //This object has left this octant.
             //If there are children octants, are there still enough objects in the octant for them to survive
@@ -59,14 +65,9 @@ public abstract class CollisionHullBaby : MonoBehaviour
         }
     }
 
-    protected CollisionHullBaby(CollisionHullBabyType type)
+    protected virtual void Awake()
     {
-        Type = type;
-    }
-
-    private void Awake()
-    {
-        parentOctree = RBTestWorld.Instance.WorldOctree;
+        //parentOctree = RBTestWorld.Instance.WorldOctree;
 
         rigidbaby = GetComponent<RigidBaby>();
         vertex = Resources.Load<GameObject>("Prefabs/Rigidbaby/Vertex");
@@ -185,17 +186,20 @@ public abstract class CollisionHullBaby : MonoBehaviour
         //6. test if the distance between the circles is smaller than their total radii distance
         if (distanceSquared < radiiSum)
         {
-            RigidBaby rigidBabyA = circle1.GetComponent<RigidBaby>();
-            RigidBaby rigidBabyB = circle2.GetComponent<RigidBaby>();
+            if (!circle1.IsTrigger && !circle2.IsTrigger)
+            {
+                RigidBaby rigidBabyA = circle1.GetComponent<RigidBaby>();
+                RigidBaby rigidBabyB = circle2.GetComponent<RigidBaby>();
 
-            Vector3 normal = (rigidBabyA.GetPosition() - rigidBabyB.GetPosition()).normalized;
-            float penetration = circle2.radius + circle1.radius - distance.magnitude;
-            float restitution = 0.0f; // In the future we can store this in RigidBaby and then add up the two values from 1 and 2.
+                Vector3 normal = (rigidBabyA.GetPosition() - rigidBabyB.GetPosition()).normalized;
+                float penetration = circle2.radius + circle1.radius - distance.magnitude;
+                float restitution = 0.0f; // In the future we can store this in RigidBaby and then add up the two values from 1 and 2.
 
-            RigidBabyContact contact = new RigidBabyContact(
+                RigidBabyContact contact = new RigidBabyContact(
                 rigidBabyA, rigidBabyB, restitution, normal, penetration);
 
-            c.Add(contact);
+                c.Add(contact);
+            }
 
             Debug.Log("Circle and Circle Collision!");
             return true;
@@ -203,7 +207,8 @@ public abstract class CollisionHullBaby : MonoBehaviour
 
         return false;
     }
-    protected static bool TestCollisionAABBVsAABB(CollisionHullBabyAABB AABB1, CollisionHullBabyAABB AABB2, ref List<RigidBabyContact> c)
+
+    public static bool TestCollisionAABBVsAABB(CollisionHullBabyAABB AABB1, CollisionHullBabyAABB AABB2, ref List<RigidBabyContact> c)
     {
         //0. Convenience Variables
         Vector3 positionAABB1 = AABB1.transform.position;
@@ -223,10 +228,12 @@ public abstract class CollisionHullBaby : MonoBehaviour
 
         if (DOAABBCollisionTest(AABB1x, AABB1y, AABB1z, AABB2x, AABB2y, AABB2z))
         {
+            if (!AABB1.IsTrigger && !AABB2.IsTrigger)
+            {
+                //Do contact stuff here.
+            }
+
             Debug.Log("AABB and AABB Collision!");
-
-            //Do contact stuff here.
-
             return true;
         }
         else
@@ -500,28 +507,28 @@ public abstract class CollisionHullBaby : MonoBehaviour
 
         if (isTransformedOBB1inOBB2)
         {
-            Debug.Log("OBB1 and OBB2 Collision!");
+            if (!OBB1.IsTrigger && !OBB2.IsTrigger)
+            {
+                RigidBaby rigidBabyA = OBB1.GetComponent<RigidBaby>();
+                RigidBaby rigidBabyB = OBB2.GetComponent<RigidBaby>();
 
-            RigidBaby rigidBabyA = OBB1.GetComponent<RigidBaby>();
-            RigidBaby rigidBabyB = OBB2.GetComponent<RigidBaby>();
+                Vector3 normal = (rigidBabyA.GetPosition() - rigidBabyB.GetPosition()).normalized;
 
-            Vector3 normal = (rigidBabyA.GetPosition() - rigidBabyB.GetPosition()).normalized;
+                //float penetration = circle2.radius + circle1.radius - distance.magnitude;
+                float toCenter = Vector3.Magnitude(rigidBabyA.GetPosition() - rigidBabyB.GetPosition());
 
-            //float penetration = circle2.radius + circle1.radius - distance.magnitude;
-            float toCenter = Vector3.Magnitude(rigidBabyA.GetPosition() - rigidBabyB.GetPosition());
+                //Vertex Face Penetration check first
+                float penetration = 0.0f;
 
-            //Vertex Face Penetration check first
-            float penetration = 0.0f;
+                float restitution = 0.0f; // In the future we can store this in RigidBaby and then add up the two values from 1 and 2.
 
+                RigidBabyContact contact = new RigidBabyContact(
+                    rigidBabyA, rigidBabyB, restitution, normal, penetration);
 
+                c.Add(contact);
 
-
-            float restitution = 0.0f; // In the future we can store this in RigidBaby and then add up the two values from 1 and 2.
-
-            RigidBabyContact contact = new RigidBabyContact(
-                rigidBabyA, rigidBabyB, restitution, normal, penetration);
-
-            c.Add(contact);
+                Debug.Log("OBB1 and OBB2 Collision!");
+            }
 
             return true;
         }
@@ -602,23 +609,24 @@ public abstract class CollisionHullBaby : MonoBehaviour
         //5. check if the bounded point is within the circle
         if (distanceSquared < circle.radius * circle.radius)
         {
-            Debug.Log("AABB and Circle Collision!");
+            if (!AABB.IsTrigger && !circle.IsTrigger)
+            {
+                //Do contact stuff here.
+                RigidBaby rigidBabyA = circle.GetComponent<RigidBaby>();
+                RigidBaby rigidBabyB = AABB.GetComponent<RigidBaby>();
 
-			//Do contact stuff here.
-			RigidBaby rigidBabyA = circle.GetComponent<RigidBaby>();
-			RigidBaby rigidBabyB = AABB.GetComponent<RigidBaby>();
 
+                Vector3 normal = (rigidBabyA.GetPosition() - rigidBabyB.GetPosition()).normalized;
+                float penetration = circle.radius - distance.magnitude;
+                float restitution = 0.0f; // In the future we can store this in RigidBaby and then add up the two values from 1 and 2.
 
-			Vector3 normal = (rigidBabyA.GetPosition() - rigidBabyB.GetPosition()).normalized;
-			float penetration = circle.radius - distance.magnitude;
-			float restitution = 0.0f; // In the future we can store this in RigidBaby and then add up the two values from 1 and 2.
+                RigidBabyContact contact = new RigidBabyContact(
+                    rigidBabyA, rigidBabyB, restitution, normal, penetration);
 
-			RigidBabyContact contact = new RigidBabyContact(
-				rigidBabyA, rigidBabyB, restitution, normal, penetration);
+                c.Add(contact);
+            }
 
-			c.Add(contact);
-
-			Debug.Log("Circle and AABB Collision!");
+			Debug.Log("AABB and Circle Collision!");
 
 			return true;
         }
@@ -891,7 +899,11 @@ public abstract class CollisionHullBaby : MonoBehaviour
 
 		if (isTransformedAABBinOBB)
 		{
-			Debug.Log("AABB and OBB Collision!");
+            if (!AABB.IsTrigger && !OBB.IsTrigger)
+            {
+                //Do collision stuff here
+                Debug.Log("AABB and OBB Collision!");
+            }
 
 			return true;
         }
@@ -969,8 +981,12 @@ public abstract class CollisionHullBaby : MonoBehaviour
         // 8. check if closest point of box is within the circle
         if (distSqr < Circle.radius * Circle.radius)
         {
-            Debug.Log("There's a shape in mah boot!");
-            //Todo Add the contact data to the contact list.
+            if (!OBB.IsTrigger && !Circle.IsTrigger)
+            {
+                //Todo Add the contact data to the contact list.
+                Debug.Log("There's a shape in mah boot!");
+            }
+
             return true;
         }
 
@@ -982,7 +998,7 @@ public abstract class CollisionHullBaby : MonoBehaviour
     #endregion
 
     #region Helper Functions
-    protected static bool DOAABBCollisionTest(Vector2 AABB1x, Vector2 AABB1y, Vector2 AABB1z,
+    public static bool DOAABBCollisionTest(Vector2 AABB1x, Vector2 AABB1y, Vector2 AABB1z,
         Vector2 AABB2x, Vector2 AABB2y, Vector2 AABB2z)
     {
         float xMin1 = AABB1x.x, xMin2 = AABB2x.x;
@@ -1005,7 +1021,7 @@ public abstract class CollisionHullBaby : MonoBehaviour
         }
     }
 
-    protected static void CalculateAABB(
+    public static void CalculateAABB(
         Vector3 rft, Vector3 lft, Vector3 rbt, Vector3 lbt,
         Vector3 rfb, Vector3 lfb, Vector3 rbb, Vector3 lbb,
         out Vector2 xBound, out Vector2 yBound, out Vector2 zBound)
@@ -1052,6 +1068,28 @@ public abstract class CollisionHullBaby : MonoBehaviour
     private static Vector4 ToVec4(Vector3 v, float w = 1.0f)
     {
         return new Vector4(v.x, v.y, v.z, w);
+    }
+
+    public static void CalculateMaxExtents(CollisionHullBaby hull, out Vector2 xBounds, out Vector2 yBounds, out Vector2 zBounds)
+    {
+        Vector3 hullPosition = hull.transform.position;
+        Vector3 radius = hull.transform.lossyScale * 0.5f;
+
+        RigidBaby rb = hull.GetComponent<RigidBaby>();
+        Matrix4x4 transformMat = rb.TransformationMat;
+
+        Vector3 rtf = transformMat * new Vector4(radius.x, radius.y, radius.z, 1.0f);
+        Vector3 ltf = transformMat * new Vector4(radius.x, radius.y, -radius.z, 1.0f);
+        Vector3 rtb = transformMat * new Vector4(radius.x, -radius.y, radius.z, 1.0f);
+        Vector3 ltb = transformMat * new Vector4(radius.x, -radius.y, -radius.z, 1.0f);
+        Vector3 rbf = transformMat * new Vector4(-radius.x, radius.y, radius.z, 1.0f);
+        Vector3 lbf = transformMat * new Vector4(-radius.x, radius.y, -radius.z, 1.0f);
+        Vector3 rbb = transformMat * new Vector4(-radius.x, -radius.y, radius.z, 1.0f);
+        Vector3 lbb = transformMat * new Vector4(-radius.x, -radius.y, -radius.z, 1.0f);
+
+        CalculateAABB(rtf, ltf, rtb, ltb, rbf, lbf, rbb, lbb,
+            out xBounds, out yBounds, out zBounds
+        );
     }
     #endregion
 }
