@@ -13,11 +13,15 @@ public class Octant : MonoBehaviour
     public Vector3 CenterPosition { get; private set; } = Vector3.zero;
     public HashSet<CollisionHullBaby> Hulls { get; private set; } = null;
     public Octant[] ChildrenNodes { get; private set; } = null;
-    private CollisionHullBabyAABB octantBounds;
+    //private CollisionHullBabyAABB octantBounds;
     public int HullCount = 0;
 
     private ContactResolverBaby contactResolver;
     private List<RigidBabyContact> contacts;
+
+    private Vector3 rft, lft, rbt, lbt;
+    private Vector3 rfb, lfb, rbb, lbb;
+    private Vector2 xExtent, yExtent, zExtent;
 
     private LineRenderer octantRenderer = null;
 
@@ -43,10 +47,11 @@ public class Octant : MonoBehaviour
         octant.CenterPosition = centerPosition;
         octant.Hulls = new HashSet<CollisionHullBaby>();
         octant.ChildrenNodes = new Octant[8];
-        octant.octantBounds = go.AddComponent<CollisionHullBabyAABB>();
-        octant.octantBounds.IsTrigger = true;
+        //octant.octantBounds = go.AddComponent<CollisionHullBabyAABB>();
+        //octant.octantBounds.IsTrigger = true;
         octant.transform.parent = parent ? parent.transform : octree.transform;
         octant.transform.localScale = new Vector3(cubeRadius * 2.0f, cubeRadius * 2.0f, cubeRadius * 2.0f);
+        octant.GenerateExtents();
 
         octant.contactResolver = new ContactResolverBaby(octant.Octree.MaxCollisionIterations);
         octant.contacts = new List<RigidBabyContact>();
@@ -70,6 +75,22 @@ public class Octant : MonoBehaviour
         //and return the newly created octree.
         octant.UpdateVisualizer();
         return octant;
+    }
+
+    private void GenerateExtents()
+    {
+        //Idk what I was thinking, but these are only right if we're using z as the x axis..
+        //Keeping this way to be consistent with the CollisionHullBaby code.
+        rft = CenterPosition + new Vector3( CubeRadius,  CubeRadius,  CubeRadius);
+        lft = CenterPosition + new Vector3( CubeRadius,  CubeRadius, -CubeRadius);
+        rbt = CenterPosition + new Vector3( CubeRadius, -CubeRadius,  CubeRadius);
+        lbt = CenterPosition + new Vector3( CubeRadius, -CubeRadius, -CubeRadius);
+        rfb = CenterPosition + new Vector3(-CubeRadius,  CubeRadius,  CubeRadius);
+        lfb = CenterPosition + new Vector3(-CubeRadius,  CubeRadius, -CubeRadius);
+        rbb = CenterPosition + new Vector3(-CubeRadius, -CubeRadius,  CubeRadius);
+        lbb = CenterPosition + new Vector3(-CubeRadius, -CubeRadius, -CubeRadius);
+
+        CollisionHullBaby.CalculateAABB(rft, lft, rbt, lbt, rfb, lfb, rbb, lbb, out xExtent, out yExtent, out zExtent);
     }
 
     public bool TryInsertHull(CollisionHullBaby hull)
@@ -248,7 +269,9 @@ public class Octant : MonoBehaviour
     private bool IsHullInBounds(CollisionHullBaby hull)
     {
         List <RigidBabyContact> none = new List<RigidBabyContact>();
-        if (CollisionHullBaby.TestCollision(octantBounds, hull, ref none))
+        //if (CollisionHullBaby.TestCollision(octantBounds, hull, ref none))
+
+        if (CollisionHullBaby.DOAABBCollisionTest(hull.xExtent, hull.yExtent, hull.zExtent, xExtent, yExtent, zExtent))
         {
             //Debug.Log(debugPrefix + " Hull is inside my bounds.");
             return true;

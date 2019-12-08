@@ -25,6 +25,8 @@ public abstract class CollisionHullBaby : MonoBehaviour
     private GameObject[] worldSpaceMegaBoxVertices = new GameObject[8];
     private GameObject boxInOtherSpace, boxInLocalSpace;
 
+    public Vector2 xExtent, yExtent, zExtent;
+
     public bool inLocalSpace = false, inWorldSpace = false, inOtherSpace = false, megaInOtherSpace = false, megaInWorldSpace = false;
 
     public enum CollisionHullBabyType
@@ -145,6 +147,8 @@ public abstract class CollisionHullBaby : MonoBehaviour
             boxInLocalSpace.SetActive(inLocalSpace);
             boxInOtherSpace.SetActive(inOtherSpace);
         }
+
+        CalculateMaxExtents(this, out xExtent, out yExtent, out zExtent);
 
         if (!IsTrigger)
         {
@@ -1067,22 +1071,22 @@ public abstract class CollisionHullBaby : MonoBehaviour
         zBound.y = Mathf.Max(rftProj.z, lftProj.z, rbtProj.z, lbtProj.z, rfbProj.z, lfbProj.z, rbbProj.z, lbbProj.z);
     }
 
-    protected static float ProjXAxis(Vector3 point)
+    public static float ProjXAxis(Vector3 point)
     {
         return ProjOnAxis(point, Vector3.right);
     }
 
-    protected static float ProjYAxis(Vector3 point)
+    public static float ProjYAxis(Vector3 point)
     {
         return ProjOnAxis(point, Vector3.up);
     }
 
-    protected static float ProjZAxis(Vector3 point)
+    public static float ProjZAxis(Vector3 point)
     {
         return ProjOnAxis(point, Vector3.forward);
     }
 
-    protected static float ProjOnAxis(Vector3 point, Vector3 axis)
+    public static float ProjOnAxis(Vector3 point, Vector3 axis)
     {
         return Vector3.Dot(point, axis);
     }

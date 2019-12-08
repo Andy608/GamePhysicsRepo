@@ -8,9 +8,6 @@ public class Octree : MonoBehaviour
 
     public GameObject OctantPrefab { get; private set; } = null;
 
-    [SerializeField] private string octreeName;
-    public string OctreeName { get => octreeName; private set { octreeName = value; } }
-
     [SerializeField] private float octantRadius = 20.0f;
     public float CubeRadius { get => octantRadius; private set { octantRadius = value; } }
 
@@ -30,7 +27,6 @@ public class Octree : MonoBehaviour
 
     private void OnValidate()
     {
-        UpdateOctreeName();
         UpdateOrigin();
     }
 
@@ -43,18 +39,13 @@ public class Octree : MonoBehaviour
 
     private void UpdateOrigin()
     {
-        Debug.Log(debugPrefix + " Updating Origin of Octree: " + octreeName);
+        Debug.Log(debugPrefix + " Updating Origin of Octree.");
         transform.position = centerPosition;
-    }
-
-    private void UpdateOctreeName()
-    {
-        transform.gameObject.name = octreeName;
     }
 
     private void GenerateOctree()
     {
-        Debug.Log(debugPrefix + " Generating " + octreeName);
+        Debug.Log(debugPrefix + " Generating Octree.");
         if (RootNode == null)
         {
             RootNode = Octant.GenerateOctant(this, 0, null, CenterPosition, CubeRadius, null);
