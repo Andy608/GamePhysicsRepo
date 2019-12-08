@@ -23,6 +23,9 @@ public class Octree : MonoBehaviour
     [SerializeField] private int maxTreeDepth = 5;
     public int MaxTreeDepth { get => maxTreeDepth; private set { maxTreeDepth = value; } }
 
+    [SerializeField] private int maxCollisionIterations = 2;
+    public int MaxCollisionIterations { get => maxCollisionIterations; private set { maxCollisionIterations = value; } }
+
     public Octant RootNode { get; private set; } = null;
 
     private void OnValidate()

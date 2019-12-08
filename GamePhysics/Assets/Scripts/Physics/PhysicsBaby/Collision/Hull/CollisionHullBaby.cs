@@ -154,12 +154,12 @@ public abstract class CollisionHullBaby : MonoBehaviour
 
     private void OnEnable()
     {
-        CollisionTesterBaby.Instance?.RegisterHull(this);
+        //CollisionTesterBaby.Instance?.RegisterHull(this);
     }
 
     private void OnDisable()
     {
-        CollisionTesterBaby.Instance?.UnRegisterHull(this);
+        //CollisionTesterBaby.Instance?.UnRegisterHull(this);
     }
 
     #region Abstact Functions

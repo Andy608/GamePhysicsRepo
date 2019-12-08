@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RigidBabyIntegrator : ManagerBase<RigidBabyIntegrator>
 {
-    public List<RigidBaby> RigidBabies { get; private set; } = new List<RigidBaby>();
+    public HashSet<RigidBaby> RigidBabies { get; private set; } = new HashSet<RigidBaby>();
 
     public void RegisterRigidBaby(RigidBaby rigidBaby)
     {

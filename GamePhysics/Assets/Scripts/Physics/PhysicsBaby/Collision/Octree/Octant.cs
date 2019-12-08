@@ -16,6 +16,9 @@ public class Octant : MonoBehaviour
     private CollisionHullBabyAABB octantBounds;
     public int HullCount = 0;
 
+    private ContactResolverBaby contactResolver;
+    private List<RigidBabyContact> contacts;
+
     private LineRenderer octantRenderer = null;
 
     public static Octant GenerateOctant(Octree octree, int depth, Octant parent, Vector3 centerPosition, float cubeRadius, HashSet<CollisionHullBaby> hulls)
@@ -44,6 +47,9 @@ public class Octant : MonoBehaviour
         octant.octantBounds.IsTrigger = true;
         octant.transform.parent = parent ? parent.transform : octree.transform;
         octant.transform.localScale = new Vector3(cubeRadius * 2.0f, cubeRadius * 2.0f, cubeRadius * 2.0f);
+
+        octant.contactResolver = new ContactResolverBaby(octant.Octree.MaxCollisionIterations);
+        octant.contacts = new List<RigidBabyContact>();
 
         octant.transform.position = centerPosition;
         octant.name = "Octant: " + centerPosition.x + "," + centerPosition.y + "," + centerPosition.z;
@@ -128,7 +134,30 @@ public class Octant : MonoBehaviour
         }
     }
 
-    public void UpdateOctant()
+    private void UpdateCollision()
+    {
+        int count = 0;
+
+        foreach (CollisionHullBaby hullA in Hulls)
+        {
+            foreach (CollisionHullBaby hullB in Hulls)
+            {
+                if (ReferenceEquals(hullA, hullB))
+                    continue;
+
+                CollisionHullBaby.TestCollision(hullA, hullB, ref contacts);
+                count++;
+            }
+        }
+
+        if (contacts.Count > 0)
+        {
+            contactResolver.ResolveContacts(ref contacts, Time.fixedDeltaTime);
+            contacts.Clear();
+        }
+    }
+
+    private void UpdateOctantDepth()
     {
         if (!ReferenceEquals(ChildrenNodes[0], null))
         {
@@ -208,67 +237,12 @@ public class Octant : MonoBehaviour
         }
 
         HullCount = Hulls.Count;
+    }
 
-        //Iterate through all the leaving hulls and re-add each into
-        //the octree.
-        //foreach (CollisionHullBaby hull in leavingHulls)
-        //{
-        //    Octree.RootNode.TryInsertHull(hull);
-        //}
-
-        ////Check children octants to see if they can be removed
-
-        ////Loop through all children nodes
-        //HashSet<CollisionHullBaby> totalHullsInChildren = new HashSet<CollisionHullBaby>();
-        //foreach (Octant child in ChildrenNodes)
-        //{
-        //    //This octant has no children or a child octant has children, so we can't collapse.
-        //    if (ReferenceEquals(child, null) || !ReferenceEquals(child.ChildrenNodes[0], null))
-        //    {
-        //        HullCount = Hulls.Count;
-        //        return;
-        //    }
-        //    else
-        //    {
-        //        //Create a list of all the hulls in all the child octants.
-        //        foreach (CollisionHullBaby hull in child.Hulls)
-        //        {
-        //            totalHullsInChildren.Add(hull);
-        //        }
-        //    }
-        //}
-
-        //If there are less than max hulls in all of the children combined,
-        //if (totalHullsInChildren.Count <= Octree.MaxObjectsPerOctant)
-        //{
-        //    //1. Loop through all children and clear all Hulls lists.
-        //    //2. Loop through all of the hulls and remove octant as a parent.
-        //    //3. DestroyImmediate all children octants.
-        //    //4. Reset Children list in current octant.
-        //    //5. Insert hulls into octant.
-        //
-        //    foreach (Octant child in ChildrenNodes)
-        //    {
-        //        foreach (CollisionHullBaby hull in Hulls)
-        //        {
-        //            hull.parentOctants.Remove(child.CenterPosition);
-        //        }
-        //
-        //        child.Hulls.Clear();
-        //    }
-        //
-        //    foreach (Octant child in ChildrenNodes)
-        //    {
-        //        DestroyImmediate(child.gameObject);
-        //    }
-        //
-        //    ChildrenNodes = new Octant[8];
-        //
-        //    foreach (CollisionHullBaby hull in totalHullsInChildren)
-        //    {
-        //        TryInsertHull(hull);
-        //    }
-        //}
+    public void UpdateOctant()
+    {
+        UpdateOctantDepth();
+        UpdateCollision();
     }
 
     private bool IsHullInBounds(CollisionHullBaby hull)
