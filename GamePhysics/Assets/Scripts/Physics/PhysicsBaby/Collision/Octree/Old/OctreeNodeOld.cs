@@ -93,7 +93,7 @@ public class OctreeNodeOld
         if (!ObjectsInOctant.Contains(hull))
         {
             ObjectsInOctant.Add(hull);
-            hull.OwnerOctants.Add(this);
+            //hull.OwnerOctants.Add(this);
         }
 
         if (ObjectsInOctant.Count > controller.MaxObjectsInOctant)
@@ -106,7 +106,7 @@ public class OctreeNodeOld
     {
         foreach (CollisionHullBaby hull in ObjectsInOctant)
         {
-            hull.OwnerOctants.Remove(this);
+            //hull.OwnerOctants.Remove(this);
         }
 
         float childRadius = CubeRadius / 2.0f;
@@ -133,10 +133,10 @@ public class OctreeNodeOld
     {
         foreach (CollisionHullBaby hull in ObjectsInOctant)
         {
-            hull.OwnerOctants = hull.OwnerOctants.Except(siblingNodesToRemove).ToList();
-            hull.OwnerOctants.Remove(this);
+            //hull.OwnerOctants = hull.OwnerOctants.Except(siblingNodesToRemove).ToList();
+            //hull.OwnerOctants.Remove(this);
 
-            hull.OwnerOctants.Add(ParentNode);
+            //hull.OwnerOctants.Add(ParentNode);
             ParentNode.ObjectsInOctant.Add(hull);
         }
 
@@ -164,7 +164,7 @@ public class OctreeNodeOld
         else
         {
             ObjectsInOctant.Remove(leavingObject);
-            leavingObject.OwnerOctants.Remove(this);
+            //leavingObject.OwnerOctants.Remove(this);
         }
     }
 

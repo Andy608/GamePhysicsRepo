@@ -15,7 +15,7 @@ public class Octree : MonoBehaviour
     public float CubeRadius { get => octantRadius; private set { octantRadius = value; } }
 
     [SerializeField] private int maxObjectsPerOctant = 2;
-    public int MaxObjecstPerOctant { get => maxObjectsPerOctant; private set { maxObjectsPerOctant = value; } }
+    public int MaxObjectsPerOctant { get => maxObjectsPerOctant; private set { maxObjectsPerOctant = value; } }
 
     [SerializeField] private Vector3 centerPosition = Vector3.zero;
     public Vector3 CenterPosition { get => centerPosition; private set { centerPosition = value; } }
@@ -40,7 +40,7 @@ public class Octree : MonoBehaviour
 
     private void UpdateOrigin()
     {
-        Log("Updating Origin of Octree: " + octreeName);
+        Debug.Log(debugPrefix + " Updating Origin of Octree: " + octreeName);
         transform.position = centerPosition;
     }
 
@@ -51,15 +51,32 @@ public class Octree : MonoBehaviour
 
     private void GenerateOctree()
     {
-        Log("Generating " + octreeName);
+        Debug.Log(debugPrefix + " Generating " + octreeName);
         if (RootNode == null)
         {
             RootNode = Octant.GenerateOctant(this, 0, null, CenterPosition, CubeRadius, null);
         }
     }
 
-    private void Log(string s)
+    private void FixedUpdate()
     {
-        Debug.Log(debugPrefix + s);
+        UpdateOctree(RootNode);
+    }
+
+    private void UpdateOctree(Octant octant)
+    {
+        octant.UpdateOctant();
+        //If the octant has no children, we have reached a leaf node
+        //so we can end the recursion.
+        if (ReferenceEquals(octant.ChildrenNodes[0], null))
+        {
+            return;
+        }
+
+        foreach (Octant child in octant.ChildrenNodes)
+        {
+            //Recursively traverse the height of the octree.
+            UpdateOctree(child);
+        }
     }
 }

@@ -5,13 +5,15 @@ using UnityEngine;
 [RequireComponent(typeof(RigidBaby))]
 public abstract class CollisionHullBaby : MonoBehaviour
 {
-    private OctreeOld parentOctree = null;
-    public List<OctreeNodeOld> OwnerOctants  = new List<OctreeNodeOld>();
+    private Octree parentOctree = null;
+    public Dictionary<Vector3, Octant> parentOctants  = new Dictionary<Vector3, Octant>();
+
     public Color worldSpaceColor = new Color(0.9433962f, 0.6820406f, 0.0533998f, 1.0f);
     public Color localSpaceColor = new Color(1.0f, 0.0f, 0.5955915f, 1.0f);
     public Color otherSpaceColor = new Color(0.3540741f, 0.0f, 0.9433962f, 1.0f);
     public Color worldSpaceMegaBoxColor = new Color(0.3948f, 0.9983f, 0.02f, 1.0f);
     public Color otherSpaceMegaBoxColor = new Color(1.0f, 1.0f, 0.0533998f, 1.0f);
+    private GameObject debugHolder = null;
 
     public bool IsTrigger = false;
 
@@ -36,50 +38,58 @@ public abstract class CollisionHullBaby : MonoBehaviour
     public CollisionHullBabyType Type { get; protected set; }
     protected RigidBaby rigidbaby;
 
-    public void RefreshOctantOwners()
-    {
-        parentOctree.RootNode.ProcessObject(this);
+    //public void UpdateParentOctants()
+    //{
+    //    parentOctree.RootNode.UpdateHull(this);
+    //}
 
-        List<OctreeNodeOld> currentParents = new List<OctreeNodeOld>();
-        List<OctreeNodeOld> oldParents = new List<OctreeNodeOld>();
+    //public void RefreshOctantOwners()
+    //{
+    //    parentOctree.RootNode.ProcessObject(this);
 
-        foreach (OctreeNodeOld node in OwnerOctants)
-        {
-            if (!node.ContainsRigidBaby(this))
-            {
-                oldParents.Add(node);
-            }
-            else
-            {
-                currentParents.Add(node);
-            }
-        }
+    //    List<OctreeNodeOld> currentParents = new List<OctreeNodeOld>();
+    //    List<OctreeNodeOld> oldParents = new List<OctreeNodeOld>();
 
-        OwnerOctants = currentParents;
+    //    foreach (OctreeNodeOld node in OwnerOctants)
+    //    {
+    //        if (!node.ContainsRigidBaby(this))
+    //        {
+    //            oldParents.Add(node);
+    //        }
+    //        else
+    //        {
+    //            currentParents.Add(node);
+    //        }
+    //    }
 
-        foreach (OctreeNodeOld node in oldParents)
-        {
-            //This object has left this octant.
-            //If there are children octants, are there still enough objects in the octant for them to survive
-            node.TryRemoveChildrenNodes(this);
-        }
-    }
+    //    OwnerOctants = currentParents;
+
+    //    foreach (OctreeNodeOld node in oldParents)
+    //    {
+    //        //This object has left this octant.
+    //        //If there are children octants, are there still enough objects in the octant for them to survive
+    //        node.TryRemoveChildrenNodes(this);
+    //    }
+    //}
 
     protected virtual void Awake()
     {
-        //parentOctree = RBTestWorld.Instance.WorldOctree;
+        parentOctree = RBTestWorld.Instance.WorldOctree;
 
         rigidbaby = GetComponent<RigidBaby>();
         vertex = Resources.Load<GameObject>("Prefabs/Rigidbaby/Vertex");
         boxInOtherSpace = Resources.Load<GameObject>("Prefabs/Rigidbaby/Cube");
 
-        boxInOtherSpace = Instantiate(Resources.Load<GameObject>("Prefabs/Rigidbaby/Cube"), transform);
+        debugHolder = new GameObject("Debug Holder");
+        debugHolder.transform.parent = transform;
+
+        boxInOtherSpace = Instantiate(Resources.Load<GameObject>("Prefabs/Rigidbaby/Cube"), debugHolder.transform);
         boxInOtherSpace.name = "In Other Space";
         otherSpaceColor.a = 0.2f;
         boxInOtherSpace.GetComponent<MeshRenderer>().material.color = otherSpaceColor;
         otherSpaceColor.a = 1.0f;
 
-        boxInLocalSpace = Instantiate(Resources.Load<GameObject>("Prefabs/Rigidbaby/Cube"), transform);
+        boxInLocalSpace = Instantiate(Resources.Load<GameObject>("Prefabs/Rigidbaby/Cube"), debugHolder.transform);
         boxInLocalSpace.name = "In Local Space";
         localSpaceColor.a = 0.2f;
         boxInLocalSpace.GetComponent<MeshRenderer>().material.color = localSpaceColor;
@@ -87,30 +97,38 @@ public abstract class CollisionHullBaby : MonoBehaviour
 
         for (int i = 0; i < 8; ++i)
         {
-            worldSpaceVertices[i] = Instantiate(vertex, transform);
+            worldSpaceVertices[i] = Instantiate(vertex, debugHolder.transform);
             worldSpaceVertices[i].GetComponent<MeshRenderer>().material.color = worldSpaceColor;
             worldSpaceVertices[i].name = "World Space Vertex";
             worldSpaceVertices[i].tag = "World";
 
-            localSpaceVertices[i] = Instantiate(vertex, transform);
+            localSpaceVertices[i] = Instantiate(vertex, debugHolder.transform);
             localSpaceVertices[i].GetComponent<MeshRenderer>().material.color = localSpaceColor;
             localSpaceVertices[i].name = "Local Space Vertex";
             localSpaceVertices[i].tag = "Local";
 
-            verticesInOtherSpace[i] = Instantiate(vertex, transform);
+            verticesInOtherSpace[i] = Instantiate(vertex, debugHolder.transform);
             verticesInOtherSpace[i].GetComponent<MeshRenderer>().material.color = otherSpaceColor;
             verticesInOtherSpace[i].name = "Other Space Vertex";
             verticesInOtherSpace[i].tag = "Other";
 
-            worldSpaceMegaBoxVertices[i] = Instantiate(vertex, transform);
+            worldSpaceMegaBoxVertices[i] = Instantiate(vertex, debugHolder.transform);
             worldSpaceMegaBoxVertices[i].GetComponent<MeshRenderer>().material.color = worldSpaceMegaBoxColor;
             worldSpaceMegaBoxVertices[i].name = "World Space Mega Box Vertex";
             worldSpaceMegaBoxVertices[i].tag = "World MegaBox";
 
-            megaBoxInOtherSpace[i] = Instantiate(vertex, transform);
+            megaBoxInOtherSpace[i] = Instantiate(vertex, debugHolder.transform);
             megaBoxInOtherSpace[i].GetComponent<MeshRenderer>().material.color = otherSpaceMegaBoxColor;
             megaBoxInOtherSpace[i].name = "Other Space Mega Box Vertex";
             megaBoxInOtherSpace[i].tag = "Other MegaBox";
+        }
+    }
+
+    private void Start()
+    {
+        if (!IsTrigger)
+        {
+            RBTestWorld.Instance.WorldOctree?.RootNode?.TryInsertHull(this);
         }
     }
 
@@ -126,6 +144,11 @@ public abstract class CollisionHullBaby : MonoBehaviour
 
             boxInLocalSpace.SetActive(inLocalSpace);
             boxInOtherSpace.SetActive(inOtherSpace);
+        }
+
+        if (!IsTrigger)
+        {
+            RBTestWorld.Instance.WorldOctree?.RootNode?.TryInsertHull(this);
         }
     }
 
@@ -231,9 +254,9 @@ public abstract class CollisionHullBaby : MonoBehaviour
             if (!AABB1.IsTrigger && !AABB2.IsTrigger)
             {
                 //Do contact stuff here.
+                Debug.Log("AABB and AABB Collision!");
             }
 
-            Debug.Log("AABB and AABB Collision!");
             return true;
         }
         else
@@ -624,9 +647,8 @@ public abstract class CollisionHullBaby : MonoBehaviour
                     rigidBabyA, rigidBabyB, restitution, normal, penetration);
 
                 c.Add(contact);
+			    Debug.Log("AABB and Circle Collision!");
             }
-
-			Debug.Log("AABB and Circle Collision!");
 
 			return true;
         }

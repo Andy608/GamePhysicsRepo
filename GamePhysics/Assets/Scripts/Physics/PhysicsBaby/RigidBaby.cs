@@ -23,8 +23,11 @@ public class RigidBaby : MonoBehaviour
     public Vector3 PrevPosition { get; private set; } = Vector3.zero;
     private Vector3 posDiff = Vector3.zero;
 
-    public Vector3 Velocity { get; private set; } = Vector3.zero;
-    public Vector3 Acceleration { get; private set; } = Vector3.zero;
+    [SerializeField] private Vector3 velocity = Vector3.zero;
+    public Vector3 Velocity { get => velocity; private set { velocity = value; } }
+
+    [SerializeField] private Vector3 acceleration = Vector3.zero;
+    public Vector3 Acceleration { get => acceleration; private set { acceleration = value; } } 
 
     public Vector3 RotVelocity { get; private set; } = Vector3.zero;
     public Vector3 RotAcceleration { get; private set; } = Vector3.zero;
@@ -146,7 +149,7 @@ public class RigidBaby : MonoBehaviour
         return Acceleration;
     }
 
-    void Start()
+    private void Awake()
     {
         Mass = startingMass;
         Position = transform.position;
@@ -154,7 +157,10 @@ public class RigidBaby : MonoBehaviour
         Rotation = ExternalQuatBaby.QuaternionToExternalQuatBaby(transform.rotation);
         shape = GetComponent<IShapeBaby>();
         InitAttachedForces();
+    }
 
+    void Start()
+    {
         //lab7
         localInertiaTensor = shape.Inertia;
 
