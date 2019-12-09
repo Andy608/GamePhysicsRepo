@@ -112,12 +112,33 @@ public class RigidBaby : MonoBehaviour
     /// <param name="p"> The position vector. </param>
     public void SetPosition(Vector3 p)
     {
-        Position = p;
-    }
+		Position = p;
+	}
+	/// <summary> Not a direct change, but will increment position. </summary>
+	/// <param name="p"> The position vector. </param>
+	public void MovePosition(Vector3 p)
+	{
+		if (transform.root != transform)
+		{
+			//transform the parent
+			if (transform.parent.GetComponent<RigidBaby>() != null)
+			{
+				transform.parent.GetComponent<RigidBaby>().MovePosition(p);
+			}
+			else
+			{
+				Position += p;
+			}
+		}
+		else
+		{
+			Position += p;
+		}
+	}
 
-    /// <summary> Add force to total force. D'Alembert principle. </summary>
-    /// <param name="newForce"> Additional force to keep track of. </param>
-    public void AddForce(Vector3 newForce)
+	/// <summary> Add force to total force. D'Alembert principle. </summary>
+	/// <param name="newForce"> Additional force to keep track of. </param>
+	public void AddForce(Vector3 newForce)
     {
         totalForce += newForce;
     }
