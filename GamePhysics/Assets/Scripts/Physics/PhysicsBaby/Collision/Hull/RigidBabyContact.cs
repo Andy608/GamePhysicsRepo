@@ -132,6 +132,26 @@ public class RigidBabyContact
 
         if (Particles[1])
         {
+            Vector3 MomentArm = Particles[0].GetPosition() - Particles[1].GetPosition();
+
+            Vector3 prevRot0 = Particles[0].RotVelocity;
+            Vector3 prevRot1 = Particles[1].RotVelocity;
+
+            Particles[0].AddAngularImpulse(MomentArm, Particles[0].Velocity);
+            Particles[0].AddAngularImpulse(-MomentArm, Particles[1].Velocity);
+
+            Particles[1].AddAngularImpulse(MomentArm, Particles[1].Velocity);
+            Particles[1].AddAngularImpulse(-MomentArm, Particles[0].Velocity);
+
+            Particles[0].AddRotVelocity(prevRot1);
+            Particles[1].AddRotVelocity(prevRot0);
+
+            //Particles[0].AddAngularImpulse(MomentArm, prevRot0);
+            //Particles[0].AddAngularImpulse(-MomentArm, prevRot1);
+
+            //Particles[1].AddAngularImpulse(MomentArm, prevRot1);
+            //Particles[1].AddAngularImpulse(-MomentArm, prevRot0);
+
             Particles[1].SetVelocity(Particles[1].GetVelocity() + impulsePerIMass * -Particles[1].MassInverse);
         }
 

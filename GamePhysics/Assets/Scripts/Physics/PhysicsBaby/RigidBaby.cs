@@ -9,14 +9,14 @@ public class RigidBaby : MonoBehaviour
     public List<IForceBaby> PersistentForces { get; private set; } = null;
     private IShapeBaby shape = null;
 
-	/// <summary> Enum for Integration Type. </summary>
-	public enum IntegrationType
-	{
-		Kinematic,
-		EulerExplicit
-	}
+    /// <summary> Enum for Integration Type. </summary>
+    public enum IntegrationType
+    {
+        Kinematic,
+        EulerExplicit
+    }
 
-	[SerializeField] private IntegrationType positionType = IntegrationType.EulerExplicit;
+    [SerializeField] private IntegrationType positionType = IntegrationType.EulerExplicit;
     [SerializeField] private IntegrationType rotationType = IntegrationType.EulerExplicit;
 
     public Vector3 Position { get; private set; } = Vector3.zero;
@@ -27,10 +27,13 @@ public class RigidBaby : MonoBehaviour
     public Vector3 Velocity { get => velocity; private set { velocity = value; } }
 
     [SerializeField] private Vector3 acceleration = Vector3.zero;
-    public Vector3 Acceleration { get => acceleration; private set { acceleration = value; } } 
+    public Vector3 Acceleration { get => acceleration; private set { acceleration = value; } }
 
-    public Vector3 RotVelocity { get; private set; } = Vector3.zero;
-    public Vector3 RotAcceleration { get; private set; } = Vector3.zero;
+    [SerializeField] private Vector3 rotVelocity = Vector3.zero;
+    public Vector3 RotVelocity { get => rotVelocity; private set { rotVelocity = value; } }
+
+    [SerializeField] private Vector3 rotAcceleration = Vector3.zero;
+    public Vector3 RotAcceleration { get => rotAcceleration; private set { rotAcceleration = value; } }
     public ExternalQuatBaby Rotation;
 
     [SerializeField] private Vector3 totalForce = Vector3.zero;
@@ -39,15 +42,19 @@ public class RigidBaby : MonoBehaviour
     [SerializeField] private Matrix4x4 translationMat;
     [SerializeField] private Matrix4x4 rotationMat;
     [SerializeField] private Matrix4x4 scaleMat = Matrix4x4.identity;
-    
+
     public Matrix4x4 TransformationMat { get; private set; } //transformationMat = transform.localToWorldMatrix
 
     private Vector3 localCenterOfMass = Vector3.zero;
+    public Vector3 LocalCenterOfMass { get => localCenterOfMass; }
     [SerializeField] private Vector3 worldCenterofMass = Vector3.zero;
-	[SerializeField] private Vector3 worldTorque;
-	[SerializeField] private Vector3 momentArm = Vector3.zero, forceApply = Vector3.zero;
-	private Matrix4x4 localInertiaTensor, inverseInertiaTensor; //these are actually 3x3 matricies
-	private Vector3 angularAcceleration;
+    [SerializeField] private Vector3 worldTorque;
+    [SerializeField] private Vector3 momentArm = Vector3.zero, forceApply = Vector3.zero;
+    private Matrix4x4 localInertiaTensor, inverseInertiaTensor; //these are actually 3x3 matricies
+    private Vector3 angularAcceleration;
+
+    public Vector3 MomentArm { get => momentArm; set { momentArm = value; } }
+    public Vector3 ForceApply { get => forceApply; set { forceApply = value; } }
 
     public float Mass
     {
@@ -101,6 +108,11 @@ public class RigidBaby : MonoBehaviour
         RigidBabyIntegrator.Instance?.UnRegisterRigidBaby(this);
     }
 
+    public void AddAngularImpulse(Vector3 momentArm, Vector3 angularVelocity)
+    {
+        RotVelocity += Vector3.Cross(momentArm, angularVelocity);
+    }
+
     /// <summary> Quick direct changes to Velocity. </summary>
     /// <param name="v"> The velocity vector. </param>
     public void SetVelocity(Vector3 v)
@@ -120,6 +132,11 @@ public class RigidBaby : MonoBehaviour
     public void AddForce(Vector3 newForce)
     {
         totalForce += newForce;
+    }
+
+    public void AddRotVelocity(Vector3 rotVel)
+    {
+        RotVelocity += rotVel;
     }
 
     /// <summary>
@@ -332,6 +349,12 @@ public class RigidBaby : MonoBehaviour
 		//Add it to the aggregate torque
 		worldTorque += Vector3.Cross(pointAppliedLocal, forceApplied);
 	}
+
+    public static IEnumerator ApplyTorque(RigidBaby b, Vector3 momentArm, Vector3 force)
+    {
+        yield return new WaitForEndOfFrame();
+        b.ApplyTorque(momentArm, force);
+    }
 
     //Multiplies a vector by the inverse of a matrix -> when that matrix only comprises of translation and rotation.
     private static Vector3 transformInverse(Vector3 vec, Matrix4x4 mat)
