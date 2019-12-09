@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DragBaby : IForceBaby
+public class ForceDragBaby : IForceBaby
 {
     [SerializeField] private float dragCo = 0.0f;
     public float DragCo { get; private set; } = 0.0f;
