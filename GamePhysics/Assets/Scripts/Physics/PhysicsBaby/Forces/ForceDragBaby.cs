@@ -19,14 +19,10 @@ public class ForceDragBaby : IForceBaby
 
     public override void UpdateForce(RigidBaby rigidbaby, float deltaTime)
     {
-        //Vector3 rotForce = rigidbaby.RotVelocity;
-        //float rotMag = rotForce.magnitude;
-        //rotMag = RotDragCo * rotMag + RotDragCoSquared * rotMag * rotMag;
-        //
-        //rotForce.Normalize();
-        //rotForce *= -rotMag;
-        //
-        //rigidbaby.ApplyTorque(rigidbaby.RotVelocity, rotForce);
+        Vector3 rotForce = rigidbaby.RotVelocity;
+        float rotMag = rotForce.magnitude;
+        rotMag = RotDragCo * rotMag + RotDragCoSquared * rotMag * rotMag;
+        //rigidbaby.RotVelocity *= rotMag;
 
         Vector3 force = rigidbaby.Velocity;
         float mag = force.magnitude;

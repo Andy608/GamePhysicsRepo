@@ -24,13 +24,55 @@ public class RigidBaby : MonoBehaviour
     private Vector3 posDiff = Vector3.zero;
 
     [SerializeField] private Vector3 velocity = Vector3.zero;
-    public Vector3 Velocity { get => velocity; private set { velocity = value; } }
+    public Vector3 Velocity { get => velocity; set
+        {
+            if (transform.root && transform.root != transform)
+            {
+                //transform the parent
+                if (transform.parent.GetComponent<RigidBaby>() != null)
+                {
+                    transform.parent.GetComponent<RigidBaby>().Velocity += value;
+                }
+                else
+                {
+                    velocity = value;
+                }
+            }
+            else
+            {
+                velocity = value;
+            }
+            //velocity = value;
+        }
+    }
 
     [SerializeField] private Vector3 acceleration = Vector3.zero;
     public Vector3 Acceleration { get => acceleration; private set { acceleration = value; } }
 
     [SerializeField] private Vector3 rotVelocity = Vector3.zero;
-    public Vector3 RotVelocity { get => rotVelocity; private set { rotVelocity = value; } }
+    public Vector3 RotVelocity { get => rotVelocity;
+        set
+        {
+            if (transform.root && transform.root != transform)
+            {
+                //transform the parent
+                if (transform.parent.GetComponent<RigidBaby>() != null)
+                {
+                    transform.parent.GetComponent<RigidBaby>().RotVelocity += value;
+                }
+                else
+                {
+                    rotVelocity = value;
+                }
+            }
+            else
+            {
+                rotVelocity = value;
+            }
+
+            //rotVelocity = value;
+        }
+    }
 
     [SerializeField] private Vector3 rotAcceleration = Vector3.zero;
     public Vector3 RotAcceleration { get => rotAcceleration; private set { rotAcceleration = value; } }
@@ -115,10 +157,30 @@ public class RigidBaby : MonoBehaviour
 
     /// <summary> Quick direct changes to Velocity. </summary>
     /// <param name="v"> The velocity vector. </param>
-    public void SetVelocity(Vector3 v)
-    {
-        Velocity = v;
-    }
+ //   public void SetVelocity(Vector3 v)
+ //   {
+	//	Velocity = v;
+	//}
+
+	//public void AddVelocity(Vector3 v)
+	//{
+	//	if (transform.root != transform)
+	//	{
+	//		//transform the parent
+	//		if (transform.parent.GetComponent<RigidBaby>() != null)
+	//		{
+	//			transform.parent.GetComponent<RigidBaby>().AddVelocity(v);
+	//		}
+	//		else
+	//		{
+	//			Velocity += v;
+	//		}
+	//	}
+	//	else
+	//	{
+	//		Velocity += v;
+	//	}
+	//}
 
     /// <summary> Quick direct changes to Position. </summary>
     /// <param name="p"> The position vector. </param>
@@ -195,6 +257,14 @@ public class RigidBaby : MonoBehaviour
         Rotation = ExternalQuatBaby.QuaternionToExternalQuatBaby(transform.rotation);
         shape = GetComponent<IShapeBaby>();
         InitAttachedForces();
+
+        RigidBaby[] children = GetComponentsInChildren<RigidBaby>();
+        foreach (RigidBaby child in children)
+        {
+            localCenterOfMass += child.Position;
+        }
+
+        localCenterOfMass /= children.Length;
     }
 
     void Start()
@@ -370,12 +440,6 @@ public class RigidBaby : MonoBehaviour
 		//Add it to the aggregate torque
 		worldTorque += Vector3.Cross(pointAppliedLocal, forceApplied);
 	}
-
-    public static IEnumerator ApplyTorque(RigidBaby b, Vector3 momentArm, Vector3 force)
-    {
-        yield return new WaitForEndOfFrame();
-        b.ApplyTorque(momentArm, force);
-    }
 
     //Multiplies a vector by the inverse of a matrix -> when that matrix only comprises of translation and rotation.
     private static Vector3 transformInverse(Vector3 vec, Matrix4x4 mat)
