@@ -29,6 +29,8 @@ public abstract class CollisionHullBaby : MonoBehaviour
 
     public bool inLocalSpace = false, inWorldSpace = false, inOtherSpace = false, megaInOtherSpace = false, megaInWorldSpace = false;
 
+	public List<CollisionHullBaby> childHulls = new List<CollisionHullBaby>();
+
     public enum CollisionHullBabyType
     {
         Circle,
@@ -77,6 +79,20 @@ public abstract class CollisionHullBaby : MonoBehaviour
     protected virtual void Awake()
     {
         parentOctree = RBTestWorld.Instance.WorldOctree;
+
+		for(int i = 0; i < transform.childCount; i++)
+		{
+			GameObject child = transform.GetChild(i).gameObject;
+
+			if(child.GetComponent<CollisionHullBaby>() != null)
+			{
+				CollisionHullBaby childHull = child.GetComponent<CollisionHullBaby>();
+				if (!childHulls.Contains(childHull))
+				{
+					childHulls.Add(childHull);
+				}
+			}
+		}
 
         rigidbaby = GetComponent<RigidBaby>();
         vertex = Resources.Load<GameObject>("Prefabs/Rigidbaby/Vertex");
@@ -128,10 +144,14 @@ public abstract class CollisionHullBaby : MonoBehaviour
 
     private void Start()
     {
-        if (!IsTrigger)
-        {
-            RBTestWorld.Instance.WorldOctree?.RootNode?.TryInsertHull(this);
-        }
+		if (transform.root != transform)
+		{
+			return;
+		}
+		else
+		{
+			RBTestWorld.Instance.WorldOctree?.RootNode?.TryInsertHull(this);
+		}
     }
 
     private void FixedUpdate()
@@ -150,13 +170,18 @@ public abstract class CollisionHullBaby : MonoBehaviour
 
         CalculateMaxExtents(this, out xExtent, out yExtent, out zExtent);
 
-        if (!IsTrigger)
-        {
-            RBTestWorld.Instance.WorldOctree?.RootNode?.TryInsertHull(this);
-        }
-    }
+		if (transform.root != transform)
+		{
+			return;
+		}
+		else
+		{
+			RBTestWorld.Instance.WorldOctree?.RootNode?.TryInsertHull(this);
+		}
 
-    private void OnEnable()
+	}
+
+	private void OnEnable()
     {
         //CollisionTesterBaby.Instance?.RegisterHull(this);
     }
@@ -171,7 +196,22 @@ public abstract class CollisionHullBaby : MonoBehaviour
     {
         bool isValidCollision = false;
 
-        if (b.Type == CollisionHullBabyType.Circle)
+		if(a.childHulls.Count > 0)
+		{
+			foreach(CollisionHullBaby hull in a.childHulls)
+			{
+				TestCollision(hull, b, ref contacts);
+			}
+		}
+		if(b.childHulls.Count > 0)
+		{
+			foreach (CollisionHullBaby hull in b.childHulls)
+			{
+				TestCollision(a, hull, ref contacts);
+			}
+		}
+
+		if (b.Type == CollisionHullBabyType.Circle)
         {
             isValidCollision = a.TestCollisionVsCircle((b as CollisionHullBabyCircle), ref contacts);
         }
