@@ -5,11 +5,11 @@ using UnityEngine;
 public abstract class IForceBaby : MonoBehaviour
 {
     [SerializeField] private bool isPersistent = false;
-    public bool IsPersistent { get; private set; } = false;
+    public bool IsPersistent { get => isPersistent; private set { isPersistent = value; } }
 
     protected virtual void Awake()
     {
-        IsPersistent = isPersistent;
+
     }
 
     public abstract void UpdateForce(RigidBaby rigidbaby, float deltaTime);
