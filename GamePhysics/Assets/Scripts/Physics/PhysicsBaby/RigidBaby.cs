@@ -105,8 +105,27 @@ public class RigidBaby : MonoBehaviour
     /// <param name="v"> The velocity vector. </param>
     public void SetVelocity(Vector3 v)
     {
-        Velocity = v;
-    }
+		Velocity = v;
+	}
+	public void AddVelocity(Vector3 v)
+	{
+		if (transform.root != transform)
+		{
+			//transform the parent
+			if (transform.parent.GetComponent<RigidBaby>() != null)
+			{
+				transform.parent.GetComponent<RigidBaby>().AddVelocity(v);
+			}
+			else
+			{
+				Velocity += v;
+			}
+		}
+		else
+		{
+			Velocity += v;
+		}
+	}
 
     /// <summary> Quick direct changes to Position. </summary>
     /// <param name="p"> The position vector. </param>

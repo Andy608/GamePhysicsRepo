@@ -128,11 +128,13 @@ public class RigidBabyContact
 
         //Apply impulses in the direction of the contact normal,
         //and are proportional to the inverse mass.
-        Particles[0].SetVelocity(Particles[0].GetVelocity() + impulsePerIMass * Particles[0].MassInverse);
+        //Particles[0].SetVelocity(Particles[0].GetVelocity() + impulsePerIMass * Particles[0].MassInverse);
+        Particles[0].AddVelocity(impulsePerIMass * Particles[0].MassInverse);
 
         if (Particles[1])
         {
-            Particles[1].SetVelocity(Particles[1].GetVelocity() + impulsePerIMass * -Particles[1].MassInverse);
+            //Particles[1].SetVelocity(Particles[1].GetVelocity() + impulsePerIMass * -Particles[1].MassInverse);
+            Particles[1].AddVelocity(impulsePerIMass * -Particles[1].MassInverse);
         }
 
         EventAnnouncer.OnCollisionOccurredBaby?.Invoke(Particles[0], Particles[1]);
