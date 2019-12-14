@@ -23,6 +23,14 @@ public class GameSceneManager : ManagerBase<GameSceneManager>
         EventAnnouncer.OnRequestSceneChange -= RequestSceneChange;
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+    }
+
     private bool RequestSceneChange(EnumScene targetScene, TransitionEffect transition = null)
     {
         if (!sceneBundle.IsTransitioning)
