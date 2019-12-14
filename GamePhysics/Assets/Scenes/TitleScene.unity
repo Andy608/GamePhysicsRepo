@@ -187,6 +187,7 @@ MonoBehaviour:
   testSpringAnchor: {fileID: 0}
   positionType: 1
   rotationType: 1
+  drag: 0
   forceType: 8
   frictionStatic: 0.75
   frictionKinetic: 0.75
@@ -1731,6 +1732,7 @@ MonoBehaviour:
   testSpringAnchor: {fileID: 0}
   positionType: 1
   rotationType: 1
+  drag: 0
   forceType: 8
   frictionStatic: 0.75
   frictionKinetic: 0.75
